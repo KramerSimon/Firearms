@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "L",
+    "R"
+  ],
+  "key": {
+    "L": {
+      "item": "firearms:lead_ingot"
+    },
+    "R": {
+      "item": "firearms:steel_rod"
+    }
+  },
+  "result": {
+    "id": "firearms:bullet_casing",
+    "count": 4
+  }
+}

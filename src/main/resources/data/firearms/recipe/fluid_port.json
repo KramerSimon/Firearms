@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P",
+    "S",
+    "G"
+  ],
+  "key": {
+    "P": {
+      "item": "firearms:fluid_pipe"
+    },
+    "S": {
+      "item": "firearms:steel_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "id": "firearms:fluid_port",
+    "count": 1
+  }
+}

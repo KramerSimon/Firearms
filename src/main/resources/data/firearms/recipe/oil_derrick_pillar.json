@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " H ",
+    " H ",
+    " H "
+  ],
+  "key": {
+    "H": {
+      "item": "firearms:hardened_steel_ingot"
+    }
+  },
+  "result": {
+    "id": "firearms:oil_derrick_pillar",
+    "count": 3
+  }
+}

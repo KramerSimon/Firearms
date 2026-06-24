@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "firearms:steel_ingot"
+  },
+  "experience": 0.7,
+  "cookingtime": 200
+}

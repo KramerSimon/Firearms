@@ -1,0 +1,115 @@
+package com.sio.firearms.client;
+
+import com.sio.firearms.Firearms;
+import com.sio.firearms.attachment.AttachmentType;
+import com.sio.firearms.keybind.ModKeybinds;
+import com.sio.firearms.registry.ModDataComponents;
+import com.sio.firearms.registry.ModEntities;
+import com.sio.firearms.registry.ModItems;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+
+@EventBusSubscriber(modid = Firearms.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ClientSetup {
+
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.BULLET.get(), ThrownItemRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        event.register(ModKeybinds.RELOAD);
+    }
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            ResourceLocation attachmentId = ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "attachment");
+            ResourceLocation underbarrelId = ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "underbarrel");
+
+            ItemProperties.register(ModItems.PISTOL.get(), attachmentId, (stack, level, entity, seed) -> {
+                String attachment = stack.get(ModDataComponents.ATTACHMENT.get());
+                if (attachment == null) return 0.0f;
+                AttachmentType type = AttachmentType.fromName(attachment);
+                return type != null ? type.getPredicateValue() : 0.0f;
+            });
+
+            ItemProperties.register(ModItems.RIFLE.get(), attachmentId, (stack, level, entity, seed) -> {
+                String attachment = stack.get(ModDataComponents.ATTACHMENT.get());
+                if (attachment == null) return 0.0f;
+                AttachmentType type = AttachmentType.fromName(attachment);
+                return type != null ? type.getPredicateValue() : 0.0f;
+            });
+
+            ItemProperties.register(ModItems.PISTOL.get(), underbarrelId, (stack, level, entity, seed) -> {
+                String underbarrel = stack.get(ModDataComponents.UNDERBARREL_ATTACHMENT.get());
+                if (underbarrel == null) return 0.0f;
+                AttachmentType type = AttachmentType.fromName(underbarrel);
+                return type != null ? type.getUnderbarrelValue() : 0.0f;
+            });
+
+            ItemProperties.register(ModItems.RIFLE.get(), underbarrelId, (stack, level, entity, seed) -> {
+                String underbarrel = stack.get(ModDataComponents.UNDERBARREL_ATTACHMENT.get());
+                if (underbarrel == null) return 0.0f;
+                AttachmentType type = AttachmentType.fromName(underbarrel);
+                return type != null ? type.getUnderbarrelValue() : 0.0f;
+            });
+        });
+    }
+
+    @SubscribeEvent
+    public static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
+        try {
+            String[] pistolSights = {"red_dot", "holo_sight"};
+            String[] rifleSights = {"red_dot", "holo_sight", "scope_4x", "scope_8x"};
+            String[] underbarrels = {"laser", "flashlight"};
+
+            // Pistol: sight-only models
+            for (String sight : pistolSights) {
+                registerModel(event, "pistol_" + sight);
+            }
+            // Pistol: underbarrel-only models
+            for (String ub : underbarrels) {
+                registerModel(event, "pistol_" + ub);
+            }
+            // Pistol: sight + underbarrel combinations
+            for (String sight : pistolSights) {
+                for (String ub : underbarrels) {
+                    registerModel(event, "pistol_" + sight + "_" + ub);
+                }
+            }
+
+            // Rifle: sight-only models
+            for (String sight : rifleSights) {
+                registerModel(event, "rifle_" + sight);
+            }
+            // Rifle: underbarrel-only models
+            for (String ub : underbarrels) {
+                registerModel(event, "rifle_" + ub);
+            }
+            // Rifle: sight + underbarrel combinations
+            for (String sight : rifleSights) {
+                for (String ub : underbarrels) {
+                    registerModel(event, "rifle_" + sight + "_" + ub);
+                }
+            }
+        } catch (Exception e) {
+            com.mojang.logging.LogUtils.getLogger().error("Failed to register additional models for Firearms", e);
+        }
+    }
+
+    private static void registerModel(ModelEvent.RegisterAdditional event, String name) {
+        event.register(new ModelResourceLocation(
+                ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "item/" + name), "inventory"));
+    }
+}

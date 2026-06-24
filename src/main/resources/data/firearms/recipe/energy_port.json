@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "W",
+    "S",
+    "R"
+  ],
+  "key": {
+    "W": {
+      "item": "firearms:copper_wire"
+    },
+    "S": {
+      "item": "firearms:steel_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "firearms:energy_port",
+    "count": 1
+  }
+}

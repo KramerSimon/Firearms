@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C",
+    "P"
+  ],
+  "key": {
+    "C": {
+      "item": "firearms:bullet_casing"
+    },
+    "P": {
+      "item": "firearms:propellant_powder"
+    }
+  },
+  "result": {
+    "id": "firearms:bullet",
+    "count": 4
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "F ",
+    "NR"
+  ],
+  "key": {
+    "F": {
+      "item": "firearms:firing_mechanism"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "R": {
+      "item": "firearms:steel_rod"
+    }
+  },
+  "result": {
+    "id": "firearms:trigger_assembly",
+    "count": 1
+  }
+}

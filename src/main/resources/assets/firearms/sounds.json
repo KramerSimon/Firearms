@@ -1,0 +1,14 @@
+{
+  "pistol_shoot": {
+    "subtitle": "subtitles.firearms.pistol_shoot",
+    "sounds": [
+      "firearms:pistol_shoot"
+    ]
+  },
+  "rifle_shoot": {
+    "subtitle": "subtitles.firearms.rifle_shoot",
+    "sounds": [
+      "firearms:rifle_shoot"
+    ]
+  }
+}

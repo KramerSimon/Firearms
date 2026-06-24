@@ -1,0 +1,112 @@
+{
+  "credit": "Made with Blockbench",
+  "textures": {
+    "0": "firearms:item/pistol/shaft",
+    "1": "firearms:item/pistol/trigger_case_1",
+    "2": "firearms:item/pistol/trigger_case_2",
+    "3": "firearms:item/pistol/trigger",
+    "4": "firearms:item/pistol/grip",
+    "particle": "firearms:item/pistol/shaft"
+  },
+  "elements": [
+    {
+      "from": [2, 7.75, 6],
+      "to": [19, 11.75, 11],
+      "rotation": {"angle": 0, "axis": "y", "origin": [2, 7.75, 6]},
+      "faces": {
+        "north": {"uv": [0, 5, 8.5, 7], "texture": "#0"},
+        "east": {"uv": [8.5, 0, 11, 2], "texture": "#0"},
+        "south": {"uv": [0, 7, 8.5, 9], "texture": "#0"},
+        "west": {"uv": [8.5, 2, 11, 4], "texture": "#0"},
+        "up": {"uv": [8.5, 2.5, 0, 0], "texture": "#0"},
+        "down": {"uv": [8.5, 2.5, 0, 5], "texture": "#0"}
+      }
+    },
+    {
+      "from": [4, 0, 6],
+      "to": [8, 8, 11],
+      "rotation": {"angle": 0, "axis": "y", "origin": [4, 0, 6]},
+      "faces": {
+        "north": {"uv": [0, 8, 4, 16], "texture": "#4"},
+        "east": {"uv": [0, 0, 5, 8], "texture": "#4"},
+        "south": {"uv": [4, 8, 8, 16], "texture": "#4"},
+        "west": {"uv": [5, 0, 10, 8], "texture": "#4"},
+        "up": {"uv": [12, 13, 8, 8], "texture": "#4"},
+        "down": {"uv": [14, 0, 10, 5], "texture": "#4"}
+      }
+    },
+    {
+      "from": [8, 5, 6],
+      "to": [11, 6, 11],
+      "rotation": {"angle": 0, "axis": "y", "origin": [8, 5, 6]},
+      "faces": {
+        "north": {"uv": [0, 6, 3, 7], "texture": "#2"},
+        "east": {"uv": [0, 5, 5, 6], "texture": "#2"},
+        "south": {"uv": [6, 0, 9, 1], "texture": "#2"},
+        "west": {"uv": [5, 5, 10, 6], "texture": "#2"},
+        "up": {"uv": [3, 5, 0, 0], "texture": "#2"},
+        "down": {"uv": [6, 0, 3, 5], "texture": "#2"}
+      }
+    },
+    {
+      "from": [11, 6, 6],
+      "to": [12, 8, 11],
+      "rotation": {"angle": 0, "axis": "y", "origin": [11, 6, 6]},
+      "faces": {
+        "north": {"uv": [2, 4, 3, 6], "texture": "#1"},
+        "east": {"uv": [0, 0, 5, 2], "texture": "#1"},
+        "south": {"uv": [3, 4, 4, 6], "texture": "#1"},
+        "west": {"uv": [0, 2, 5, 4], "texture": "#1"},
+        "up": {"uv": [1, 9, 0, 4], "texture": "#1"},
+        "down": {"uv": [2, 4, 1, 9], "texture": "#1"}
+      }
+    },
+    {
+      "from": [9, 7, 7],
+      "to": [10, 8, 10],
+      "rotation": {"angle": 0, "axis": "y", "origin": [9, 7, 7]},
+      "faces": {
+        "north": {"uv": [2, 2, 3, 3], "texture": "#3"},
+        "east": {"uv": [0, 0, 3, 1], "texture": "#3"},
+        "south": {"uv": [3, 0, 4, 1], "texture": "#3"},
+        "west": {"uv": [0, 1, 3, 2], "texture": "#3"},
+        "up": {"uv": [1, 5, 0, 2], "texture": "#3"},
+        "down": {"uv": [2, 2, 1, 5], "texture": "#3"}
+      }
+    }
+  ],
+  "overrides": [
+    {"predicate": {"firearms:underbarrel": 0.1}, "model": "firearms:item/pistol_laser"},
+    {"predicate": {"firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_flashlight"},
+    {"predicate": {"firearms:attachment": 0.1}, "model": "firearms:item/pistol_red_dot"},
+    {"predicate": {"firearms:attachment": 0.1, "firearms:underbarrel": 0.1}, "model": "firearms:item/pistol_red_dot_laser"},
+    {"predicate": {"firearms:attachment": 0.1, "firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_red_dot_flashlight"},
+    {"predicate": {"firearms:attachment": 0.2}, "model": "firearms:item/pistol_holo_sight"},
+    {"predicate": {"firearms:attachment": 0.2, "firearms:underbarrel": 0.1}, "model": "firearms:item/pistol_holo_sight_laser"},
+    {"predicate": {"firearms:attachment": 0.2, "firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_holo_sight_flashlight"}
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, 90, 0],
+      "translation": [0, 0.5, 0],
+      "scale": [0.6, 0.6, 0.6]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 90, 0],
+      "translation": [0, 3.75, 0],
+      "scale": [0.75, 0.75, 0.75]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.625, 0.625, 0.625]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "fixed": {
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

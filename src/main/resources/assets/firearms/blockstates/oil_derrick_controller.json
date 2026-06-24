@@ -1,0 +1,5 @@
+﻿{
+  "variants": {
+    "": { "model": "firearms:block/oil_derrick_controller" }
+  }
+}

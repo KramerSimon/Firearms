@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    " TG",
+    " M "
+  ],
+  "key": {
+    "B": {
+      "item": "firearms:gun_barrel"
+    },
+    "T": {
+      "item": "firearms:trigger_assembly"
+    },
+    "G": {
+      "item": "firearms:gun_grip"
+    },
+    "M": {
+      "item": "firearms:magazine"
+    }
+  },
+  "result": {
+    "id": "firearms:rifle",
+    "count": 1
+  }
+}

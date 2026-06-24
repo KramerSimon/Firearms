@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "firearms:block/heat_treatment_furnace" }
+  }
+}
