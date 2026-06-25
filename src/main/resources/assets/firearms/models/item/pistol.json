@@ -83,7 +83,10 @@
     {"predicate": {"firearms:attachment": 0.1, "firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_red_dot_flashlight"},
     {"predicate": {"firearms:attachment": 0.2}, "model": "firearms:item/pistol_holo_sight"},
     {"predicate": {"firearms:attachment": 0.2, "firearms:underbarrel": 0.1}, "model": "firearms:item/pistol_holo_sight_laser"},
-    {"predicate": {"firearms:attachment": 0.2, "firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_holo_sight_flashlight"}
+    {"predicate": {"firearms:attachment": 0.2, "firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_holo_sight_flashlight"},
+    {"predicate": {"firearms:attachment": 0.7}, "model": "firearms:item/pistol_rubber_grip"},
+    {"predicate": {"firearms:attachment": 0.7, "firearms:underbarrel": 0.1}, "model": "firearms:item/pistol_rubber_grip_laser"},
+    {"predicate": {"firearms:attachment": 0.7, "firearms:underbarrel": 0.2}, "model": "firearms:item/pistol_rubber_grip_flashlight"}
   ],
   "display": {
     "thirdperson_righthand": {

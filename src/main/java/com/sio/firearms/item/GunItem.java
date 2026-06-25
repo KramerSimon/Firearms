@@ -2,7 +2,10 @@ package com.sio.firearms.item;
 
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.registry.ModDataComponents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -10,7 +13,10 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public class GunItem extends Item {
 
@@ -29,6 +35,14 @@ public class GunItem extends Item {
 
     public int getMaxAmmo() {
         return maxAmmo;
+    }
+
+    protected int getFireRate() {
+        return fireRate;
+    }
+
+    protected SoundEvent getSoundEvent() {
+        return soundEvent;
     }
 
     public int getAmmo(ItemStack stack) {
@@ -63,13 +77,46 @@ public class GunItem extends Item {
         setAmmo(stack, currentAmmo - 1);
 
         BulletEntity bullet = new BulletEntity(level, player, damage);
+        bullet.setShooterGun(stack);
         bullet.setPos(player.getEyePosition());
         bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 0.0F);
         level.addFreshEntity(bullet);
 
         level.playSound(null, player.blockPosition(), soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);
 
+        if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            stack.hurtAndBreak(1, serverLevel, serverPlayer, item -> {});
+        }
+
         player.getCooldowns().addCooldown(this, fireRate);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal("Damage: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(damage)).withStyle(ChatFormatting.WHITE)));
+        tooltipComponents.add(Component.literal("Fire Rate: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(fireRate + " ticks").withStyle(ChatFormatting.WHITE)));
+        tooltipComponents.add(Component.literal("Ammo: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(getAmmo(stack) + " / " + maxAmmo).withStyle(ChatFormatting.WHITE)));
+        tooltipComponents.add(Component.literal("Durability: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal((stack.getMaxDamage() - stack.getDamageValue()) + " / " + stack.getMaxDamage()).withStyle(ChatFormatting.WHITE)));
+
+        Integer kills = stack.get(ModDataComponents.KILL_COUNT.get());
+        tooltipComponents.add(Component.literal("Kills: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(kills != null ? kills : 0)).withStyle(ChatFormatting.YELLOW)));
+
+        String attachment = stack.get(ModDataComponents.ATTACHMENT.get());
+        if (attachment != null && !attachment.isEmpty()) {
+            tooltipComponents.add(Component.literal("Sight: ").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(attachment).withStyle(ChatFormatting.WHITE)));
+        }
+
+        String underbarrel = stack.get(ModDataComponents.UNDERBARREL_ATTACHMENT.get());
+        if (underbarrel != null && !underbarrel.isEmpty()) {
+            tooltipComponents.add(Component.literal("Underbarrel: ").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(underbarrel).withStyle(ChatFormatting.WHITE)));
+        }
     }
 
     @Override

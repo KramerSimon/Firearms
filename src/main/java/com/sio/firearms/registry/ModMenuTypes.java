@@ -2,7 +2,9 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.menu.AssemblyBenchMenu;
+import com.sio.firearms.menu.AutoTurretMenu;
 import com.sio.firearms.menu.CoalGeneratorMenu;
+import com.sio.firearms.menu.FuelGeneratorMenu;
 import com.sio.firearms.menu.OilDerrickMenu;
 import com.sio.firearms.menu.RefineryMenu;
 import com.sio.firearms.menu.HeatTreatmentFurnaceMenu;
@@ -52,6 +54,14 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<RefineryMenu>> REFINERY_MENU =
             MENU_TYPES.register("refinery",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new RefineryMenu(windowId, inv)));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<FuelGeneratorMenu>> FUEL_GENERATOR_MENU =
+            MENU_TYPES.register("fuel_generator",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new FuelGeneratorMenu(windowId, inv)));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<AutoTurretMenu>> AUTO_TURRET_MENU =
+            MENU_TYPES.register("auto_turret",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new AutoTurretMenu(windowId, inv)));
 
     public static final DeferredHolder<MenuType<?>, MenuType<OilDerrickMenu>> OIL_DERRICK_MENU =
             MENU_TYPES.register("oil_derrick",

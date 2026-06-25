@@ -20,6 +20,7 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 public class GunsmithTableMenu extends AbstractContainerMenu {
 
     private boolean isAttachmentRecipe = false;
+    private int[] consumeAmounts = null;
 
     private final ItemStackHandler handler = new ItemStackHandler(10) {
         @Override
@@ -76,6 +77,7 @@ public class GunsmithTableMenu extends AbstractContainerMenu {
 
     private void checkRecipe() {
         isAttachmentRecipe = false;
+        consumeAmounts = null;
 
         // Pistol: gun_barrel(0), gun_grip(3), trigger_assembly(4), magazine(6)
         if (slotIs(0, "firearms:gun_barrel") && slotEmpty(1) && slotEmpty(2)
@@ -90,6 +92,33 @@ public class GunsmithTableMenu extends AbstractContainerMenu {
                 && slotIs(3, "firearms:trigger_assembly") && slotIs(4, "firearms:gun_grip") && slotEmpty(5)
                 && slotIs(6, "firearms:magazine") && slotIs(7, "firearms:steel_rod") && slotEmpty(8)) {
             handler.setStackInSlot(9, new ItemStack(ModItems.RIFLE.get()));
+            return;
+        }
+
+        // Shotgun: gun_barrel x2 (0), trigger_assembly(1), gun_grip(2), magazine(3)
+        if (slotIs(0, "firearms:gun_barrel") && handler.getStackInSlot(0).getCount() >= 2
+                && slotIs(1, "firearms:trigger_assembly") && slotIs(2, "firearms:gun_grip")
+                && slotIs(3, "firearms:magazine") && slotsEmpty(4, 5, 6, 7, 8)) {
+            consumeAmounts = new int[]{2, 1, 1, 1, 0, 0, 0, 0, 0};
+            handler.setStackInSlot(9, new ItemStack(ModItems.SHOTGUN.get()));
+            return;
+        }
+
+        // Sniper Rifle: gun_barrel(0), trigger_assembly(1), gun_grip(2), magazine(3), steel_rod x2 (4), firing_pin(5)
+        if (slotIs(0, "firearms:gun_barrel") && slotIs(1, "firearms:trigger_assembly")
+                && slotIs(2, "firearms:gun_grip") && slotIs(3, "firearms:magazine")
+                && slotIs(4, "firearms:steel_rod") && handler.getStackInSlot(4).getCount() >= 2
+                && slotIs(5, "firearms:firing_pin") && slotsEmpty(6, 7, 8)) {
+            consumeAmounts = new int[]{1, 1, 1, 1, 2, 1, 0, 0, 0};
+            handler.setStackInSlot(9, new ItemStack(ModItems.SNIPER_RIFLE.get()));
+            return;
+        }
+
+        // SMG: gun_barrel(0), electronic_trigger(1), gun_grip(2), magazine(3), circuit_board(4)
+        if (slotIs(0, "firearms:gun_barrel") && slotIs(1, "firearms:electronic_trigger")
+                && slotIs(2, "firearms:gun_grip") && slotIs(3, "firearms:magazine")
+                && slotIs(4, "firearms:circuit_board") && slotsEmpty(5, 6, 7, 8)) {
+            handler.setStackInSlot(9, new ItemStack(ModItems.SMG.get()));
             return;
         }
 
@@ -143,6 +172,12 @@ public class GunsmithTableMenu extends AbstractContainerMenu {
             if (isAttachmentRecipe) {
                 handler.setStackInSlot(0, ItemStack.EMPTY);
                 handler.setStackInSlot(1, ItemStack.EMPTY);
+            } else if (consumeAmounts != null) {
+                for (int i = 0; i < consumeAmounts.length; i++) {
+                    if (consumeAmounts[i] > 0) {
+                        handler.getStackInSlot(i).shrink(consumeAmounts[i]);
+                    }
+                }
             } else {
                 for (int i = 0; i < 9; i++) {
                     ItemStack input = handler.getStackInSlot(i);

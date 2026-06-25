@@ -1,7 +1,9 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.screen.AssemblyBenchScreen;
+import com.sio.firearms.screen.AutoTurretScreen;
 import com.sio.firearms.screen.CoalGeneratorScreen;
+import com.sio.firearms.screen.FuelGeneratorScreen;
 import com.sio.firearms.screen.OilDerrickScreen;
 import com.sio.firearms.screen.RefineryScreen;
 import com.sio.firearms.screen.HeatTreatmentFurnaceScreen;
@@ -26,7 +28,9 @@ public class ModScreens {
         event.register(ModMenuTypes.HEAT_TREATMENT_FURNACE_MENU.get(), HeatTreatmentFurnaceScreen::new);
         event.register(ModMenuTypes.LATHE_MENU.get(), LatheScreen::new);
         event.register(ModMenuTypes.ASSEMBLY_BENCH_MENU.get(), AssemblyBenchScreen::new);
+        event.register(ModMenuTypes.FUEL_GENERATOR_MENU.get(), FuelGeneratorScreen::new);
         event.register(ModMenuTypes.OIL_DERRICK_MENU.get(), OilDerrickScreen::new);
         event.register(ModMenuTypes.REFINERY_MENU.get(), RefineryScreen::new);
+        event.register(ModMenuTypes.AUTO_TURRET_MENU.get(), AutoTurretScreen::new);
     }
 }

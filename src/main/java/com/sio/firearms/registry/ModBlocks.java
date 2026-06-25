@@ -2,11 +2,14 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AssemblyBenchBlock;
+import com.sio.firearms.block.LandMineBlock;
+import com.sio.firearms.block.AutoTurretBlock;
 import com.sio.firearms.block.CoalGeneratorBlock;
 import com.sio.firearms.block.EnergyPortBlock;
 import com.sio.firearms.block.EnergyPylonBlock;
 import com.sio.firearms.block.FluidPipeBlock;
 import com.sio.firearms.block.FluidPortBlock;
+import com.sio.firearms.block.FuelGeneratorBlock;
 import com.sio.firearms.block.OilDerrickControllerBlock;
 import com.sio.firearms.block.RefineryControllerBlock;
 import com.sio.firearms.block.HeatTreatmentFurnaceBlock;
@@ -122,6 +125,18 @@ public class ModBlocks {
                             .strength(3.5f)
                             .requiresCorrectToolForDrops()));
 
+    public static final DeferredBlock<Block> FUEL_GENERATOR =
+            BLOCKS.register("fuel_generator",
+                    () -> new FuelGeneratorBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> AUTO_TURRET =
+            BLOCKS.register("auto_turret",
+                    () -> new AutoTurretBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
     public static final DeferredBlock<Block> FLUID_PIPE =
             BLOCKS.register("fluid_pipe",
                     () -> new FluidPipeBlock(BlockBehaviour.Properties.of()
@@ -139,6 +154,13 @@ public class ModBlocks {
                     () -> new FluidPortBlock(BlockBehaviour.Properties.of()
                             .strength(2.5f)
                             .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> LAND_MINE =
+            BLOCKS.register("land_mine",
+                    () -> new LandMineBlock(BlockBehaviour.Properties.of()
+                            .strength(0.5f)
+                            .noOcclusion()
+                            .pushReaction(PushReaction.DESTROY)));
 
     public static final DeferredBlock<LiquidBlock> OIL_FLUID =
             BLOCKS.register("oil_fluid",

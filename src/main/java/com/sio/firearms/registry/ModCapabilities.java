@@ -2,6 +2,7 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.CoalGeneratorBlockEntity;
+import com.sio.firearms.block.FuelGeneratorBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import com.sio.firearms.item.BatteryItem;
 import net.neoforged.api.distmarker.Dist;
@@ -68,6 +69,24 @@ public class ModCapabilities {
                 Capabilities.EnergyStorage.BLOCK,
                 ModBlockEntities.ENERGY_PORT.get(),
                 (blockEntity, direction) -> blockEntity.getEnergyStorage()
+        );
+
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.FUEL_GENERATOR.get(),
+                (blockEntity, direction) -> blockEntity.getEnergyStorage()
+        );
+
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.AUTO_TURRET.get(),
+                (blockEntity, direction) -> blockEntity.getEnergyStorage()
+        );
+
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                ModBlockEntities.FUEL_GENERATOR.get(),
+                (blockEntity, direction) -> blockEntity.getFuelInputHandler()
         );
 
         event.registerBlockEntity(

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SBS",
+    "TCT",
+    "HHH"
+  ],
+  "key": {
+    "S": {
+      "item": "firearms:steel_ingot"
+    },
+    "B": {
+      "item": "firearms:gun_barrel"
+    },
+    "T": {
+      "item": "firearms:trigger_assembly"
+    },
+    "C": {
+      "item": "firearms:circuit_board"
+    },
+    "H": {
+      "item": "firearms:hardened_steel_ingot"
+    }
+  },
+  "result": {
+    "id": "firearms:auto_turret",
+    "count": 1
+  }
+}

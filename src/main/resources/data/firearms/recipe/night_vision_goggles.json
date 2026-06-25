@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CBC",
+    "WSW",
+    " R "
+  ],
+  "key": {
+    "C": { "item": "firearms:circuit_board" },
+    "B": { "item": "minecraft:glass_pane" },
+    "W": { "item": "firearms:copper_wire" },
+    "S": { "item": "firearms:steel_ingot" },
+    "R": { "item": "firearms:rubber_sheet" }
+  },
+  "result": {
+    "id": "firearms:night_vision_goggles",
+    "count": 1
+  }
+}

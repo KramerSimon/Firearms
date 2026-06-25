@@ -135,18 +135,39 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
             return new RecipeMatch(new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()), new int[]{1, 1, 1, 0, 0, 0});
         }
 
-        // gun_barrel + trigger_assembly + gun_grip + magazine → pistol
+        // gun_barrel + trigger_assembly + gun_grip + magazine + spring → pistol
         if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
                 && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotEmpty(4) && slotEmpty(5)) {
-            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()), new int[]{1, 1, 1, 1, 0, 0});
+                && slotIs(4, ModItems.SPRING) && slotEmpty(5)) {
+            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()), new int[]{1, 1, 1, 1, 1, 0});
         }
 
-        // gun_barrel + trigger_assembly + gun_grip + magazine + steel_rod → rifle
+        // gun_barrel + trigger_assembly + gun_grip + magazine + bolt + buffer_tube → rifle
         if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
                 && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotIs(4, ModItems.STEEL_ROD) && slotEmpty(5)) {
-            return new RecipeMatch(new ItemStack(ModItems.RIFLE.get()), new int[]{1, 1, 1, 1, 1, 0});
+                && slotIs(4, ModItems.BOLT) && slotIs(5, ModItems.BUFFER_TUBE)) {
+            return new RecipeMatch(new ItemStack(ModItems.RIFLE.get()), new int[]{1, 1, 1, 1, 1, 1});
+        }
+
+        // gun_barrel x2 + trigger_assembly + gun_grip + magazine → shotgun
+        if (slotIs(0, ModItems.GUN_BARREL, 2) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
+                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
+                && slotEmpty(4) && slotEmpty(5)) {
+            return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()), new int[]{2, 1, 1, 1, 0, 0});
+        }
+
+        // gun_barrel + trigger_assembly + gun_grip + magazine + steel_rod x2 + firing_pin → sniper_rifle
+        if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
+                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
+                && slotIs(4, ModItems.STEEL_ROD, 2) && slotIs(5, ModItems.FIRING_PIN)) {
+            return new RecipeMatch(new ItemStack(ModItems.SNIPER_RIFLE.get()), new int[]{1, 1, 1, 1, 2, 1});
+        }
+
+        // gun_barrel + electronic_trigger + gun_grip + magazine + circuit_board + buffer_tube → smg
+        if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.ELECTRONIC_TRIGGER)
+                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
+                && slotIs(4, ModItems.CIRCUIT_BOARD) && slotIs(5, ModItems.BUFFER_TUBE)) {
+            return new RecipeMatch(new ItemStack(ModItems.SMG.get()), new int[]{1, 1, 1, 1, 1, 1});
         }
 
         return null;

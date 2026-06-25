@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RR",
+    "RR"
+  ],
+  "key": {
+    "R": {"item": "firearms:rubber_sheet"}
+  },
+  "result": {
+    "id": "firearms:rubber_grip",
+    "count": 2
+  }
+}

@@ -32,6 +32,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.LEAD_INGOT.get());
                         output.accept(ModItems.PISTOL.get());
                         output.accept(ModItems.RIFLE.get());
+                        output.accept(ModItems.SHOTGUN.get());
+                        output.accept(ModItems.SNIPER_RIFLE.get());
+                        output.accept(ModItems.SMG.get());
                         output.accept(ModItems.RED_DOT.get());
                         output.accept(ModItems.HOLO_SIGHT.get());
                         output.accept(ModItems.LASER.get());
@@ -45,6 +48,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SPRING.get());
                         output.accept(ModItems.FIRING_PIN.get());
                         output.accept(ModItems.COAL_GENERATOR.get());
+                        output.accept(ModItems.FUEL_GENERATOR.get());
                         output.accept(ModItems.HEAT_TREATMENT_FURNACE.get());
                         output.accept(ModItems.LATHE.get());
                         output.accept(ModItems.ASSEMBLY_BENCH.get());
@@ -53,6 +57,11 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BATTERY.get());
                         output.accept(ModItems.RUBBER_SHEET.get());
                         output.accept(ModItems.GUN_OIL.get());
+                        output.accept(ModItems.BOLT.get());
+                        output.accept(ModItems.BUFFER_TUBE.get());
+                        output.accept(ModItems.RUBBER_GRIP.get());
+                        output.accept(ModItems.CLEANING_KIT.get());
+                        output.accept(ModItems.INDUSTRIAL_LUBRICANT.get());
                         output.accept(ModItems.OIL_BUCKET.get());
                         output.accept(ModItems.FUEL_BUCKET.get());
                         output.accept(ModItems.REFINERY_BASE.get());
@@ -65,6 +74,19 @@ public class ModCreativeTabs {
                         output.accept(ModItems.OIL_DERRICK_BASE.get());
                         output.accept(ModItems.OIL_DERRICK_PILLAR.get());
                         output.accept(ModItems.OIL_DERRICK_CONTROLLER.get());
+                        output.accept(ModItems.BANDAGE.get());
+                        output.accept(ModItems.MEDIKIT.get());
+                        output.accept(ModItems.KEVLAR_PLATE.get());
+                        output.accept(ModItems.BULLETPROOF_VEST.get());
+                        output.accept(ModItems.NIGHT_VISION_GOGGLES.get());
+                        output.accept(ModItems.CIRCUIT_BOARD.get());
+                        output.accept(ModItems.ELECTRONIC_TRIGGER.get());
+                        output.accept(ModItems.AUTO_TURRET.get());
+                        output.accept(ModItems.EXPLOSIVE_COMPOUND.get());
+                        output.accept(ModItems.GRENADE.get());
+                        output.accept(ModItems.SMOKE_GRENADE.get());
+                        output.accept(ModItems.LAND_MINE.get());
+                        output.accept(ModItems.SEA_MINE.get());
                     })
                     .build());
 }

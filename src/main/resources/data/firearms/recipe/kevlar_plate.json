@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RCR",
+    "C C",
+    "RCR"
+  ],
+  "key": {
+    "R": {
+      "item": "firearms:rubber_sheet"
+    },
+    "C": {
+      "item": "firearms:carbon_steel"
+    }
+  },
+  "result": {
+    "id": "firearms:kevlar_plate",
+    "count": 1
+  }
+}

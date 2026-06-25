@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "R"
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_rod"},
+    "R": {"item": "firearms:rubber_sheet"}
+  },
+  "result": {
+    "id": "firearms:buffer_tube",
+    "count": 1
+  }
+}

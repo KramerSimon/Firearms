@@ -6,7 +6,9 @@ import com.sio.firearms.keybind.ModKeybinds;
 import com.sio.firearms.registry.ModDataComponents;
 import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModItems;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -21,9 +23,15 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 @EventBusSubscriber(modid = Firearms.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BULLET.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.GRENADE.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.SMOKE_GRENADE.get(), ThrownItemRenderer::new);
+        // SeaMineEntity extends Entity (not ThrowableItemProjectile) but implements ItemSupplier,
+        // so raw-type cast is required to use ThrownItemRenderer here.
+        event.registerEntityRenderer((EntityType) ModEntities.SEA_MINE.get(), ThrownItemRenderer::new);
     }
 
     @SubscribeEvent
@@ -70,8 +78,8 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
         try {
-            String[] pistolSights = {"red_dot", "holo_sight"};
-            String[] rifleSights = {"red_dot", "holo_sight", "scope_4x", "scope_8x"};
+            String[] pistolSights = {"red_dot", "holo_sight", "rubber_grip"};
+            String[] rifleSights = {"red_dot", "holo_sight", "scope_4x", "scope_8x", "rubber_grip"};
             String[] underbarrels = {"laser", "flashlight"};
 
             // Pistol: sight-only models

@@ -22,7 +22,8 @@ public class FirearmsJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(
                 new GunsmithTableRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
-                new MetalPressRecipeCategory(registration.getJeiHelpers().getGuiHelper())
+                new MetalPressRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
+                new AssemblyBenchRecipeCategory(registration.getJeiHelpers().getGuiHelper())
         );
     }
 
@@ -30,11 +31,13 @@ public class FirearmsJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(GunsmithTableRecipeCategory.RECIPE_TYPE, GunsmithTableJeiRecipe.getAllRecipes());
         registration.addRecipes(MetalPressRecipeCategory.RECIPE_TYPE, MetalPressJeiRecipe.getAllRecipes());
+        registration.addRecipes(AssemblyBenchRecipeCategory.RECIPE_TYPE, AssemblyBenchJeiRecipe.getAllRecipes());
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.GUNSMITH_TABLE.get()), GunsmithTableRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.METAL_PRESS.get()), MetalPressRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ASSEMBLY_BENCH.get()), AssemblyBenchRecipeCategory.RECIPE_TYPE);
     }
 }

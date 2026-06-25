@@ -1,0 +1,42 @@
+package com.sio.firearms.item;
+
+import com.sio.firearms.entity.BulletEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+
+public class SMGItem extends GunItem {
+
+    private static final float SPREAD = 0.1f;
+
+    public SMGItem(Properties properties, int damage, int fireRate, int maxAmmo, SoundEvent soundEvent) {
+        super(properties, damage, fireRate, maxAmmo, soundEvent);
+    }
+
+    @Override
+    public void shoot(Player player, Level level) {
+        ItemStack stack = player.getMainHandItem();
+        if (!(stack.getItem() instanceof SMGItem)) return;
+
+        int currentAmmo = getAmmo(stack);
+
+        if (currentAmmo <= 0) {
+            return;
+        }
+
+        setAmmo(stack, currentAmmo - 1);
+
+        BulletEntity bullet = new BulletEntity(level, player, 5);
+        bullet.setShooterGun(stack);
+        bullet.setPos(player.getEyePosition());
+        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, SPREAD);
+        level.addFreshEntity(bullet);
+
+        level.playSound(null, player.blockPosition(), getSoundEvent(), SoundSource.PLAYERS, 0.7F, 1.0F + level.getRandom().nextFloat() * 0.2F);
+
+        player.getCooldowns().addCooldown(this, getFireRate());
+    }
+}

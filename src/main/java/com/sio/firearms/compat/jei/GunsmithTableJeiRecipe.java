@@ -25,7 +25,7 @@ public class GunsmithTableJeiRecipe {
     }
 
     public static List<GunsmithTableJeiRecipe> getAllRecipes() {
-        return List.of(createPistolRecipe(), createRifleRecipe());
+        return List.of(createPistolRecipe(), createRifleRecipe(), createShotgunRecipe(), createSniperRifleRecipe(), createSMGRecipe());
     }
 
     private static GunsmithTableJeiRecipe createPistolRecipe() {
@@ -45,5 +45,35 @@ public class GunsmithTableJeiRecipe {
         inputs.set(6, new ItemStack(ModItems.MAGAZINE.get()));
         inputs.set(7, new ItemStack(ModItems.STEEL_ROD.get()));
         return new GunsmithTableJeiRecipe(inputs, new ItemStack(ModItems.RIFLE.get()));
+    }
+
+    private static GunsmithTableJeiRecipe createShotgunRecipe() {
+        NonNullList<ItemStack> inputs = NonNullList.withSize(9, ItemStack.EMPTY);
+        inputs.set(0, new ItemStack(ModItems.GUN_BARREL.get(), 2));
+        inputs.set(1, new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()));
+        inputs.set(2, new ItemStack(ModItems.GUN_GRIP.get()));
+        inputs.set(3, new ItemStack(ModItems.MAGAZINE.get()));
+        return new GunsmithTableJeiRecipe(inputs, new ItemStack(ModItems.SHOTGUN.get()));
+    }
+
+    private static GunsmithTableJeiRecipe createSMGRecipe() {
+        NonNullList<ItemStack> inputs = NonNullList.withSize(9, ItemStack.EMPTY);
+        inputs.set(0, new ItemStack(ModItems.GUN_BARREL.get()));
+        inputs.set(1, new ItemStack(ModItems.ELECTRONIC_TRIGGER.get()));
+        inputs.set(2, new ItemStack(ModItems.GUN_GRIP.get()));
+        inputs.set(3, new ItemStack(ModItems.MAGAZINE.get()));
+        inputs.set(4, new ItemStack(ModItems.CIRCUIT_BOARD.get()));
+        return new GunsmithTableJeiRecipe(inputs, new ItemStack(ModItems.SMG.get()));
+    }
+
+    private static GunsmithTableJeiRecipe createSniperRifleRecipe() {
+        NonNullList<ItemStack> inputs = NonNullList.withSize(9, ItemStack.EMPTY);
+        inputs.set(0, new ItemStack(ModItems.GUN_BARREL.get()));
+        inputs.set(1, new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()));
+        inputs.set(2, new ItemStack(ModItems.GUN_GRIP.get()));
+        inputs.set(3, new ItemStack(ModItems.MAGAZINE.get()));
+        inputs.set(4, new ItemStack(ModItems.STEEL_ROD.get(), 2));
+        inputs.set(5, new ItemStack(ModItems.FIRING_PIN.get()));
+        return new GunsmithTableJeiRecipe(inputs, new ItemStack(ModItems.SNIPER_RIFLE.get()));
     }
 }

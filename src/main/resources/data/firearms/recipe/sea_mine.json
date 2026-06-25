@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "SES",
+    "SES"
+  ],
+  "key": {
+    "S": { "item": "firearms:steel_ingot" },
+    "E": { "item": "firearms:explosive_compound" }
+  },
+  "result": {
+    "id": "firearms:sea_mine",
+    "count": 1
+  }
+}

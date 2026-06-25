@@ -2,6 +2,8 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
+import com.sio.firearms.block.LandMineBlockEntity;
+import com.sio.firearms.block.AutoTurretBlockEntity;
 import com.sio.firearms.block.CoalGeneratorBlockEntity;
 import com.sio.firearms.block.EnergyPortBlockEntity;
 import com.sio.firearms.block.FluidPortBlockEntity;
@@ -11,6 +13,7 @@ import com.sio.firearms.block.LatheBlockEntity;
 import com.sio.firearms.block.OilDerrickControllerBlockEntity;
 import com.sio.firearms.block.RefineryControllerBlockEntity;
 import com.sio.firearms.block.FluidPipeBlockEntity;
+import com.sio.firearms.block.FuelGeneratorBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -72,8 +75,23 @@ public class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(FluidPipeBlockEntity::new,
                             ModBlocks.FLUID_PIPE.get()).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelGeneratorBlockEntity>> FUEL_GENERATOR =
+            BLOCK_ENTITIES.register("fuel_generator",
+                    () -> BlockEntityType.Builder.of(FuelGeneratorBlockEntity::new,
+                            ModBlocks.FUEL_GENERATOR.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AutoTurretBlockEntity>> AUTO_TURRET =
+            BLOCK_ENTITIES.register("auto_turret",
+                    () -> BlockEntityType.Builder.of(AutoTurretBlockEntity::new,
+                            ModBlocks.AUTO_TURRET.get()).build(null));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WireBlockEntity>> COPPER_WIRE =
             BLOCK_ENTITIES.register("copper_wire",
                     () -> BlockEntityType.Builder.of(WireBlockEntity::new,
                             ModBlocks.COPPER_WIRE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LandMineBlockEntity>> LAND_MINE =
+            BLOCK_ENTITIES.register("land_mine",
+                    () -> BlockEntityType.Builder.of(LandMineBlockEntity::new,
+                            ModBlocks.LAND_MINE.get()).build(null));
 }

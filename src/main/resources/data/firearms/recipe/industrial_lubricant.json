@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "firearms:gun_oil"},
+    {"item": "minecraft:copper_ingot"}
+  ],
+  "result": {
+    "id": "firearms:industrial_lubricant",
+    "count": 2
+  }
+}

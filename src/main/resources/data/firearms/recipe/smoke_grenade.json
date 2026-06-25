@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " W ",
+    "IGI",
+    " I "
+  ],
+  "key": {
+    "W": { "item": "minecraft:white_wool" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "G": { "item": "minecraft:gunpowder" }
+  },
+  "result": {
+    "id": "firearms:smoke_grenade",
+    "count": 2
+  }
+}

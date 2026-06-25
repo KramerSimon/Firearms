@@ -3,8 +3,20 @@ package com.sio.firearms.registry;
 import com.sio.firearms.Firearms;
 import com.sio.firearms.attachment.AttachmentType;
 import com.sio.firearms.item.AttachmentItem;
+import com.sio.firearms.item.BandageItem;
 import com.sio.firearms.item.BatteryItem;
+import com.sio.firearms.item.BulletproofVestItem;
+import com.sio.firearms.item.CleaningKitItem;
+import com.sio.firearms.item.GrenadeItem;
+import com.sio.firearms.item.NightVisionGogglesItem;
+import com.sio.firearms.item.SeaMineItem;
+import com.sio.firearms.item.SmokeGrenadeItem;
 import com.sio.firearms.item.GunItem;
+import com.sio.firearms.item.MedikitItem;
+import com.sio.firearms.item.ShotgunItem;
+import com.sio.firearms.item.SMGItem;
+import com.sio.firearms.item.SniperRifleItem;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -31,10 +43,19 @@ public class ModItems {
     public static final DeferredItem<Item> LEAD_INGOT = ITEMS.registerSimpleItem("lead_ingot");
 
     public static final DeferredItem<Item> PISTOL = ITEMS.register("pistol",
-            () -> new GunItem(new Item.Properties().stacksTo(1), 8, 10, 7, ModSounds.PISTOL_SHOOT.get()));
+            () -> new GunItem(new Item.Properties().stacksTo(1).durability(150), 8, 10, 7, ModSounds.PISTOL_SHOOT.get()));
 
     public static final DeferredItem<Item> RIFLE = ITEMS.register("rifle",
-            () -> new GunItem(new Item.Properties().stacksTo(1), 16, 25, 5, ModSounds.RIFLE_SHOOT.get()));
+            () -> new GunItem(new Item.Properties().stacksTo(1).durability(200), 16, 25, 5, ModSounds.RIFLE_SHOOT.get()));
+
+    public static final DeferredItem<Item> SHOTGUN = ITEMS.register("shotgun",
+            () -> new ShotgunItem(new Item.Properties().stacksTo(1).durability(150), 4, 40, 2, ModSounds.SHOTGUN_SHOOT.get()));
+
+    public static final DeferredItem<Item> SNIPER_RIFLE = ITEMS.register("sniper_rifle",
+            () -> new SniperRifleItem(new Item.Properties().stacksTo(1).durability(200), 24, 60, 5, ModSounds.SNIPER_RIFLE_SHOOT.get()));
+
+    public static final DeferredItem<Item> SMG = ITEMS.register("smg",
+            () -> new SMGItem(new Item.Properties().stacksTo(1).durability(300), 5, 4, 30, ModSounds.SMG_SHOOT.get()));
 
     public static final DeferredItem<Item> RED_DOT = ITEMS.register("red_dot",
             () -> new AttachmentItem(new Item.Properties(), AttachmentType.RED_DOT));
@@ -55,6 +76,13 @@ public class ModItems {
 
     public static final DeferredItem<Item> RUBBER_SHEET = ITEMS.registerSimpleItem("rubber_sheet");
     public static final DeferredItem<Item> GUN_OIL = ITEMS.registerSimpleItem("gun_oil");
+    public static final DeferredItem<Item> BOLT = ITEMS.registerSimpleItem("bolt");
+    public static final DeferredItem<Item> BUFFER_TUBE = ITEMS.registerSimpleItem("buffer_tube");
+    public static final DeferredItem<Item> RUBBER_GRIP = ITEMS.register("rubber_grip",
+            () -> new AttachmentItem(new Item.Properties(), AttachmentType.RUBBER_GRIP));
+    public static final DeferredItem<Item> CLEANING_KIT = ITEMS.register("cleaning_kit",
+            () -> new CleaningKitItem(new Item.Properties().stacksTo(8)));
+    public static final DeferredItem<Item> INDUSTRIAL_LUBRICANT = ITEMS.registerSimpleItem("industrial_lubricant");
 
     public static final DeferredItem<Item> OIL_BUCKET = ITEMS.register("oil_bucket",
             () -> new BucketItem(ModFluids.OIL_STILL.get(),
@@ -66,6 +94,36 @@ public class ModItems {
 
     public static final DeferredItem<Item> BATTERY = ITEMS.register("battery",
             () -> new BatteryItem(new Item.Properties().stacksTo(1)));
+
+    public static final DeferredItem<Item> BANDAGE = ITEMS.register("bandage",
+            () -> new BandageItem(new Item.Properties().stacksTo(16)));
+
+    public static final DeferredItem<Item> MEDIKIT = ITEMS.register("medikit",
+            () -> new MedikitItem(new Item.Properties().stacksTo(4)));
+
+    public static final DeferredItem<Item> KEVLAR_PLATE = ITEMS.registerSimpleItem("kevlar_plate");
+    public static final DeferredItem<Item> CIRCUIT_BOARD = ITEMS.registerSimpleItem("circuit_board");
+    public static final DeferredItem<Item> ELECTRONIC_TRIGGER = ITEMS.registerSimpleItem("electronic_trigger");
+    public static final DeferredItem<Item> EXPLOSIVE_COMPOUND = ITEMS.registerSimpleItem("explosive_compound");
+
+    public static final DeferredItem<Item> GRENADE = ITEMS.register("grenade",
+            () -> new GrenadeItem(new Item.Properties().stacksTo(16)));
+
+    public static final DeferredItem<Item> SMOKE_GRENADE = ITEMS.register("smoke_grenade",
+            () -> new SmokeGrenadeItem(new Item.Properties().stacksTo(16)));
+
+    public static final DeferredItem<Item> SEA_MINE = ITEMS.register("sea_mine",
+            () -> new SeaMineItem(new Item.Properties().stacksTo(4)));
+
+    public static final DeferredItem<Item> BULLETPROOF_VEST = ITEMS.register("bulletproof_vest",
+            () -> new BulletproofVestItem(ModArmorMaterials.BULLETPROOF_VEST, ArmorItem.Type.CHESTPLATE,
+                    new Item.Properties().stacksTo(1).durability(ArmorItem.Type.CHESTPLATE.getDurability(25))));
+
+    public static final DeferredItem<Item> NIGHT_VISION_GOGGLES = ITEMS.register("night_vision_goggles",
+            () -> new NightVisionGogglesItem(ModArmorMaterials.NIGHT_VISION_GOGGLES,
+                    new Item.Properties().stacksTo(1).durability(ArmorItem.Type.HELMET.getDurability(15))));
+
+    public static final DeferredItem<BlockItem> LAND_MINE = ITEMS.registerSimpleBlockItem(ModBlocks.LAND_MINE);
 
     public static final DeferredItem<BlockItem> GUNSMITH_TABLE = ITEMS.registerSimpleBlockItem(ModBlocks.GUNSMITH_TABLE);
     public static final DeferredItem<BlockItem> METAL_PRESS = ITEMS.registerSimpleBlockItem(ModBlocks.METAL_PRESS);
@@ -82,6 +140,8 @@ public class ModItems {
     public static final DeferredItem<BlockItem> REFINERY_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.REFINERY_CONTROLLER);
     public static final DeferredItem<BlockItem> ENERGY_PORT = ITEMS.registerSimpleBlockItem(ModBlocks.ENERGY_PORT);
     public static final DeferredItem<BlockItem> FLUID_PORT = ITEMS.registerSimpleBlockItem(ModBlocks.FLUID_PORT);
+    public static final DeferredItem<BlockItem> FUEL_GENERATOR = ITEMS.registerSimpleBlockItem(ModBlocks.FUEL_GENERATOR);
+    public static final DeferredItem<BlockItem> AUTO_TURRET = ITEMS.registerSimpleBlockItem(ModBlocks.AUTO_TURRET);
     public static final DeferredItem<BlockItem> FLUID_PIPE = ITEMS.registerSimpleBlockItem(ModBlocks.FLUID_PIPE);
     public static final DeferredItem<BlockItem> OIL_DERRICK_BASE = ITEMS.registerSimpleBlockItem(ModBlocks.OIL_DERRICK_BASE);
     public static final DeferredItem<BlockItem> OIL_DERRICK_PILLAR = ITEMS.registerSimpleBlockItem(ModBlocks.OIL_DERRICK_PILLAR);

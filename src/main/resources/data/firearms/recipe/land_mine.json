@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SES",
+    "TFT"
+  ],
+  "key": {
+    "S": { "item": "firearms:steel_ingot" },
+    "E": { "item": "firearms:explosive_compound" },
+    "T": { "item": "firearms:trigger_assembly" },
+    "F": { "item": "firearms:firing_pin" }
+  },
+  "result": {
+    "id": "firearms:land_mine",
+    "count": 2
+  }
+}

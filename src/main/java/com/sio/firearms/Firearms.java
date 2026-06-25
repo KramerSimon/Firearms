@@ -7,7 +7,9 @@ import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModFeatures;
 import com.sio.firearms.registry.ModFluids;
 import com.sio.firearms.registry.ModItems;
+import com.sio.firearms.registry.ModArmorMaterials;
 import com.sio.firearms.registry.ModDataComponents;
+import com.sio.firearms.registry.ModEffects;
 import com.sio.firearms.registry.ModMenuTypes;
 import com.sio.firearms.registry.ModSounds;
 import net.neoforged.bus.api.IEventBus;
@@ -22,6 +24,7 @@ public class Firearms {
         ModFluids.FLUID_TYPES.register(modEventBus);
         ModFluids.FLUIDS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
+        ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);
@@ -29,6 +32,7 @@ public class Firearms {
         ModSounds.SOUND_EVENTS.register(modEventBus);
         ModDataComponents.DATA_COMPONENTS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        ModEffects.MOB_EFFECTS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
     }
 }

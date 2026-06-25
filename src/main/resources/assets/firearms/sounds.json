@@ -10,5 +10,41 @@
     "sounds": [
       "firearms:rifle_shoot"
     ]
+  },
+  "bullet_flyby": {
+    "subtitle": "sounds.firearms.bullet_flyby",
+    "sounds": [
+      "firearms:bullet_flyby"
+    ]
+  },
+  "bandage": {
+    "subtitle": "sounds.firearms.bandage",
+    "sounds": [
+      "firearms:bandage"
+    ]
+  },
+  "sniper_rifle_shoot": {
+    "subtitle": "subtitles.firearms.sniper_rifle_shoot",
+    "sounds": [
+      "firearms:sniper_rifle_shoot"
+    ]
+  },
+  "shotgun_shoot": {
+    "subtitle": "subtitles.firearms.shotgun_shoot",
+    "sounds": [
+      "firearms:shotgun_shoot"
+    ]
+  },
+  "smg_shoot": {
+    "subtitle": "subtitles.firearms.smg_shoot",
+    "sounds": [
+      "firearms:smg_shoot"
+    ]
+  },
+  "grenade_pin": {
+    "subtitle": "sounds.firearms.grenade_pin",
+    "sounds": [
+      "firearms:grenade_pin"
+    ]
   }
 }

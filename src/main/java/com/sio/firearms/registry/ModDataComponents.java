@@ -42,4 +42,10 @@ public class ModDataComponents {
                     .persistent(Codec.STRING)
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8)
                     .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> KILL_COUNT =
+            DATA_COMPONENTS.register("kill_count", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
 }

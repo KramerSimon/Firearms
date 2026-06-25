@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RSR",
+    "CKC",
+    "RSR"
+  ],
+  "key": {
+    "R": {
+      "item": "firearms:rubber_sheet"
+    },
+    "S": {
+      "item": "firearms:steel_ingot"
+    },
+    "C": {
+      "item": "firearms:carbon_steel"
+    },
+    "K": {
+      "item": "firearms:kevlar_plate"
+    }
+  },
+  "result": {
+    "id": "firearms:bulletproof_vest",
+    "count": 1
+  }
+}

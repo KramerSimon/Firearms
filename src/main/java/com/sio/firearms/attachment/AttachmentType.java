@@ -6,7 +6,8 @@ public enum AttachmentType {
     LASER("laser", false, 0.90f, 0.3f, 0.1f),
     FLASHLIGHT("flashlight", false, 1.0f, 0.4f, 0.2f),
     SCOPE_4X("scope_4x", true, 0.25f, 0.5f, 0.0f),
-    SCOPE_8X("scope_8x", true, 0.12f, 0.6f, 0.0f);
+    SCOPE_8X("scope_8x", true, 0.12f, 0.6f, 0.0f),
+    RUBBER_GRIP("rubber_grip", false, 0.95f, 0.7f, 0.0f);
 
     private final String name;
     private final boolean rifleOnly;

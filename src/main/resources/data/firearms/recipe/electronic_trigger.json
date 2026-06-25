@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CTC",
+    " B "
+  ],
+  "key": {
+    "C": {
+      "item": "firearms:copper_wire"
+    },
+    "T": {
+      "item": "firearms:trigger_assembly"
+    },
+    "B": {
+      "item": "firearms:circuit_board"
+    }
+  },
+  "result": {
+    "id": "firearms:electronic_trigger",
+    "count": 1
+  }
+}
