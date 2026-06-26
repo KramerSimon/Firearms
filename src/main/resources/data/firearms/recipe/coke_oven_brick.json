@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BSB",
+    "S S",
+    "BSB"
+  ],
+  "key": {
+    "B": {"item": "minecraft:brick"},
+    "S": {"item": "minecraft:stone"}
+  },
+  "result": {
+    "id": "firearms:coke_oven_brick",
+    "count": 4
+  }
+}

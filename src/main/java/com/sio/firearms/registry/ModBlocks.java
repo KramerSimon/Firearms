@@ -1,7 +1,15 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
+import com.sio.firearms.block.AcidBathBlock;
 import com.sio.firearms.block.AssemblyBenchBlock;
+import com.sio.firearms.block.ChemicalMixerBlock;
+import com.sio.firearms.block.EBFControllerBlock;
+import com.sio.firearms.block.ElectrolysisMachineBlock;
+import com.sio.firearms.block.ItemPipeBlock;
+import com.sio.firearms.block.UraniumOreBlock;
+import com.sio.firearms.block.WaterPumpBlock;
+import com.sio.firearms.block.WeaponRackBlock;
 import com.sio.firearms.block.LandMineBlock;
 import com.sio.firearms.block.AutoTurretBlock;
 import com.sio.firearms.block.CoalGeneratorBlock;
@@ -15,11 +23,13 @@ import com.sio.firearms.block.RefineryControllerBlock;
 import com.sio.firearms.block.HeatTreatmentFurnaceBlock;
 import com.sio.firearms.block.LatheBlock;
 import com.sio.firearms.block.GunModificationTableBlock;
-import com.sio.firearms.block.GunsmithTableBlock;
 import com.sio.firearms.block.MetalPressBlock;
 import com.sio.firearms.block.WireBlock;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -28,12 +38,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModBlocks {
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Firearms.MOD_ID);
-
-    public static final DeferredBlock<Block> GUNSMITH_TABLE =
-            BLOCKS.register("gunsmith_table",
-                    () -> new GunsmithTableBlock(BlockBehaviour.Properties.of()
-                            .strength(2.5f)
-                            .requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<Block> METAL_PRESS =
             BLOCKS.register("metal_press",
@@ -162,6 +166,115 @@ public class ModBlocks {
                             .noOcclusion()
                             .pushReaction(PushReaction.DESTROY)));
 
+    public static final DeferredBlock<Block> COKE_OVEN_BRICK =
+            BLOCKS.register("coke_oven_brick",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> COKE_OVEN_CONTROLLER =
+            BLOCKS.register("coke_oven_controller",
+                    () -> new com.sio.firearms.block.CokeOvenControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> EBF_BASE =
+            BLOCKS.register("ebf_base",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> EBF_WALL =
+            BLOCKS.register("ebf_wall",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> EBF_TOP =
+            BLOCKS.register("ebf_top",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> EBF_CONTROLLER =
+            BLOCKS.register("ebf_controller",
+                    () -> new EBFControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> CHEMICAL_MIXER =
+            BLOCKS.register("chemical_mixer",
+                    () -> new ChemicalMixerBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> ACID_BATH =
+            BLOCKS.register("acid_bath",
+                    () -> new AcidBathBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> WATER_PUMP =
+            BLOCKS.register("water_pump",
+                    () -> new WaterPumpBlock(BlockBehaviour.Properties.of()
+                            .strength(3.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> WEAPON_RACK =
+            BLOCKS.register("weapon_rack",
+                    () -> new WeaponRackBlock(BlockBehaviour.Properties.of()
+                            .strength(2.0f)
+                            .noOcclusion()));
+
+    public static final DeferredBlock<Block> ITEM_PIPE =
+            BLOCKS.register("item_pipe",
+                    () -> new ItemPipeBlock(BlockBehaviour.Properties.of()
+                            .strength(0.5f)
+                            .noOcclusion()));
+
+    // ── Ore blocks ───────────────────────────────────────────────────────────
+
+    public static final DeferredBlock<Block> SULFUR_ORE =
+            BLOCKS.register("sulfur_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(0, 2), BlockBehaviour.Properties.of()
+                            .strength(2.0f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    public static final DeferredBlock<Block> SALTPETER_ORE =
+            BLOCKS.register("saltpeter_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(0, 1), BlockBehaviour.Properties.of()
+                            .strength(2.0f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    public static final DeferredBlock<Block> TUNGSTEN_ORE =
+            BLOCKS.register("tungsten_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.of()
+                            .strength(3.0f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    public static final DeferredBlock<Block> FLUORITE_ORE =
+            BLOCKS.register("fluorite_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(1, 2), BlockBehaviour.Properties.of()
+                            .strength(2.0f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    public static final DeferredBlock<Block> URANIUM_ORE =
+            BLOCKS.register("uranium_ore",
+                    () -> new UraniumOreBlock(BlockBehaviour.Properties.of()
+                            .strength(2.5f, 3.0f)
+                            .sound(SoundType.STONE)
+                            .lightLevel(state -> 2)));
+
+    public static final DeferredBlock<LiquidBlock> CREOSOTE_OIL_FLUID =
+            BLOCKS.register("creosote_oil_fluid",
+                    () -> new LiquidBlock(ModFluids.CREOSOTE_OIL_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable()
+                            .noCollission()
+                            .strength(-1.0f)
+                            .liquid()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()));
+
     public static final DeferredBlock<LiquidBlock> OIL_FLUID =
             BLOCKS.register("oil_fluid",
                     () -> new LiquidBlock(ModFluids.OIL_STILL.get(), BlockBehaviour.Properties.of()
@@ -181,4 +294,80 @@ public class ModBlocks {
                             .liquid()
                             .pushReaction(PushReaction.DESTROY)
                             .noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> SULFURIC_ACID_FLUID =
+            BLOCKS.register("sulfuric_acid_fluid",
+                    () -> new LiquidBlock(ModFluids.SULFURIC_ACID_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable()
+                            .noCollission()
+                            .strength(-1.0f)
+                            .liquid()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> NITRIC_ACID_FLUID =
+            BLOCKS.register("nitric_acid_fluid",
+                    () -> new LiquidBlock(ModFluids.NITRIC_ACID_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable()
+                            .noCollission()
+                            .strength(-1.0f)
+                            .liquid()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> SYNTHETIC_RUBBER_FLUID =
+            BLOCKS.register("synthetic_rubber_fluid",
+                    () -> new LiquidBlock(ModFluids.SYNTHETIC_RUBBER_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable()
+                            .noCollission()
+                            .strength(-1.0f)
+                            .liquid()
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()));
+
+    // ── Electrolysis Machine ─────────────────────────────────────────────────
+
+    public static final DeferredBlock<Block> ELECTROLYSIS_MACHINE =
+            BLOCKS.register("electrolysis_machine",
+                    () -> new ElectrolysisMachineBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── New fluid blocks ─────────────────────────────────────────────────────
+
+    public static final DeferredBlock<LiquidBlock> HYDROGEN_GAS_FLUID =
+            BLOCKS.register("hydrogen_gas_fluid",
+                    () -> new LiquidBlock(ModFluids.HYDROGEN_GAS_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> OXYGEN_GAS_FLUID =
+            BLOCKS.register("oxygen_gas_fluid",
+                    () -> new LiquidBlock(ModFluids.OXYGEN_GAS_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> FLUORINE_GAS_FLUID =
+            BLOCKS.register("fluorine_gas_fluid",
+                    () -> new LiquidBlock(ModFluids.FLUORINE_GAS_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> CHLORINE_GAS_FLUID =
+            BLOCKS.register("chlorine_gas_fluid",
+                    () -> new LiquidBlock(ModFluids.CHLORINE_GAS_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> NITRATE_SOLUTION_FLUID =
+            BLOCKS.register("nitrate_solution_fluid",
+                    () -> new LiquidBlock(ModFluids.NITRATE_SOLUTION_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> PVC_RESIN_FLUID =
+            BLOCKS.register("pvc_resin_fluid",
+                    () -> new LiquidBlock(ModFluids.PVC_RESIN_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
 }

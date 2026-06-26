@@ -47,5 +47,61 @@ public class FluidClientSetup {
                 return 0xFFFF8C00;
             }
         }, ModFluids.FUEL_TYPE.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/creosote_oil_still");
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/creosote_oil_flowing");
+            }
+
+            @Override
+            public int getTintColor() {
+                return 0xFF4A2800;
+            }
+        }, ModFluids.CREOSOTE_OIL_TYPE.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/sulfuric_acid_still");
+            }
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/sulfuric_acid_flowing");
+            }
+            @Override
+            public int getTintColor() { return 0xFF9DB500; }
+        }, ModFluids.SULFURIC_ACID_TYPE.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/nitric_acid_still");
+            }
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/nitric_acid_flowing");
+            }
+            @Override
+            public int getTintColor() { return 0xFFE8E800; }
+        }, ModFluids.NITRIC_ACID_TYPE.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/synthetic_rubber_still");
+            }
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/synthetic_rubber_flowing");
+            }
+            @Override
+            public int getTintColor() { return 0xFF2A2A2A; }
+        }, ModFluids.SYNTHETIC_RUBBER_TYPE.get());
     }
 }

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "firearms:block/weapon_rack" },
+    "facing=south": { "model": "firearms:block/weapon_rack", "y": 180 },
+    "facing=east":  { "model": "firearms:block/weapon_rack", "y": 270 },
+    "facing=west":  { "model": "firearms:block/weapon_rack", "y": 90 }
+  }
+}

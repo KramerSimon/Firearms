@@ -21,33 +21,32 @@ public class OilDerrickScreen extends AbstractContainerScreen<OilDerrickMenu> {
     @Override
     protected void renderBg(GuiGraphics gui, float partialTick, int mouseX, int mouseY) {
         gui.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
-        int maxEnergy = menu.getMaxEnergy();
-        if (maxEnergy > 0) {
-            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
-            gui.fill(leftPos + 10, topPos + 10 + 52 - barHeight, leftPos + 22, topPos + 10 + 52, 0xFFCC0000);
-        }
-
-        int maxFluid = menu.getMaxFluid();
-        if (maxFluid > 0) {
-            int barHeight = menu.getFluidAmount() * 52 / maxFluid;
-            gui.fill(leftPos + 152, topPos + 10 + 52 - barHeight, leftPos + 164, topPos + 10 + 52, 0xFF1A1A1A);
-        }
     }
 
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
-        renderTooltip(gui, mouseX, mouseY);
+
+        int maxEnergy = menu.getMaxEnergy();
+        if (maxEnergy > 0) {
+            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
+            gui.fill(leftPos + 7, topPos + 66 - barHeight, leftPos + 19, topPos + 66, 0xFFCC0000);
+        }
+
+        int maxFluid = menu.getMaxFluid();
+        if (maxFluid > 0) {
+            int barHeight = menu.getFluidAmount() * 52 / maxFluid;
+            gui.fill(leftPos + 150, topPos + 66 - barHeight, leftPos + 162, topPos + 66, 0xFF1A1A1A);
+        }
 
         String status = menu.isStructureValid() ? "Structure: Valid" : "Structure: Incomplete";
         int statusColor = menu.isStructureValid() ? 0x00AA00 : 0xAA0000;
-        gui.drawString(font, status, leftPos + 30, topPos + 15, statusColor, false);
+        gui.drawString(font, status, leftPos + 40, topPos + 80, statusColor, false);
+        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
+                leftPos + 7, topPos + 75, 0x404040, false);
+        gui.drawString(font, menu.getFluidAmount() + " / " + menu.getMaxFluid() + " mB",
+                leftPos + 120, topPos + 75, 0x404040, false);
 
-        String energyText = menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE";
-        gui.drawString(font, energyText, leftPos + 30, topPos + 30, 0x404040, false);
-
-        String fluidText = menu.getFluidAmount() + " / " + menu.getMaxFluid() + " mB";
-        gui.drawString(font, fluidText, leftPos + 30, topPos + 45, 0x404040, false);
+        renderTooltip(gui, mouseX, mouseY);
     }
 }

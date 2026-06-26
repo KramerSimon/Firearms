@@ -59,6 +59,7 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
     private IEnergyStorage getControllerEnergy(BlockEntity be) {
         if (be instanceof OilDerrickControllerBlockEntity derrick) return derrick.getEnergyStorage();
         if (be instanceof RefineryControllerBlockEntity refinery) return refinery.getEnergyStorage();
+        if (be instanceof EBFControllerBlockEntity ebf) return ebf.getEnergyStorage();
         return null;
     }
 
@@ -80,7 +81,9 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 visited.add(neighbor);
 
                 BlockEntity be = level.getBlockEntity(neighbor);
-                if (be instanceof OilDerrickControllerBlockEntity || be instanceof RefineryControllerBlockEntity) {
+                if (be instanceof OilDerrickControllerBlockEntity
+                        || be instanceof RefineryControllerBlockEntity
+                        || be instanceof EBFControllerBlockEntity) {
                     return neighbor;
                 }
 
@@ -100,6 +103,10 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || block == ModBlocks.REFINERY_WALL.get()
                 || block == ModBlocks.REFINERY_TOP.get()
                 || block == ModBlocks.REFINERY_CONTROLLER.get()
+                || block == ModBlocks.EBF_BASE.get()
+                || block == ModBlocks.EBF_WALL.get()
+                || block == ModBlocks.EBF_TOP.get()
+                || block == ModBlocks.EBF_CONTROLLER.get()
                 || block == ModBlocks.ENERGY_PORT.get()
                 || block == ModBlocks.FLUID_PORT.get();
     }

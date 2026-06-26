@@ -133,6 +133,9 @@ public class LatheBlockEntity extends EnergyStorageBlock implements MenuProvider
         if (primary.is(ModItems.STEEL_ROD.get()) && secondary.is(ModItems.RUBBER_SHEET.get())) {
             return new ItemStack(ModItems.BUFFER_TUBE.get());
         }
+        if (primary.is(ModItems.TUNGSTEN_INGOT.get()) && secondary.isEmpty()) {
+            return new ItemStack(ModItems.TUNGSTEN_ROD.get(), 2);
+        }
 
         return ItemStack.EMPTY;
     }
@@ -143,6 +146,7 @@ public class LatheBlockEntity extends EnergyStorageBlock implements MenuProvider
         if (primary.is(ModItems.HARDENED_STEEL_INGOT.get()) && secondary.is(ModItems.CARBON_STEEL.get())) return true;
         if (primary.is(ModItems.HARDENED_STEEL_INGOT.get()) && secondary.is(ModItems.STEEL_ROD.get())) return true;
         if (primary.is(ModItems.STEEL_ROD.get()) && secondary.is(ModItems.RUBBER_SHEET.get())) return true;
+        // tungsten_ingot → tungsten_rod: no secondary needed
         return false;
     }
 

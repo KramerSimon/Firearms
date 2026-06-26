@@ -1,6 +1,12 @@
 package com.sio.firearms.registry;
 
+import com.sio.firearms.screen.AcidBathScreen;
 import com.sio.firearms.screen.AssemblyBenchScreen;
+import com.sio.firearms.screen.ElectrolysisMachineScreen;
+import com.sio.firearms.screen.ChemicalMixerScreen;
+import com.sio.firearms.screen.WaterPumpScreen;
+import com.sio.firearms.screen.EBFScreen;
+import com.sio.firearms.screen.CokeOvenScreen;
 import com.sio.firearms.screen.AutoTurretScreen;
 import com.sio.firearms.screen.CoalGeneratorScreen;
 import com.sio.firearms.screen.FuelGeneratorScreen;
@@ -9,7 +15,6 @@ import com.sio.firearms.screen.RefineryScreen;
 import com.sio.firearms.screen.HeatTreatmentFurnaceScreen;
 import com.sio.firearms.screen.LatheScreen;
 import com.sio.firearms.screen.GunModificationTableScreen;
-import com.sio.firearms.screen.GunsmithTableScreen;
 import com.sio.firearms.screen.MetalPressScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,7 +26,6 @@ public class ModScreens {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(ModMenuTypes.GUNSMITH_TABLE_MENU.get(), GunsmithTableScreen::new);
         event.register(ModMenuTypes.METAL_PRESS_MENU.get(), MetalPressScreen::new);
         event.register(ModMenuTypes.GUN_MODIFICATION_TABLE_MENU.get(), GunModificationTableScreen::new);
         event.register(ModMenuTypes.COAL_GENERATOR_MENU.get(), CoalGeneratorScreen::new);
@@ -32,5 +36,11 @@ public class ModScreens {
         event.register(ModMenuTypes.OIL_DERRICK_MENU.get(), OilDerrickScreen::new);
         event.register(ModMenuTypes.REFINERY_MENU.get(), RefineryScreen::new);
         event.register(ModMenuTypes.AUTO_TURRET_MENU.get(), AutoTurretScreen::new);
+        event.register(ModMenuTypes.COKE_OVEN_MENU.get(), CokeOvenScreen::new);
+        event.register(ModMenuTypes.EBF_MENU.get(), EBFScreen::new);
+        event.register(ModMenuTypes.CHEMICAL_MIXER_MENU.get(), ChemicalMixerScreen::new);
+        event.register(ModMenuTypes.ACID_BATH_MENU.get(), AcidBathScreen::new);
+        event.register(ModMenuTypes.WATER_PUMP_MENU.get(), WaterPumpScreen::new);
+        event.register(ModMenuTypes.ELECTROLYSIS_MACHINE_MENU.get(), ElectrolysisMachineScreen::new);
     }
 }

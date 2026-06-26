@@ -3,6 +3,7 @@ package com.sio.firearms.client;
 import com.sio.firearms.Firearms;
 import com.sio.firearms.attachment.AttachmentType;
 import com.sio.firearms.keybind.ModKeybinds;
+import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModDataComponents;
 import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModItems;
@@ -26,6 +27,7 @@ public class ClientSetup {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.WEAPON_RACK.get(), WeaponRackRenderer::new);
         event.registerEntityRenderer(ModEntities.BULLET.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.GRENADE.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.SMOKE_GRENADE.get(), ThrownItemRenderer::new);

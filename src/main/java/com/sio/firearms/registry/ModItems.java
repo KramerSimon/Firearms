@@ -28,6 +28,12 @@ public class ModItems {
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Firearms.MOD_ID);
 
+    public static final DeferredItem<Item> COAL_COKE = ITEMS.registerSimpleItem("coal_coke");
+
+    public static final DeferredItem<Item> CREOSOTE_OIL_BUCKET = ITEMS.register("creosote_oil_bucket",
+            () -> new BucketItem(ModFluids.CREOSOTE_OIL_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
     public static final DeferredItem<Item> STEEL_INGOT = ITEMS.registerSimpleItem("steel_ingot");
     public static final DeferredItem<Item> GUN_BARREL = ITEMS.registerSimpleItem("gun_barrel");
     public static final DeferredItem<Item> GUN_GRIP = ITEMS.registerSimpleItem("gun_grip");
@@ -123,9 +129,87 @@ public class ModItems {
             () -> new NightVisionGogglesItem(ModArmorMaterials.NIGHT_VISION_GOGGLES,
                     new Item.Properties().stacksTo(1).durability(ArmorItem.Type.HELMET.getDurability(15))));
 
+    // ── New chemical items ───────────────────────────────────────────────────
+    public static final DeferredItem<Item> QUARTZ_SAND        = ITEMS.registerSimpleItem("quartz_sand");
+    public static final DeferredItem<Item> ETCHED_STEEL       = ITEMS.registerSimpleItem("etched_steel");
+    public static final DeferredItem<Item> ETCHED_COPPER      = ITEMS.registerSimpleItem("etched_copper");
+    public static final DeferredItem<Item> ETCHED_IRON        = ITEMS.registerSimpleItem("etched_iron");
+    public static final DeferredItem<Item> SYNTHETIC_RUBBER   = ITEMS.registerSimpleItem("synthetic_rubber");
+
+    public static final DeferredItem<Item> SULFURIC_ACID_BUCKET = ITEMS.register("sulfuric_acid_bucket",
+            () -> new BucketItem(ModFluids.SULFURIC_ACID_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<Item> NITRIC_ACID_BUCKET = ITEMS.register("nitric_acid_bucket",
+            () -> new BucketItem(ModFluids.NITRIC_ACID_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<Item> SYNTHETIC_RUBBER_BUCKET = ITEMS.register("synthetic_rubber_bucket",
+            () -> new BucketItem(ModFluids.SYNTHETIC_RUBBER_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<BlockItem> CHEMICAL_MIXER = ITEMS.registerSimpleBlockItem(ModBlocks.CHEMICAL_MIXER);
+    public static final DeferredItem<BlockItem> ACID_BATH      = ITEMS.registerSimpleBlockItem(ModBlocks.ACID_BATH);
+    public static final DeferredItem<BlockItem> WATER_PUMP     = ITEMS.registerSimpleBlockItem(ModBlocks.WATER_PUMP);
+
+    // ── Refined ammo ──────────────────────────────────────────────────────────
+    public static final DeferredItem<Item> REFINED_GUNPOWDER    = ITEMS.registerSimpleItem("refined_gunpowder");
+    public static final DeferredItem<Item> REFINED_BULLET       = ITEMS.registerSimpleItem("refined_bullet");
+
+    // ── New chemical items ────────────────────────────────────────────────────
+    public static final DeferredItem<Item> TUNGSTEN_ROD         = ITEMS.registerSimpleItem("tungsten_rod");
+    public static final DeferredItem<Item> ARMOR_PIERCING_BULLET = ITEMS.registerSimpleItem("armor_piercing_bullet");
+    public static final DeferredItem<Item> NITROCELLULOSE       = ITEMS.registerSimpleItem("nitrocellulose");
+
+    public static final DeferredItem<Item> HYDROGEN_GAS_BUCKET = ITEMS.register("hydrogen_gas_bucket",
+            () -> new BucketItem(ModFluids.HYDROGEN_GAS_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> OXYGEN_GAS_BUCKET = ITEMS.register("oxygen_gas_bucket",
+            () -> new BucketItem(ModFluids.OXYGEN_GAS_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> FLUORINE_GAS_BUCKET = ITEMS.register("fluorine_gas_bucket",
+            () -> new BucketItem(ModFluids.FLUORINE_GAS_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> CHLORINE_GAS_BUCKET = ITEMS.register("chlorine_gas_bucket",
+            () -> new BucketItem(ModFluids.CHLORINE_GAS_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> NITRATE_SOLUTION_BUCKET = ITEMS.register("nitrate_solution_bucket",
+            () -> new BucketItem(ModFluids.NITRATE_SOLUTION_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> PVC_RESIN_BUCKET = ITEMS.register("pvc_resin_bucket",
+            () -> new BucketItem(ModFluids.PVC_RESIN_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<BlockItem> ELECTROLYSIS_MACHINE = ITEMS.registerSimpleBlockItem(ModBlocks.ELECTROLYSIS_MACHINE);
+
+    // ── Ore drops & ingots ────────────────────────────────────────────────────
+    public static final DeferredItem<Item> SULFUR           = ITEMS.registerSimpleItem("sulfur");
+    public static final DeferredItem<Item> SALTPETER        = ITEMS.registerSimpleItem("saltpeter");
+    public static final DeferredItem<Item> TUNGSTEN_ORE_RAW = ITEMS.registerSimpleItem("tungsten_ore_raw");
+    public static final DeferredItem<Item> FLUORITE_CRYSTAL = ITEMS.registerSimpleItem("fluorite_crystal");
+    public static final DeferredItem<Item> URANIUM_ORE_RAW  = ITEMS.registerSimpleItem("uranium_ore_raw");
+    public static final DeferredItem<Item> TUNGSTEN_INGOT   = ITEMS.registerSimpleItem("tungsten_ingot");
+    public static final DeferredItem<Item> URANIUM_INGOT    = ITEMS.registerSimpleItem("uranium_ingot");
+
+    public static final DeferredItem<BlockItem> SULFUR_ORE    = ITEMS.registerSimpleBlockItem(ModBlocks.SULFUR_ORE);
+    public static final DeferredItem<BlockItem> SALTPETER_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.SALTPETER_ORE);
+    public static final DeferredItem<BlockItem> TUNGSTEN_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.TUNGSTEN_ORE);
+    public static final DeferredItem<BlockItem> FLUORITE_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.FLUORITE_ORE);
+    public static final DeferredItem<BlockItem> URANIUM_ORE   = ITEMS.registerSimpleBlockItem(ModBlocks.URANIUM_ORE);
+
+    public static final DeferredItem<BlockItem> EBF_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_BASE);
+    public static final DeferredItem<BlockItem> EBF_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_WALL);
+    public static final DeferredItem<BlockItem> EBF_TOP        = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_TOP);
+    public static final DeferredItem<BlockItem> EBF_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_CONTROLLER);
+
+    public static final DeferredItem<BlockItem> COKE_OVEN_BRICK  = ITEMS.registerSimpleBlockItem(ModBlocks.COKE_OVEN_BRICK);
+    public static final DeferredItem<BlockItem> COKE_OVEN_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.COKE_OVEN_CONTROLLER);
+
+    public static final DeferredItem<BlockItem> WEAPON_RACK = ITEMS.registerSimpleBlockItem(ModBlocks.WEAPON_RACK);
+    public static final DeferredItem<BlockItem> ITEM_PIPE   = ITEMS.registerSimpleBlockItem(ModBlocks.ITEM_PIPE);
+
     public static final DeferredItem<BlockItem> LAND_MINE = ITEMS.registerSimpleBlockItem(ModBlocks.LAND_MINE);
 
-    public static final DeferredItem<BlockItem> GUNSMITH_TABLE = ITEMS.registerSimpleBlockItem(ModBlocks.GUNSMITH_TABLE);
     public static final DeferredItem<BlockItem> METAL_PRESS = ITEMS.registerSimpleBlockItem(ModBlocks.METAL_PRESS);
     public static final DeferredItem<BlockItem> GUN_MODIFICATION_TABLE = ITEMS.registerSimpleBlockItem(ModBlocks.GUN_MODIFICATION_TABLE);
     public static final DeferredItem<BlockItem> COAL_GENERATOR = ITEMS.registerSimpleBlockItem(ModBlocks.COAL_GENERATOR);

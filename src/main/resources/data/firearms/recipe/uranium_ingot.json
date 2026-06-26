@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "firearms:uranium_ore_raw" },
+  "result": { "id": "firearms:uranium_ingot" },
+  "experience": 2.0,
+  "cookingtime": 400
+}

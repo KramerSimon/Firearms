@@ -25,22 +25,23 @@ public class AssemblyBenchScreen extends AbstractContainerScreen<AssemblyBenchMe
         int maxProgress = menu.getMaxProgress();
         if (maxProgress > 0 && menu.getProgress() > 0) {
             int arrowWidth = menu.getProgress() * 24 / maxProgress;
-            gui.blit(TEXTURE, leftPos + 80, topPos + 35, 176, 0, arrowWidth, 16);
-        }
-
-        int maxEnergy = menu.getMaxEnergy();
-        if (maxEnergy > 0) {
-            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
-            gui.fill(leftPos + 152, topPos + 10 + 52 - barHeight, leftPos + 164, topPos + 10 + 52, 0xFFCC0000);
+            gui.blit(TEXTURE, leftPos + 88, topPos + 35, 176, 0, arrowWidth, 16);
         }
     }
 
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
-        renderTooltip(gui, mouseX, mouseY);
 
-        String energyText = menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE";
-        gui.drawString(font, energyText, leftPos + 8, topPos + 66, 0x404040, false);
+        int maxEnergy = menu.getMaxEnergy();
+        if (maxEnergy > 0) {
+            int barH = menu.getEnergyStored() * 52 / maxEnergy;
+            gui.fill(leftPos + 152, topPos + 62 - barH, leftPos + 164, topPos + 62, 0xFFCC0000);
+        }
+
+        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
+                leftPos + 7, topPos + 75, 0x404040, false);
+
+        renderTooltip(gui, mouseX, mouseY);
     }
 }

@@ -4,8 +4,8 @@ import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.registry.ModDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -76,7 +76,11 @@ public class GunItem extends Item {
 
         setAmmo(stack, currentAmmo - 1);
 
-        BulletEntity bullet = new BulletEntity(level, player, damage);
+        boolean ap = Boolean.TRUE.equals(stack.get(ModDataComponents.ARMOR_PIERCING.get()));
+        boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
+        int actualDamage = ap ? 20 : (refined ? 10 : damage);
+        BulletEntity bullet = new BulletEntity(level, player, actualDamage);
+        bullet.setArmorPiercing(ap);
         bullet.setShooterGun(stack);
         bullet.setPos(player.getEyePosition());
         bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 0.0F);
@@ -84,8 +88,9 @@ public class GunItem extends Item {
 
         level.playSound(null, player.blockPosition(), soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-        if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
-            stack.hurtAndBreak(1, serverLevel, serverPlayer, item -> {});
+        if (player instanceof ServerPlayer serverPlayer) {
+            stack.hurtAndBreak(1, serverPlayer.serverLevel(), serverPlayer,
+                    item -> serverPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND));
         }
 
         player.getCooldowns().addCooldown(this, fireRate);
@@ -93,8 +98,13 @@ public class GunItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
         tooltipComponents.add(Component.literal("Damage: ").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(String.valueOf(damage)).withStyle(ChatFormatting.WHITE)));
+        if (refined) {
+            tooltipComponents.add(Component.literal("Ammo: ").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("Refined (+2 dmg)").withStyle(ChatFormatting.AQUA)));
+        }
         tooltipComponents.add(Component.literal("Fire Rate: ").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(fireRate + " ticks").withStyle(ChatFormatting.WHITE)));
         tooltipComponents.add(Component.literal("Ammo: ").withStyle(ChatFormatting.GRAY)

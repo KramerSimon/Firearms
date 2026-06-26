@@ -1,0 +1,67 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 3.0, "max": 6.0 },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firearms:bullet",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "type": "minecraft:uniform", "min": 10.0, "max": 64.0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 },
+      "entries": [
+        { "type": "minecraft:item", "name": "firearms:pistol", "weight": 1 },
+        { "type": "minecraft:item", "name": "firearms:rifle", "weight": 1 },
+        { "type": "minecraft:item", "name": "firearms:shotgun", "weight": 1 }
+      ]
+    },
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 0.0, "max": 1.0 },
+      "entries": [
+        { "type": "minecraft:item", "name": "firearms:bulletproof_vest" }
+      ]
+    },
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 2.0, "max": 4.0 },
+      "entries": [
+        { "type": "minecraft:item", "name": "firearms:bandage" }
+      ]
+    },
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 0.0, "max": 1.0 },
+      "entries": [
+        { "type": "minecraft:item", "name": "firearms:night_vision_goggles" }
+      ]
+    },
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 1.0, "max": 3.0 },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firearms:steel_ingot",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "type": "minecraft:uniform", "min": 4.0, "max": 16.0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 0.0, "max": 1.0 },
+      "entries": [
+        { "type": "minecraft:item", "name": "firearms:grenade" }
+      ]
+    }
+  ]
+}

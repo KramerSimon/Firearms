@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FIF",
+    "IFI"
+  ],
+  "key": {
+    "F": { "item": "firearms:steel_ingot" },
+    "I": { "item": "minecraft:iron_nugget" }
+  },
+  "result": { "id": "firearms:item_pipe", "count": 6 }
+}

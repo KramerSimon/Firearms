@@ -29,17 +29,20 @@ public class AssemblyBenchJeiRecipe {
                 createGunBarrelRecipe(),
                 createTriggerAssemblyRecipe(),
                 createPistolRecipe(),
-                createRifleRecipe(),
                 createShotgunRecipe(),
+                createRifleRecipe(),
+                createSMGRecipe(),
                 createSniperRifleRecipe(),
-                createSMGRecipe()
+                createAPBulletRecipe(),
+                createRefinedBulletRecipe()
         );
     }
 
-    private static AssemblyBenchJeiRecipe of(ItemStack[] slots, ItemStack output) {
-        NonNullList<ItemStack> inputs = NonNullList.withSize(6, ItemStack.EMPTY);
-        for (int i = 0; i < slots.length && i < 6; i++) {
-            inputs.set(i, slots[i]);
+    /** Fill a 9-slot list; extra slots remain empty. */
+    private static AssemblyBenchJeiRecipe of(ItemStack[] items, ItemStack output) {
+        NonNullList<ItemStack> inputs = NonNullList.withSize(9, ItemStack.EMPTY);
+        for (int i = 0; i < items.length && i < 9; i++) {
+            inputs.set(i, items[i]);
         }
         return new AssemblyBenchJeiRecipe(inputs, output);
     }
@@ -69,6 +72,15 @@ public class AssemblyBenchJeiRecipe {
         }, new ItemStack(ModItems.PISTOL.get()));
     }
 
+    private static AssemblyBenchJeiRecipe createShotgunRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.GUN_BARREL.get(), 2),
+                new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()),
+                new ItemStack(ModItems.GUN_GRIP.get()),
+                new ItemStack(ModItems.MAGAZINE.get())
+        }, new ItemStack(ModItems.SHOTGUN.get()));
+    }
+
     private static AssemblyBenchJeiRecipe createRifleRecipe() {
         return of(new ItemStack[]{
                 new ItemStack(ModItems.GUN_BARREL.get()),
@@ -80,13 +92,15 @@ public class AssemblyBenchJeiRecipe {
         }, new ItemStack(ModItems.RIFLE.get()));
     }
 
-    private static AssemblyBenchJeiRecipe createShotgunRecipe() {
+    private static AssemblyBenchJeiRecipe createSMGRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.GUN_BARREL.get(), 2),
-                new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()),
+                new ItemStack(ModItems.GUN_BARREL.get()),
+                new ItemStack(ModItems.ELECTRONIC_TRIGGER.get()),
                 new ItemStack(ModItems.GUN_GRIP.get()),
-                new ItemStack(ModItems.MAGAZINE.get())
-        }, new ItemStack(ModItems.SHOTGUN.get()));
+                new ItemStack(ModItems.MAGAZINE.get()),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.BUFFER_TUBE.get())
+        }, new ItemStack(ModItems.SMG.get()));
     }
 
     private static AssemblyBenchJeiRecipe createSniperRifleRecipe() {
@@ -100,14 +114,18 @@ public class AssemblyBenchJeiRecipe {
         }, new ItemStack(ModItems.SNIPER_RIFLE.get()));
     }
 
-    private static AssemblyBenchJeiRecipe createSMGRecipe() {
+    private static AssemblyBenchJeiRecipe createAPBulletRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.GUN_BARREL.get()),
-                new ItemStack(ModItems.ELECTRONIC_TRIGGER.get()),
-                new ItemStack(ModItems.GUN_GRIP.get()),
-                new ItemStack(ModItems.MAGAZINE.get()),
-                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
-                new ItemStack(ModItems.BUFFER_TUBE.get())
-        }, new ItemStack(ModItems.SMG.get()));
+                new ItemStack(ModItems.TUNGSTEN_ROD.get()),
+                new ItemStack(ModItems.BULLET_CASING.get()),
+                new ItemStack(ModItems.PROPELLANT_POWDER.get())
+        }, new ItemStack(ModItems.ARMOR_PIERCING_BULLET.get(), 4));
+    }
+
+    private static AssemblyBenchJeiRecipe createRefinedBulletRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.BULLET_CASING.get()),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get())
+        }, new ItemStack(ModItems.REFINED_BULLET.get(), 8));
     }
 }

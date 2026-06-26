@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SIS",
+    "PIS"
+  ],
+  "key": {
+    "S": { "item": "minecraft:stick" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "P": { "item": "minecraft:oak_planks" }
+  },
+  "result": { "id": "firearms:weapon_rack", "count": 2 }
+}

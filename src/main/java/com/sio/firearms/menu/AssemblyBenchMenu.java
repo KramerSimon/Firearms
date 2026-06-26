@@ -16,7 +16,7 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public AssemblyBenchMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new ItemStackHandler(7), new SimpleContainerData(4));
+        this(containerId, playerInventory, new ItemStackHandler(10), new SimpleContainerData(4));
     }
 
     public AssemblyBenchMenu(int containerId, Inventory playerInventory,
@@ -24,25 +24,29 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
         super(ModMenuTypes.ASSEMBLY_BENCH_MENU.get(), containerId);
         this.data = data;
 
+        // 3x3 input grid — slots 0-8
         for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 2; col++) {
-                addSlot(new SlotItemHandler(handler, row * 2 + col, 30 + col * 18, 17 + row * 18));
+            for (int col = 0; col < 3; col++) {
+                addSlot(new SlotItemHandler(handler, row * 3 + col, 29 + col * 18, 17 + row * 18));
             }
         }
 
-        addSlot(new SlotItemHandler(handler, 6, 124, 35) {
+        // Output slot — slot 9
+        addSlot(new SlotItemHandler(handler, 9, 116, 35) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
             }
         });
 
+        // Player inventory
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
 
+        // Hotbar
         for (int col = 0; col < 9; col++) {
             addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
         }
@@ -50,21 +54,10 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
-    public int getEnergyStored() {
-        return data.get(0);
-    }
-
-    public int getMaxEnergy() {
-        return data.get(1);
-    }
-
-    public int getProgress() {
-        return data.get(2);
-    }
-
-    public int getMaxProgress() {
-        return data.get(3);
-    }
+    public int getEnergyStored() { return data.get(0); }
+    public int getMaxEnergy()    { return data.get(1); }
+    public int getProgress()     { return data.get(2); }
+    public int getMaxProgress()  { return data.get(3); }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {

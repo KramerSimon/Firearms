@@ -21,27 +21,23 @@ public class AutoTurretScreen extends AbstractContainerScreen<AutoTurretMenu> {
     @Override
     protected void renderBg(GuiGraphics gui, float partialTick, int mouseX, int mouseY) {
         gui.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
-        int maxEnergy = menu.getMaxEnergy();
-        if (maxEnergy > 0) {
-            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
-            gui.fill(leftPos + 152, topPos + 10 + 52 - barHeight, leftPos + 164, topPos + 10 + 52, 0xFFCC0000);
-        }
     }
 
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
-        renderTooltip(gui, mouseX, mouseY);
 
-        String energyText = menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE";
-        gui.drawString(font, energyText, leftPos + 8, topPos + 66, 0x404040, false);
-
-        String ammoText = "Ammo: " + menu.getAmmoCount();
-        gui.drawString(font, ammoText, leftPos + 8, topPos + 56, 0x404040, false);
+        int maxEnergy = menu.getMaxEnergy();
+        if (maxEnergy > 0) {
+            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
+            gui.fill(leftPos + 150, topPos + 66 - barHeight, leftPos + 162, topPos + 66, 0xFFCC0000);
+        }
 
         String status = menu.isActive() ? "Active" : "Inactive";
         int statusColor = menu.isActive() ? 0x00AA00 : 0xAA0000;
-        gui.drawString(font, status, leftPos + 110, topPos + 56, statusColor, false);
+        gui.drawString(font, status, leftPos + 40, topPos + 40, statusColor, false);
+        gui.drawString(font, "Ammo: " + menu.getAmmoCount(), leftPos + 40, topPos + 55, 0x404040, false);
+
+        renderTooltip(gui, mouseX, mouseY);
     }
 }

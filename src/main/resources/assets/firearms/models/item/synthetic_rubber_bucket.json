@@ -1,0 +1,4 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "firearms:synthetic_rubber_still"
+}

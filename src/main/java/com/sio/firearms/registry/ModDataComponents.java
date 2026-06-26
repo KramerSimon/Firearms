@@ -48,4 +48,16 @@ public class ModDataComponents {
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.INT)
                     .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ARMOR_PIERCING =
+            DATA_COMPONENTS.register("armor_piercing", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> USING_REFINED_AMMO =
+            DATA_COMPONENTS.register("using_refined_ammo", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
 }

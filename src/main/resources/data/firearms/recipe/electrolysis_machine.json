@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CSC",
+    "WHW",
+    "CSC"
+  ],
+  "key": {
+    "C": { "item": "firearms:circuit_board" },
+    "S": { "item": "firearms:steel_ingot" },
+    "W": { "item": "firearms:copper_wire" },
+    "H": { "item": "firearms:hardened_steel_ingot" }
+  },
+  "result": { "id": "firearms:electrolysis_machine", "count": 1 }
+}

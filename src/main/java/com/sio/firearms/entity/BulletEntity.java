@@ -35,6 +35,7 @@ public class BulletEntity extends Projectile implements ItemSupplier {
     private float damage = 8.0F;
     private int life = 0;
     private int piercingCount = 0;
+    private boolean armorPiercing = false;
     private final Set<UUID> playersFlybyPlayed = new HashSet<>();
     private final Set<UUID> piercedEntities = new HashSet<>();
     private ItemStack shooterGun = ItemStack.EMPTY;
@@ -53,6 +54,10 @@ public class BulletEntity extends Projectile implements ItemSupplier {
 
     public void setDamage(float damage) {
         this.damage = damage;
+    }
+
+    public void setArmorPiercing(boolean ap) {
+        this.armorPiercing = ap;
     }
 
     public void setShooterGun(ItemStack gun) {
@@ -115,7 +120,7 @@ public class BulletEntity extends Projectile implements ItemSupplier {
         if (!level().isClientSide()) {
             Entity target = result.getEntity();
             Entity owner = getOwner();
-            DamageSource source = damageSources().thrown(this, owner);
+            DamageSource source = armorPiercing ? damageSources().magic() : damageSources().thrown(this, owner);
             target.hurt(source, damage);
 
             if (target instanceof LivingEntity living) {
@@ -125,7 +130,7 @@ public class BulletEntity extends Projectile implements ItemSupplier {
                 }
 
                 boolean wearingVest = living.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof BulletproofVestItem;
-                if (!wearingVest) {
+                if (!wearingVest || armorPiercing) {
                     MobEffectInstance existing = living.getEffect(ModEffects.BLEEDING);
                     int amplifier = (existing != null) ? Math.min(existing.getAmplifier() + 1, 2) : 0;
                     living.addEffect(new MobEffectInstance(ModEffects.BLEEDING, 200, amplifier));

@@ -89,7 +89,7 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         public FluidStack drain(int maxDrain, FluidAction action) { return fuelTank.drain(maxDrain, action); }
     };
 
-    private final ItemStackHandler inventory = new ItemStackHandler(4) {
+    private final ItemStackHandler inventory = new ItemStackHandler(5) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -97,6 +97,7 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
     };
 
     private int progress = 0;
+    private int cycleCount = 0;
     private boolean structureValid = false;
     private BlockPos structureCenter = null;
 
@@ -271,6 +272,10 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
 
                 tryOutputFuelBucket();
                 tryOutputRubber();
+                cycleCount++;
+                if (cycleCount % 5 == 0) {
+                    tryOutputGunOil();
+                }
 
                 progress = 0;
             }
@@ -323,6 +328,15 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         }
     }
 
+    private void tryOutputGunOil() {
+        ItemStack oilSlot = inventory.getStackInSlot(4);
+        if (oilSlot.isEmpty()) {
+            inventory.setStackInSlot(4, new ItemStack(ModItems.GUN_OIL.get()));
+        } else if (oilSlot.is(ModItems.GUN_OIL.get()) && oilSlot.getCount() < oilSlot.getMaxStackSize()) {
+            oilSlot.grow(1);
+        }
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
@@ -331,6 +345,7 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         tag.put("FuelTank", fuelTank.writeToNBT(registries, new CompoundTag()));
         tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putInt("Progress", progress);
+        tag.putInt("CycleCount", cycleCount);
         tag.putBoolean("StructureValid", structureValid);
     }
 
@@ -342,6 +357,7 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         if (tag.contains("FuelTank")) fuelTank.readFromNBT(registries, tag.getCompound("FuelTank"));
         if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         progress = tag.getInt("Progress");
+        cycleCount = tag.getInt("CycleCount");
         structureValid = tag.getBoolean("StructureValid");
     }
 }

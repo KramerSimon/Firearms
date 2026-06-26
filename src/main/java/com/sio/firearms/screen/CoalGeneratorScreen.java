@@ -25,22 +25,23 @@ public class CoalGeneratorScreen extends AbstractContainerScreen<CoalGeneratorMe
         int maxBurn = menu.getMaxBurnTime();
         if (maxBurn > 0) {
             int burnProgress = menu.getBurnTime() * 14 / maxBurn;
-            gui.blit(TEXTURE, leftPos + 56, topPos + 36 + 14 - burnProgress, 176, 14 - burnProgress, 14, burnProgress);
-        }
-
-        int maxEnergy = menu.getMaxEnergy();
-        if (maxEnergy > 0) {
-            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
-            gui.fill(leftPos + 152, topPos + 10 + 52 - barHeight, leftPos + 164, topPos + 10 + 52, 0xFFCC0000);
+            gui.blit(TEXTURE, leftPos + 79, topPos + 34 + 14 - burnProgress, 176, 14 - burnProgress, 14, burnProgress);
         }
     }
 
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
-        renderTooltip(gui, mouseX, mouseY);
 
-        String energyText = menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE";
-        gui.drawString(font, energyText, leftPos + 8, topPos + 66, 0x404040, false);
+        int maxEnergy = menu.getMaxEnergy();
+        if (maxEnergy > 0) {
+            int barHeight = menu.getEnergyStored() * 52 / maxEnergy;
+            gui.fill(leftPos + 150, topPos + 66 - barHeight, leftPos + 162, topPos + 66, 0xFFCC0000);
+        }
+
+        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
+                leftPos + 7, topPos + 75, 0x404040, false);
+
+        renderTooltip(gui, mouseX, mouseY);
     }
 }

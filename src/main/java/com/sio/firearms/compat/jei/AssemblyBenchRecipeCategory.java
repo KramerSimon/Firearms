@@ -24,8 +24,10 @@ public class AssemblyBenchRecipeCategory implements IRecipeCategory<AssemblyBenc
     private final Component title;
 
     public AssemblyBenchRecipeCategory(IGuiHelper guiHelper) {
+        // Crop the GUI texture to show the 3x3 input grid, arrow, and output slot.
+        // Grid starts at (29,17), output at (116,35); background starts at (20,8) to capture everything.
         ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "textures/gui/assembly_bench.png");
-        this.background = guiHelper.createDrawable(texture, 20, 10, 140, 60);
+        this.background = guiHelper.createDrawable(texture, 20, 8, 120, 68);
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ASSEMBLY_BENCH.get()));
         this.title = Component.translatable("block.firearms.assembly_bench");
     }
@@ -47,26 +49,28 @@ public class AssemblyBenchRecipeCategory implements IRecipeCategory<AssemblyBenc
 
     @Override
     public int getWidth() {
-        return 140;
+        return 120;
     }
 
     @Override
     public int getHeight() {
-        return 60;
+        return 68;
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AssemblyBenchJeiRecipe recipe, IFocusGroup focuses) {
+        // Input slots: 3x3 grid. Texture grid starts at (29,17); background origin is (20,8).
         for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 2; col++) {
-                int index = row * 2 + col;
+            for (int col = 0; col < 3; col++) {
+                int index = row * 3 + col;
                 ItemStack input = recipe.getInputs().get(index);
-                builder.addSlot(RecipeIngredientRole.INPUT, 10 + col * 18, 3 + row * 18)
+                builder.addSlot(RecipeIngredientRole.INPUT, 9 + col * 18, 9 + row * 18)
                         .addItemStack(input);
             }
         }
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 21)
+        // Output slot: texture at (116,35); JEI relative = (96, 27)
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 27)
                 .addItemStack(recipe.getOutput());
     }
 }

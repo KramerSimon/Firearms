@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "S",
-    "O",
-    "T"
+    " S ",
+    "OGO",
+    " S "
   ],
   "key": {
-    "S": {"item": "firearms:spring"},
-    "O": {"item": "firearms:gun_oil"},
-    "T": {"item": "minecraft:string"}
+    "S": {"item": "minecraft:string"},
+    "O": {"item": "firearms:spring"},
+    "G": {"item": "firearms:gun_oil"}
   },
   "result": {
     "id": "firearms:cleaning_kit",
-    "count": 4
+    "count": 2
   }
 }

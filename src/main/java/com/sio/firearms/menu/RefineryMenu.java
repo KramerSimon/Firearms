@@ -17,7 +17,7 @@ public class RefineryMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public RefineryMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new ItemStackHandler(4), new SimpleContainerData(7));
+        this(containerId, playerInventory, new ItemStackHandler(5), new SimpleContainerData(7));
     }
 
     public RefineryMenu(int containerId, Inventory playerInventory,
@@ -39,7 +39,7 @@ public class RefineryMenu extends AbstractContainerMenu {
             }
         });
 
-        addSlot(new SlotItemHandler(handler, 2, 130, 20) {
+        addSlot(new SlotItemHandler(handler, 2, 130, 14) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -47,6 +47,13 @@ public class RefineryMenu extends AbstractContainerMenu {
         });
 
         addSlot(new SlotItemHandler(handler, 3, 130, 50) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return false;
+            }
+        });
+
+        addSlot(new SlotItemHandler(handler, 4, 130, 32) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;

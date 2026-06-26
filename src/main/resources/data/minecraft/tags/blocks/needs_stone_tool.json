@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "firearms:sulfur_ore",
+    "firearms:saltpeter_ore"
+  ]
+}

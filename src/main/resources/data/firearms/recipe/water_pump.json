@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WCW",
+    "SXS",
+    "HHH"
+  ],
+  "key": {
+    "W": { "item": "firearms:copper_wire" },
+    "C": { "item": "firearms:circuit_board" },
+    "S": { "item": "firearms:steel_ingot" },
+    "X": { "item": "minecraft:iron_bars" },
+    "H": { "item": "firearms:hardened_steel_ingot" }
+  },
+  "result": { "id": "firearms:water_pump", "count": 1 }
+}

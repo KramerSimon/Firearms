@@ -1,11 +1,13 @@
 package com.sio.firearms.block;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.energy.EnergyStorageBlock;
 import com.sio.firearms.menu.AssemblyBenchMenu;
 import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -16,15 +18,28 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.slf4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements MenuProvider {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final int CAPACITY = 50_000;
     private static final int MAX_RECEIVE = 500;
     private static final int FE_PER_TICK = 100;
     private static final int PROCESS_TIME = 300;
 
-    private final ItemStackHandler inventory = new ItemStackHandler(7) {
+    // slots 0-8: input grid (3x3), slot 9: output
+    private final ItemStackHandler inventory = new ItemStackHandler(10) {
+        @Override
+        public void setSize(int size) {
+            // Never resize — old world saves may have "Size":7; keep fixed at 10.
+            super.setSize(10);
+        }
+
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -74,28 +89,178 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         return new AssemblyBenchMenu(containerId, playerInventory, inventory, data);
     }
 
+    // ── Recipe system ────────────────────────────────────────────────────────
+
+    private Map<String, Integer> getInputMap() {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < 9; i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            String key = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            map.merge(key, stack.getCount(), Integer::sum);
+        }
+        return map;
+    }
+
+    private boolean containsItem(Map<String, Integer> inputs, String id, int count) {
+        return inputs.getOrDefault(id, 0) >= count;
+    }
+
+    private record RecipeMatch(ItemStack result, Map<String, Integer> consume) {}
+
+    private RecipeMatch findRecipe() {
+        Map<String, Integer> in = getInputMap();
+        int total = in.values().stream().mapToInt(Integer::intValue).sum();
+
+        if (LOGGER.isDebugEnabled() && !in.isEmpty()) {
+            LOGGER.debug("[AssemblyBench] findRecipe input={} total={}", in, total);
+        }
+
+        // Gun Barrel: gun_barrel_blank + steel_rod x2
+        if (total == 3
+                && containsItem(in, "firearms:gun_barrel_blank", 1)
+                && containsItem(in, "firearms:steel_rod", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.GUN_BARREL.get()),
+                    Map.of("firearms:gun_barrel_blank", 1, "firearms:steel_rod", 2));
+        }
+
+        // Trigger Assembly: firing_mechanism + firing_pin + spring
+        if (total == 3
+                && containsItem(in, "firearms:firing_mechanism", 1)
+                && containsItem(in, "firearms:firing_pin", 1)
+                && containsItem(in, "firearms:spring", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()),
+                    Map.of("firearms:firing_mechanism", 1, "firearms:firing_pin", 1, "firearms:spring", 1));
+        }
+
+        // Pistol: gun_barrel + trigger_assembly + gun_grip + magazine + spring
+        if (total == 5
+                && containsItem(in, "firearms:gun_barrel", 1)
+                && containsItem(in, "firearms:trigger_assembly", 1)
+                && containsItem(in, "firearms:gun_grip", 1)
+                && containsItem(in, "firearms:magazine", 1)
+                && containsItem(in, "firearms:spring", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()),
+                    Map.of("firearms:gun_barrel", 1, "firearms:trigger_assembly", 1,
+                            "firearms:gun_grip", 1, "firearms:magazine", 1, "firearms:spring", 1));
+        }
+
+        // Shotgun: gun_barrel x2 + trigger_assembly + gun_grip + magazine
+        if (total == 5
+                && containsItem(in, "firearms:gun_barrel", 2)
+                && containsItem(in, "firearms:trigger_assembly", 1)
+                && containsItem(in, "firearms:gun_grip", 1)
+                && containsItem(in, "firearms:magazine", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()),
+                    Map.of("firearms:gun_barrel", 2, "firearms:trigger_assembly", 1,
+                            "firearms:gun_grip", 1, "firearms:magazine", 1));
+        }
+
+        // Rifle: gun_barrel + trigger_assembly + gun_grip + magazine + bolt + buffer_tube
+        if (total == 6
+                && containsItem(in, "firearms:gun_barrel", 1)
+                && containsItem(in, "firearms:trigger_assembly", 1)
+                && containsItem(in, "firearms:gun_grip", 1)
+                && containsItem(in, "firearms:magazine", 1)
+                && containsItem(in, "firearms:bolt", 1)
+                && containsItem(in, "firearms:buffer_tube", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.RIFLE.get()),
+                    Map.of("firearms:gun_barrel", 1, "firearms:trigger_assembly", 1,
+                            "firearms:gun_grip", 1, "firearms:magazine", 1,
+                            "firearms:bolt", 1, "firearms:buffer_tube", 1));
+        }
+
+        // SMG: gun_barrel + electronic_trigger + gun_grip + magazine + circuit_board + buffer_tube
+        if (total == 6
+                && containsItem(in, "firearms:gun_barrel", 1)
+                && containsItem(in, "firearms:electronic_trigger", 1)
+                && containsItem(in, "firearms:gun_grip", 1)
+                && containsItem(in, "firearms:magazine", 1)
+                && containsItem(in, "firearms:circuit_board", 1)
+                && containsItem(in, "firearms:buffer_tube", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.SMG.get()),
+                    Map.of("firearms:gun_barrel", 1, "firearms:electronic_trigger", 1,
+                            "firearms:gun_grip", 1, "firearms:magazine", 1,
+                            "firearms:circuit_board", 1, "firearms:buffer_tube", 1));
+        }
+
+        // Sniper Rifle: gun_barrel + trigger_assembly + gun_grip + magazine + steel_rod x2 + firing_pin
+        if (total == 7
+                && containsItem(in, "firearms:gun_barrel", 1)
+                && containsItem(in, "firearms:trigger_assembly", 1)
+                && containsItem(in, "firearms:gun_grip", 1)
+                && containsItem(in, "firearms:magazine", 1)
+                && containsItem(in, "firearms:steel_rod", 2)
+                && containsItem(in, "firearms:firing_pin", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.SNIPER_RIFLE.get()),
+                    Map.of("firearms:gun_barrel", 1, "firearms:trigger_assembly", 1,
+                            "firearms:gun_grip", 1, "firearms:magazine", 1,
+                            "firearms:steel_rod", 2, "firearms:firing_pin", 1));
+        }
+
+        // Refined Bullet: bullet_casing + refined_gunpowder → 8x refined_bullet
+        // Uses in.size()==2 (exactly 2 distinct item types) instead of total==2 so that stacks
+        // larger than 1 (e.g. 4x refined_gunpowder from the Chemical Mixer) still match.
+        // Item IDs: "firearms:bullet_casing", "firearms:refined_gunpowder" — must match exactly.
+        if (in.size() == 2
+                && containsItem(in, "firearms:bullet_casing", 1)
+                && containsItem(in, "firearms:refined_gunpowder", 1)) {
+            LOGGER.debug("[AssemblyBench] refined_bullet recipe matched: input={}", in);
+            return new RecipeMatch(new ItemStack(ModItems.REFINED_BULLET.get(), 8),
+                    Map.of("firearms:bullet_casing", 1, "firearms:refined_gunpowder", 1));
+        }
+
+        // AP Bullet: tungsten_rod + bullet_casing + propellant_powder → 4x armor_piercing_bullet
+        if (total == 3
+                && containsItem(in, "firearms:tungsten_rod", 1)
+                && containsItem(in, "firearms:bullet_casing", 1)
+                && containsItem(in, "firearms:propellant_powder", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.ARMOR_PIERCING_BULLET.get(), 4),
+                    Map.of("firearms:tungsten_rod", 1, "firearms:bullet_casing", 1,
+                            "firearms:propellant_powder", 1));
+        }
+
+        return null;
+    }
+
+    private void consumeIngredients(Map<String, Integer> toConsume) {
+        Map<String, Integer> remaining = new HashMap<>(toConsume);
+        for (int i = 0; i < 9; i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            String key = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            int need = remaining.getOrDefault(key, 0);
+            if (need <= 0) continue;
+            int take = Math.min(need, stack.getCount());
+            stack.shrink(take);
+            remaining.put(key, need - take);
+        }
+    }
+
+    private boolean canOutput(ItemStack current, ItemStack result) {
+        if (current.isEmpty()) return true;
+        if (!ItemStack.isSameItemSameComponents(current, result)) return false;
+        return current.getCount() + result.getCount() <= current.getMaxStackSize();
+    }
+
     public void serverTick() {
         if (level == null) return;
         boolean changed = false;
 
-        ItemStack output = inventory.getStackInSlot(6);
+        ItemStack output = inventory.getStackInSlot(9);
         RecipeMatch recipe = findRecipe();
 
-        if (recipe != null && energy.getEnergyStored() >= FE_PER_TICK && canOutput(output, recipe.result)) {
+        if (recipe != null && energy.getEnergyStored() >= FE_PER_TICK && canOutput(output, recipe.result())) {
             energy.extractEnergy(FE_PER_TICK, false);
             progress++;
             changed = true;
 
             if (progress >= PROCESS_TIME) {
-                for (int i = 0; i < recipe.consume.length; i++) {
-                    if (recipe.consume[i] > 0) {
-                        inventory.getStackInSlot(i).shrink(recipe.consume[i]);
-                    }
-                }
+                consumeIngredients(recipe.consume());
                 if (output.isEmpty()) {
-                    inventory.setStackInSlot(6, recipe.result.copy());
+                    inventory.setStackInSlot(9, recipe.result().copy());
                 } else {
-                    output.grow(recipe.result.getCount());
+                    output.grow(recipe.result().getCount());
                 }
                 progress = 0;
             }
@@ -105,78 +270,6 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         if (changed) setChanged();
-    }
-
-    private record RecipeMatch(ItemStack result, int[] consume) {}
-
-    private boolean slotIs(int slot, net.neoforged.neoforge.registries.DeferredItem<?> item) {
-        return inventory.getStackInSlot(slot).is(item.get());
-    }
-
-    private boolean slotIs(int slot, net.neoforged.neoforge.registries.DeferredItem<?> item, int minCount) {
-        ItemStack stack = inventory.getStackInSlot(slot);
-        return stack.is(item.get()) && stack.getCount() >= minCount;
-    }
-
-    private boolean slotEmpty(int slot) {
-        return inventory.getStackInSlot(slot).isEmpty();
-    }
-
-    private RecipeMatch findRecipe() {
-        // gun_barrel_blank + steel_rod x2 → gun_barrel
-        if (slotIs(0, ModItems.GUN_BARREL_BLANK) && slotIs(1, ModItems.STEEL_ROD, 2)
-                && slotEmpty(2) && slotEmpty(3) && slotEmpty(4) && slotEmpty(5)) {
-            return new RecipeMatch(new ItemStack(ModItems.GUN_BARREL.get()), new int[]{1, 2, 0, 0, 0, 0});
-        }
-
-        // firing_mechanism + firing_pin + spring → trigger_assembly
-        if (slotIs(0, ModItems.FIRING_MECHANISM) && slotIs(1, ModItems.FIRING_PIN) && slotIs(2, ModItems.SPRING)
-                && slotEmpty(3) && slotEmpty(4) && slotEmpty(5)) {
-            return new RecipeMatch(new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()), new int[]{1, 1, 1, 0, 0, 0});
-        }
-
-        // gun_barrel + trigger_assembly + gun_grip + magazine + spring → pistol
-        if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
-                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotIs(4, ModItems.SPRING) && slotEmpty(5)) {
-            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()), new int[]{1, 1, 1, 1, 1, 0});
-        }
-
-        // gun_barrel + trigger_assembly + gun_grip + magazine + bolt + buffer_tube → rifle
-        if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
-                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotIs(4, ModItems.BOLT) && slotIs(5, ModItems.BUFFER_TUBE)) {
-            return new RecipeMatch(new ItemStack(ModItems.RIFLE.get()), new int[]{1, 1, 1, 1, 1, 1});
-        }
-
-        // gun_barrel x2 + trigger_assembly + gun_grip + magazine → shotgun
-        if (slotIs(0, ModItems.GUN_BARREL, 2) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
-                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotEmpty(4) && slotEmpty(5)) {
-            return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()), new int[]{2, 1, 1, 1, 0, 0});
-        }
-
-        // gun_barrel + trigger_assembly + gun_grip + magazine + steel_rod x2 + firing_pin → sniper_rifle
-        if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.TRIGGER_ASSEMBLY)
-                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotIs(4, ModItems.STEEL_ROD, 2) && slotIs(5, ModItems.FIRING_PIN)) {
-            return new RecipeMatch(new ItemStack(ModItems.SNIPER_RIFLE.get()), new int[]{1, 1, 1, 1, 2, 1});
-        }
-
-        // gun_barrel + electronic_trigger + gun_grip + magazine + circuit_board + buffer_tube → smg
-        if (slotIs(0, ModItems.GUN_BARREL) && slotIs(1, ModItems.ELECTRONIC_TRIGGER)
-                && slotIs(2, ModItems.GUN_GRIP) && slotIs(3, ModItems.MAGAZINE)
-                && slotIs(4, ModItems.CIRCUIT_BOARD) && slotIs(5, ModItems.BUFFER_TUBE)) {
-            return new RecipeMatch(new ItemStack(ModItems.SMG.get()), new int[]{1, 1, 1, 1, 1, 1});
-        }
-
-        return null;
-    }
-
-    private boolean canOutput(ItemStack current, ItemStack result) {
-        if (current.isEmpty()) return true;
-        if (!ItemStack.isSameItemSameComponents(current, result)) return false;
-        return current.getCount() + result.getCount() <= current.getMaxStackSize();
     }
 
     @Override

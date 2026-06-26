@@ -1,0 +1,4 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "firearms:sulfuric_acid_still"
+}

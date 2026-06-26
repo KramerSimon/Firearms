@@ -1,5 +1,6 @@
 # generate_gui_textures.ps1
 # Generates all Firearms mod GUI textures (256x256 RGBA PNG) using System.Drawing.
+# No text is drawn — all labels are rendered by the Java screen classes.
 # Run: powershell -ExecutionPolicy Bypass -File generate_gui_textures.ps1
 
 Add-Type -AssemblyName System.Drawing
@@ -12,7 +13,6 @@ $BG         = [System.Drawing.Color]::FromArgb(255, 198, 185, 154)
 $SLOT_BG    = [System.Drawing.Color]::FromArgb(255, 139, 139, 139)
 $SLOT_DARK  = [System.Drawing.Color]::FromArgb(255,  85,  85,  85)
 $SLOT_LIGHT = [System.Drawing.Color]::FromArgb(255, 255, 255, 255)
-$TEXT_DARK  = [System.Drawing.Color]::FromArgb(255,  64,  64,  64)
 $FLAME_A    = [System.Drawing.Color]::FromArgb(255, 255, 200,   0)
 $FLAME_B    = [System.Drawing.Color]::FromArgb(255, 255, 100,   0)
 $FLAME_C    = [System.Drawing.Color]::FromArgb(255, 255, 240, 120)
@@ -27,16 +27,10 @@ function mkPen($c)   { New-Object System.Drawing.Pen($c, 1) }
 
 # ── Canvas ────────────────────────────────────────────────────────────────────
 function New-GUI {
-    param([string]$Title = "")
     $bmp = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $g   = [System.Drawing.Graphics]::FromImage($bmp)
     $g.Clear([System.Drawing.Color]::Transparent)
     $g.FillRectangle((mkBrush $BG), 0, 0, 176, 166)
-    if ($Title) {
-        $font = New-Object System.Drawing.Font("Arial", 7, [System.Drawing.FontStyle]::Bold)
-        $g.DrawString($Title, $font, (mkBrush $TEXT_DARK), 8, 6)
-        $font.Dispose()
-    }
     return @{ bmp = $bmp; g = $g }
 }
 
@@ -53,10 +47,10 @@ function Save-GUI {
 function Draw-Slot {
     param($g, [int]$x, [int]$y)
     $g.FillRectangle((mkBrush $SLOT_BG), $x, $y, 18, 18)
-    $g.DrawLine((mkPen $SLOT_DARK),  $x,      $y,      ($x+17), $y     )   # top
-    $g.DrawLine((mkPen $SLOT_DARK),  $x,      $y,      $x,      ($y+17))   # left
-    $g.DrawLine((mkPen $SLOT_LIGHT), $x,      ($y+17), ($x+17), ($y+17))   # bottom
-    $g.DrawLine((mkPen $SLOT_LIGHT), ($x+17), $y,      ($x+17), ($y+17))   # right
+    $g.DrawLine((mkPen $SLOT_DARK),  $x,      $y,      ($x+17), $y     )
+    $g.DrawLine((mkPen $SLOT_DARK),  $x,      $y,      $x,      ($y+17))
+    $g.DrawLine((mkPen $SLOT_LIGHT), $x,      ($y+17), ($x+17), ($y+17))
+    $g.DrawLine((mkPen $SLOT_LIGHT), ($x+17), $y,      ($x+17), ($y+17))
 }
 
 function Draw-Grid {
@@ -78,23 +72,46 @@ function Draw-Arrow {
     }
 }
 
-function Draw-Flame {
+function Draw-FlameSlot {
+    # Empty recessed area in the GUI where the flame sprite renders at runtime.
     param($g, [int]$x, [int]$y, [int]$w=14, [int]$h=14)
-    $g.FillRectangle((mkBrush $FLAME_B), ($x+3),     ($y+5), ($w-7),  ($h-6))
-    $g.FillRectangle((mkBrush $FLAME_A), ($x+4),     ($y+2), ($w-9),  8     )
-    $g.FillRectangle((mkBrush $FLAME_C), ($x+5),     $y,     ($w-11), 5     )
-    $g.FillRectangle((mkBrush $FLAME_B), ($x+2),     ($y+7), 3,       ($h-8))
-    $g.FillRectangle((mkBrush $FLAME_B), ($x+$w-5),  ($y+7), 3,       ($h-8))
+    $g.FillRectangle((mkBrush $SLOT_DARK), ($x-1), ($y-1), ($w+2), ($h+2))
+    $g.FillRectangle((mkBrush $BAR_EMPTY), $x,     $y,     $w,     $h    )
+}
+
+function Draw-FlameSprite {
+    # Flame sprite at UV (176, 0) — read by animated blit in coal/fuel generator screens.
+    param($g, [int]$ux=176, [int]$uy=0, [int]$w=14, [int]$h=14)
+    $g.FillRectangle((mkBrush $FLAME_B), ($ux+3),    ($uy+5), ($w-7),  ($h-6))
+    $g.FillRectangle((mkBrush $FLAME_A), ($ux+4),    ($uy+2), ($w-9),  8     )
+    $g.FillRectangle((mkBrush $FLAME_C), ($ux+5),    $uy,     ($w-11), 5     )
+    $g.FillRectangle((mkBrush $FLAME_B), ($ux+2),    ($uy+7), 3,       ($h-8))
+    $g.FillRectangle((mkBrush $FLAME_B), ($ux+$w-5), ($uy+7), 3,       ($h-8))
+}
+
+function Draw-ArrowSlot {
+    # Empty recessed area in the GUI where the arrow sprite renders at runtime.
+    param($g, [int]$x, [int]$y)
+    $g.FillRectangle((mkBrush $SLOT_DARK), ($x-1), ($y+4),  26, 9)
+    $g.FillRectangle((mkBrush $BAR_EMPTY), $x,     ($y+5),  24, 7)
+}
+
+function Draw-ArrowSprite {
+    # Arrow sprite at UV (176, 0) — read by animated blit in refinery screen.
+    param($g, [int]$ux=176, [int]$uy=0, [int]$w=24, [int]$h=16)
+    $cy = $uy + ($h / 2)
+    $g.FillRectangle((mkBrush $SLOT_DARK), $ux, ($cy-2), ($w-9), 5)
+    for ($i = 0; $i -lt 9; $i++) {
+        $half = [Math]::Max(0, ($h/2) - 1 - $i)
+        $g.DrawLine((mkPen $SLOT_DARK), ($ux+$w-9+$i), ($cy-$half), ($ux+$w-9+$i), ($cy+$half))
+    }
 }
 
 function Draw-Bar {
-    param($g, [int]$x, [int]$y, [int]$w=12, [int]$h=52, $color=$ENERGY_CLR, [double]$fill=0.5)
-    $g.FillRectangle((mkBrush $SLOT_DARK),  ($x-1), ($y-1), ($w+2), ($h+2))
-    $g.FillRectangle((mkBrush $BAR_EMPTY),  $x,     $y,     $w,     $h    )
-    $fh = [int]($h * $fill)
-    if ($fh -gt 0) {
-        $g.FillRectangle((mkBrush $color), $x, ($y+$h-$fh), $w, $fh)
-    }
+    # Empty bar container — Java draws the color fill on top at runtime.
+    param($g, [int]$x, [int]$y, [int]$w=12, [int]$h=52)
+    $g.FillRectangle((mkBrush $SLOT_DARK), ($x-1), ($y-1), ($w+2), ($h+2))
+    $g.FillRectangle((mkBrush $BAR_EMPTY), $x,     $y,     $w,     $h    )
 }
 
 function Draw-StatusBox {
@@ -107,10 +124,8 @@ function Draw-StatusBox {
 }
 
 function Draw-PlayerInv {
+    # Player inventory and hotbar slots — no text labels.
     param($g, [int]$ix=7, [int]$iy=83, [int]$hx=7, [int]$hy=141)
-    $font = New-Object System.Drawing.Font("Arial", 7)
-    $g.DrawString("Inventory", $font, (mkBrush $TEXT_DARK), $ix, ($iy-11))
-    $font.Dispose()
     Draw-Grid $g $ix $iy 9 3
     Draw-Grid $g $hx $hy 9 1
 }
@@ -120,7 +135,7 @@ function Draw-PlayerInv {
 Write-Host "Generating GUI textures -> $OUT`n"
 
 # 1. Gunsmith Table
-$gui = New-GUI "Gunsmith Table"
+$gui = New-GUI
 Draw-Grid      $gui.g 29 16 3 3
 Draw-Arrow     $gui.g 97 34
 Draw-Slot      $gui.g 123 34
@@ -128,7 +143,7 @@ Draw-PlayerInv $gui.g
 Save-GUI       $gui "gunsmith_table.png"
 
 # 2. Metal Press
-$gui = New-GUI "Metal Press"
+$gui = New-GUI
 Draw-Slot      $gui.g 56 17
 Draw-Slot      $gui.g 56 35
 Draw-Arrow     $gui.g 88 34
@@ -137,81 +152,87 @@ Draw-PlayerInv $gui.g
 Save-GUI       $gui "metal_press.png"
 
 # 3. Coal Generator
-$gui = New-GUI "Coal Generator"
+$gui = New-GUI
 Draw-Slot      $gui.g 56 35
 Draw-Slot      $gui.g 116 35
-Draw-Flame     $gui.g 79 34
-Draw-Bar       $gui.g 150 14 12 52 $ENERGY_CLR 0.60
+Draw-FlameSlot $gui.g 79 34
+Draw-Bar       $gui.g 150 14
 Draw-PlayerInv $gui.g
+Draw-FlameSprite $gui.g 176 0
 Save-GUI       $gui "coal_generator.png"
 
 # 4. Heat Treatment Furnace
-$gui = New-GUI "Heat Treatment Furnace"
+$gui = New-GUI
 Draw-Slot      $gui.g 56 26
 Draw-Slot      $gui.g 56 44
 Draw-Arrow     $gui.g 88 34
 Draw-Slot      $gui.g 116 34
-Draw-Bar       $gui.g 150 14 12 52 $ENERGY_CLR 0.45
+Draw-Bar       $gui.g 150 14
 Draw-PlayerInv $gui.g
 Save-GUI       $gui "heat_treatment_furnace.png"
 
 # 5. Lathe
-$gui = New-GUI "Lathe"
+$gui = New-GUI
 Draw-Slot      $gui.g 56 26
 Draw-Slot      $gui.g 56 44
 Draw-Arrow     $gui.g 88 34
 Draw-Slot      $gui.g 116 34
-Draw-Bar       $gui.g 150 14 12 52 $ENERGY_CLR 0.55
+Draw-Bar       $gui.g 150 14
 Draw-PlayerInv $gui.g
 Save-GUI       $gui "lathe.png"
 
-# 6. Assembly Bench
-$gui = New-GUI "Assembly Bench"
-Draw-Grid      $gui.g 29 16 2 3
-Draw-Arrow     $gui.g 88 34
-Draw-Slot      $gui.g 116 34
-Draw-Bar       $gui.g 150 14 12 52 $ENERGY_CLR 0.50
-Draw-PlayerInv $gui.g
-Save-GUI       $gui "assembly_bench.png"
+# 6. Assembly Bench — 3x3 shapeless input grid
+$gui = New-GUI
+Draw-Grid        $gui.g 29 16 3 3
+Draw-ArrowSlot   $gui.g 88 35
+Draw-Slot        $gui.g 116 35
+Draw-Bar         $gui.g 152 10
+Draw-PlayerInv   $gui.g
+Draw-ArrowSprite $gui.g 176 0
+Save-GUI         $gui "assembly_bench.png"
 
 # 7. Fuel Generator
-$gui = New-GUI "Fuel Generator"
+$gui = New-GUI
 Draw-Slot      $gui.g 56 26
 Draw-Slot      $gui.g 56 44
-Draw-Flame     $gui.g 79 34
-Draw-Bar       $gui.g 7   14 12 52 $FUEL_CLR   0.70
-Draw-Bar       $gui.g 150 14 12 52 $ENERGY_CLR 0.40
+Draw-FlameSlot $gui.g 79 34
+Draw-Bar       $gui.g 7   14
+Draw-Bar       $gui.g 150 14
 Draw-PlayerInv $gui.g
+Draw-FlameSprite $gui.g 176 0
 Save-GUI       $gui "fuel_generator.png"
 
 # 8. Oil Derrick
-$gui = New-GUI "Oil Derrick"
-Draw-Bar       $gui.g 7   14 12 52 $ENERGY_CLR 0.50
-Draw-Bar       $gui.g 150 14 12 52 $OIL_CLR    0.30
+$gui = New-GUI
+Draw-Bar       $gui.g 7   14
+Draw-Bar       $gui.g 150 14
 Draw-StatusBox $gui.g 60 20 56 40
 Draw-PlayerInv $gui.g
 Save-GUI       $gui "oil_derrick.png"
 
-# 9. Refinery
-$gui = New-GUI "Refinery"
-Draw-Bar       $gui.g 7   14 12 52 $ENERGY_CLR 0.50
-Draw-Bar       $gui.g 40  14 12 52 $OIL_CLR    0.60
-Draw-Arrow     $gui.g 70 34
-Draw-Bar       $gui.g 100 14 12 52 $FUEL_CLR   0.20
-Draw-Slot      $gui.g 130 34
+# 9. Refinery — 3 output slots: fuel (130,14), gun_oil (130,32), rubber (130,50)
+$gui = New-GUI
+Draw-Bar       $gui.g 7   14
+Draw-Bar       $gui.g 40  14
+Draw-ArrowSlot $gui.g 70 34
+Draw-Bar       $gui.g 100 14
+Draw-Slot      $gui.g 130 14
+Draw-Slot      $gui.g 130 32
+Draw-Slot      $gui.g 130 50
 Draw-PlayerInv $gui.g
+Draw-ArrowSprite $gui.g 176 0
 Save-GUI       $gui "refinery.png"
 
 # 10. Auto Turret
-$gui = New-GUI "Auto Turret"
+$gui = New-GUI
 Draw-Slot      $gui.g 80 26
-Draw-Bar       $gui.g 150 14 12 52 $ENERGY_CLR 0.80
+Draw-Bar       $gui.g 150 14
 Draw-StatusBox $gui.g 40 34 56 40
 Draw-PlayerInv $gui.g
 Save-GUI       $gui "auto_turret.png"
 
 # 11. Gun Modification Table
-$gui = New-GUI "Gun Modification Table"
+$gui = New-GUI
 Draw-Slot      $gui.g 26 26
 Draw-Slot      $gui.g 62 17
 Draw-Slot      $gui.g 62 53
@@ -220,4 +241,58 @@ Draw-Slot      $gui.g 124 35
 Draw-PlayerInv $gui.g
 Save-GUI       $gui "gun_modification_table.png"
 
-Write-Host "`nDone - 11 textures generated."
+# 12. Coke Oven
+$gui = New-GUI
+Draw-Slot        $gui.g 56 35
+Draw-Slot        $gui.g 116 35
+Draw-ArrowSlot   $gui.g 88 34
+Draw-Bar         $gui.g 150 14
+Draw-PlayerInv   $gui.g
+Draw-ArrowSprite $gui.g 176 0
+Save-GUI         $gui "coke_oven.png"
+
+# 13. Electric Blast Furnace
+$gui = New-GUI
+Draw-Bar         $gui.g 7   14
+Draw-Slot        $gui.g 56  17
+Draw-Slot        $gui.g 56  53
+Draw-ArrowSlot   $gui.g 78  30
+Draw-Slot        $gui.g 116 35
+Draw-PlayerInv   $gui.g
+Draw-ArrowSprite $gui.g 176 0
+Save-GUI         $gui "ebf.png"
+
+# 14. Chemical Mixer — 5 slots: inputA/B/bucket-in on left, item-out/empty-bucket-out on right
+$gui = New-GUI
+Draw-Bar         $gui.g  7  14
+Draw-Bar         $gui.g 26  14
+Draw-Slot        $gui.g 47  17
+Draw-Slot        $gui.g 47  35
+Draw-Slot        $gui.g 47  53
+Draw-ArrowSlot   $gui.g 75  35
+Draw-Slot        $gui.g 113 26
+Draw-Slot        $gui.g 113 53
+Draw-Bar         $gui.g 140 14
+Draw-PlayerInv   $gui.g
+Draw-ArrowSprite $gui.g 176 0
+Save-GUI         $gui "chemical_mixer.png"
+
+# 15. Acid Bath — energy bar, acid bar, item input, arrow, item output
+$gui = New-GUI
+Draw-Bar         $gui.g  7 14
+Draw-Bar         $gui.g 26 14
+Draw-Slot        $gui.g 56 35
+Draw-ArrowSlot   $gui.g 80 35
+Draw-Slot        $gui.g 116 35
+Draw-PlayerInv   $gui.g
+Draw-ArrowSprite $gui.g 176 0
+Save-GUI         $gui "acid_bath.png"
+
+# 16. Water Pump — energy bar + water tank bar, no item slots
+$gui = New-GUI
+Draw-Bar         $gui.g  7 14
+Draw-Bar         $gui.g 26 14
+Draw-PlayerInv   $gui.g
+Save-GUI         $gui "water_pump.png"
+
+Write-Host "`nDone - 16 textures generated."

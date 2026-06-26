@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SHS",
+    "S S",
+    "SSS"
+  ],
+  "key": {
+    "S": { "item": "firearms:steel_ingot" },
+    "H": { "item": "firearms:hardened_steel_ingot" }
+  },
+  "result": { "id": "firearms:acid_bath", "count": 1 }
+}

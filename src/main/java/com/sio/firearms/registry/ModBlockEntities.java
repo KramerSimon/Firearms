@@ -1,7 +1,15 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
+import com.sio.firearms.block.AcidBathBlockEntity;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
+import com.sio.firearms.block.ChemicalMixerBlockEntity;
+import com.sio.firearms.block.ElectrolysisMachineBlockEntity;
+import com.sio.firearms.block.ItemPipeBlockEntity;
+import com.sio.firearms.block.WaterPumpBlockEntity;
+import com.sio.firearms.block.WeaponRackBlockEntity;
+import com.sio.firearms.block.EBFControllerBlockEntity;
+import com.sio.firearms.block.CokeOvenControllerBlockEntity;
 import com.sio.firearms.block.LandMineBlockEntity;
 import com.sio.firearms.block.AutoTurretBlockEntity;
 import com.sio.firearms.block.CoalGeneratorBlockEntity;
@@ -90,8 +98,48 @@ public class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(WireBlockEntity::new,
                             ModBlocks.COPPER_WIRE.get()).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CokeOvenControllerBlockEntity>> COKE_OVEN_CONTROLLER =
+            BLOCK_ENTITIES.register("coke_oven_controller",
+                    () -> BlockEntityType.Builder.of(CokeOvenControllerBlockEntity::new,
+                            ModBlocks.COKE_OVEN_CONTROLLER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EBFControllerBlockEntity>> EBF_CONTROLLER =
+            BLOCK_ENTITIES.register("ebf_controller",
+                    () -> BlockEntityType.Builder.of(EBFControllerBlockEntity::new,
+                            ModBlocks.EBF_CONTROLLER.get()).build(null));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LandMineBlockEntity>> LAND_MINE =
             BLOCK_ENTITIES.register("land_mine",
                     () -> BlockEntityType.Builder.of(LandMineBlockEntity::new,
                             ModBlocks.LAND_MINE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChemicalMixerBlockEntity>> CHEMICAL_MIXER =
+            BLOCK_ENTITIES.register("chemical_mixer",
+                    () -> BlockEntityType.Builder.of(ChemicalMixerBlockEntity::new,
+                            ModBlocks.CHEMICAL_MIXER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AcidBathBlockEntity>> ACID_BATH =
+            BLOCK_ENTITIES.register("acid_bath",
+                    () -> BlockEntityType.Builder.of(AcidBathBlockEntity::new,
+                            ModBlocks.ACID_BATH.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterPumpBlockEntity>> WATER_PUMP =
+            BLOCK_ENTITIES.register("water_pump",
+                    () -> BlockEntityType.Builder.of(WaterPumpBlockEntity::new,
+                            ModBlocks.WATER_PUMP.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectrolysisMachineBlockEntity>> ELECTROLYSIS_MACHINE =
+            BLOCK_ENTITIES.register("electrolysis_machine",
+                    () -> BlockEntityType.Builder.of(ElectrolysisMachineBlockEntity::new,
+                            ModBlocks.ELECTROLYSIS_MACHINE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WeaponRackBlockEntity>> WEAPON_RACK =
+            BLOCK_ENTITIES.register("weapon_rack",
+                    () -> BlockEntityType.Builder.of(WeaponRackBlockEntity::new,
+                            ModBlocks.WEAPON_RACK.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemPipeBlockEntity>> ITEM_PIPE =
+            BLOCK_ENTITIES.register("item_pipe",
+                    () -> BlockEntityType.Builder.of(ItemPipeBlockEntity::new,
+                            ModBlocks.ITEM_PIPE.get()).build(null));
 }

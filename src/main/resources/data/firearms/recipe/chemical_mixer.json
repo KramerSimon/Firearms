@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WSW",
+    "SCS",
+    "WSW"
+  ],
+  "key": {
+    "W": { "item": "firearms:copper_wire" },
+    "S": { "item": "firearms:steel_ingot" },
+    "C": { "item": "firearms:circuit_board" }
+  },
+  "result": { "id": "firearms:chemical_mixer", "count": 1 }
+}

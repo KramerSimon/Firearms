@@ -20,24 +20,34 @@ public class FirearmsJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
+        var gui = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(
-                new GunsmithTableRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
-                new MetalPressRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
-                new AssemblyBenchRecipeCategory(registration.getJeiHelpers().getGuiHelper())
+                new MetalPressRecipeCategory(gui),
+                new AssemblyBenchRecipeCategory(gui),
+                new LatheRecipeCategory(gui),
+                new EBFRecipeCategory(gui),
+                new ChemicalMixerRecipeCategory(gui),
+                new ElectrolysisRecipeCategory(gui)
         );
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(GunsmithTableRecipeCategory.RECIPE_TYPE, GunsmithTableJeiRecipe.getAllRecipes());
         registration.addRecipes(MetalPressRecipeCategory.RECIPE_TYPE, MetalPressJeiRecipe.getAllRecipes());
         registration.addRecipes(AssemblyBenchRecipeCategory.RECIPE_TYPE, AssemblyBenchJeiRecipe.getAllRecipes());
+        registration.addRecipes(LatheRecipeCategory.RECIPE_TYPE, LatheJeiRecipe.getAllRecipes());
+        registration.addRecipes(EBFRecipeCategory.RECIPE_TYPE, EBFJeiRecipe.getAllRecipes());
+        registration.addRecipes(ChemicalMixerRecipeCategory.RECIPE_TYPE, ChemicalMixerJeiRecipe.getAllRecipes());
+        registration.addRecipes(ElectrolysisRecipeCategory.RECIPE_TYPE, ElectrolysisJeiRecipe.getAllRecipes());
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GUNSMITH_TABLE.get()), GunsmithTableRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.METAL_PRESS.get()), MetalPressRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ASSEMBLY_BENCH.get()), AssemblyBenchRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.LATHE.get()), LatheRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EBF_CONTROLLER.get()), EBFRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_MIXER.get()), ChemicalMixerRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELECTROLYSIS_MACHINE.get()), ElectrolysisRecipeCategory.RECIPE_TYPE);
     }
 }

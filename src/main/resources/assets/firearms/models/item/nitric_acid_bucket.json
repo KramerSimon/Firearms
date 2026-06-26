@@ -1,0 +1,4 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "firearms:nitric_acid_still"
+}

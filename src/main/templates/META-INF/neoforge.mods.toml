@@ -42,11 +42,11 @@ displayName="${mod_name}" #mandatory
 #credits="" #optional
 
 # The authors of the mod, displayed in the mod UI (optional)
-#authors=""
+authors="SIO"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Example mod description.
+A comprehensive firearms mod for NeoForge 1.21.1 featuring realistic weapons, complex production chains, an energy system, oil refining, and much more. Alpha release.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

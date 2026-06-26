@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "firearms:tungsten_ore_raw" },
+  "result": { "id": "firearms:tungsten_ingot" },
+  "experience": 1.0,
+  "cookingtime": 200
+}

@@ -4,6 +4,8 @@ import com.sio.firearms.entity.BulletEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -40,6 +42,11 @@ public class ShotgunItem extends GunItem {
         }
 
         level.playSound(null, player.blockPosition(), getSoundEvent(), SoundSource.PLAYERS, 1.0F, 0.8F);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            stack.hurtAndBreak(1, serverPlayer.serverLevel(), serverPlayer,
+                    item -> serverPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND));
+        }
 
         player.getCooldowns().addCooldown(this, getFireRate());
     }

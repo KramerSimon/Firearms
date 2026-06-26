@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SBS"
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "B": {"item": "minecraft:brick"}
+  },
+  "result": {
+    "id": "firearms:ebf_wall",
+    "count": 4
+  }
+}
