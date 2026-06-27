@@ -1,0 +1,9 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SSS","SGS","SSS"],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "G": {"item": "minecraft:glass_pane"}
+  },
+  "result": {"id": "firearms:crystal_growth_top", "count": 4}
+}

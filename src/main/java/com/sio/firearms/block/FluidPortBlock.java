@@ -43,11 +43,18 @@ public class FluidPortBlock extends Block implements EntityBlock {
                                                Player player, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof FluidPortBlockEntity port) {
-                port.toggleMode();
-                String modeKey = port.getMode() == FluidPortBlockEntity.Mode.INPUT
-                        ? "message.firearms.fluid_port.input"
-                        : "message.firearms.fluid_port.output";
-                player.sendSystemMessage(Component.translatable(modeKey));
+                if (player.isShiftKeyDown()) {
+                    // Sneak + right-click: cycle target fluid
+                    port.cycleTargetFluid();
+                    player.displayClientMessage(
+                            Component.literal("Fluid Port: Targeting " + port.getTargetFluidDisplayName()), true);
+                } else {
+                    // Right-click: cycle INPUT / OUTPUT mode
+                    port.toggleMode();
+                    String modeStr = port.getMode() == FluidPortBlockEntity.Mode.INPUT ? "INPUT" : "OUTPUT";
+                    player.displayClientMessage(
+                            Component.literal("Fluid Port: " + modeStr + " mode"), true);
+                }
             }
         }
         return InteractionResult.SUCCESS;

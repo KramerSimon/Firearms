@@ -1,0 +1,10 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["TAT","ACA","TAT"],
+  "key": {
+    "T": {"item": "firearms:tungsten_carbide"},
+    "A": {"item": "firearms:advanced_microchip"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:euv_lithography_controller", "count": 1}
+}

@@ -1,0 +1,11 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SBS","EQE","SBS"],
+  "key": {
+    "S": {"item": "firearms:hardened_steel_ingot"},
+    "B": {"item": "firearms:crystal_growth_base"},
+    "E": {"item": "firearms:electronic_grade_silicon"},
+    "Q": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:crystal_growth_controller", "count": 1}
+}

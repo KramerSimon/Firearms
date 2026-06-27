@@ -1,0 +1,11 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["AHA","SCS","AHA"],
+  "key": {
+    "A": {"item": "firearms:aluminum_ingot"},
+    "H": {"item": "firearms:hardened_steel_ingot"},
+    "S": {"item": "firearms:steel_ingot"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:deposition_chamber", "count": 1}
+}

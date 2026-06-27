@@ -54,7 +54,19 @@ public class LatheJeiRecipe {
             new LatheJeiRecipe(
                 new ItemStack(ModItems.TUNGSTEN_INGOT.get()),
                 ItemStack.EMPTY,
-                new ItemStack(ModItems.TUNGSTEN_ROD.get(), 2))
+                new ItemStack(ModItems.TUNGSTEN_ROD.get(), 2)),
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.KANTHAL_ALLOY.get()),
+                ItemStack.EMPTY,
+                new ItemStack(ModItems.KANTHAL_WIRE.get(), 4)),
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.NICHROME_ALLOY.get()),
+                ItemStack.EMPTY,
+                new ItemStack(ModItems.NICHROME_WIRE.get(), 4)),
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.TUNGSTEN_CARBIDE.get()),
+                ItemStack.EMPTY,
+                new ItemStack(ModItems.TUNGSTEN_WIRE.get(), 4))
         );
     }
 }

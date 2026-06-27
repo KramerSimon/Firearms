@@ -50,7 +50,26 @@ public class ElectrolysisMachineMenu extends AbstractContainerMenu {
     public int getFluidOut2Max()  { return data.get(9); }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) { return ItemStack.EMPTY; }
+    public ItemStack quickMoveStack(Player player, int index) {
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slot 0: item input
+        if (index < 1) {
+            if (!moveItemStackTo(stack, 1, 37, false)) return ItemStack.EMPTY;
+        } else if (index < 28) {
+            if (!moveItemStackTo(stack, 0, 1, false)
+                    && !moveItemStackTo(stack, 28, 37, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 1, false)
+                    && !moveItemStackTo(stack, 1, 28, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
+    }
 
     @Override
     public boolean stillValid(Player player) { return true; }

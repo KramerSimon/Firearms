@@ -1,0 +1,11 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SUS","HCH","SUS"],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "U": {"item": "minecraft:copper_ingot"},
+    "H": {"item": "firearms:hardened_steel_ingot"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:metallization_chamber", "count": 1}
+}

@@ -1,6 +1,16 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.screen.AcidBathScreen;
+import com.sio.firearms.screen.CrystalGrowthControllerScreen;
+import com.sio.firearms.screen.EuvLithographyScreen;
+import com.sio.firearms.screen.WaferCuttingMachineScreen;
+import com.sio.firearms.screen.DepositionChamberScreen;
+import com.sio.firearms.screen.PlasmaEtcherScreen;
+import com.sio.firearms.screen.IonImplanterScreen;
+import com.sio.firearms.screen.MetallizationChamberScreen;
+import com.sio.firearms.screen.WaferTesterScreen;
+import com.sio.firearms.screen.DicingSawScreen;
+import com.sio.firearms.screen.ChipPackagingMachineScreen;
 import com.sio.firearms.screen.AssemblyBenchScreen;
 import com.sio.firearms.screen.ElectrolysisMachineScreen;
 import com.sio.firearms.screen.ChemicalMixerScreen;
@@ -42,5 +52,15 @@ public class ModScreens {
         event.register(ModMenuTypes.ACID_BATH_MENU.get(), AcidBathScreen::new);
         event.register(ModMenuTypes.WATER_PUMP_MENU.get(), WaterPumpScreen::new);
         event.register(ModMenuTypes.ELECTROLYSIS_MACHINE_MENU.get(), ElectrolysisMachineScreen::new);
+        event.register(ModMenuTypes.WAFER_CUTTING_MACHINE_MENU.get(), WaferCuttingMachineScreen::new);
+        event.register(ModMenuTypes.DEPOSITION_CHAMBER_MENU.get(), DepositionChamberScreen::new);
+        event.register(ModMenuTypes.PLASMA_ETCHER_MENU.get(), PlasmaEtcherScreen::new);
+        event.register(ModMenuTypes.ION_IMPLANTER_MENU.get(), IonImplanterScreen::new);
+        event.register(ModMenuTypes.METALLIZATION_CHAMBER_MENU.get(), MetallizationChamberScreen::new);
+        event.register(ModMenuTypes.WAFER_TESTER_MENU.get(), WaferTesterScreen::new);
+        event.register(ModMenuTypes.DICING_SAW_MENU.get(), DicingSawScreen::new);
+        event.register(ModMenuTypes.CHIP_PACKAGING_MACHINE_MENU.get(), ChipPackagingMachineScreen::new);
+        event.register(ModMenuTypes.CRYSTAL_GROWTH_CONTROLLER_MENU.get(), CrystalGrowthControllerScreen::new);
+        event.register(ModMenuTypes.EUV_LITHOGRAPHY_MENU.get(), EuvLithographyScreen::new);
     }
 }

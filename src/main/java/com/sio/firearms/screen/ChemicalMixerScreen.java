@@ -33,21 +33,18 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
 
-        // energy bar (red)
         int maxE = menu.getMaxEnergy();
         if (maxE > 0) {
             int h = menu.getEnergyStored() * 52 / maxE;
             gui.fill(leftPos + 8, topPos + 66 - h, leftPos + 20, topPos + 66, 0xFFCC0000);
         }
 
-        // fluid input bar (blue)
         int maxFI = menu.getFluidInMax();
         if (maxFI > 0 && menu.getFluidInAmount() > 0) {
             int h = menu.getFluidInAmount() * 52 / maxFI;
             gui.fill(leftPos + 27, topPos + 66 - h, leftPos + 39, topPos + 66, 0xFF4080FF);
         }
 
-        // fluid output bar (yellow-green)
         int maxFO = menu.getFluidOutMax();
         if (maxFO > 0 && menu.getFluidOutAmount() > 0) {
             int h = menu.getFluidOutAmount() * 52 / maxFO;
@@ -55,5 +52,38 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
         }
 
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Progress arrow (75–99, 35–51)
+        if (mx >= leftPos + 75 && mx < leftPos + 99 && my >= topPos + 35 && my < topPos + 51) {
+            gui.renderTooltip(font,
+                    Component.literal("Progress: " + menu.getProgress() + " / " + menu.getMaxProgress() + " ticks"),
+                    mx, my);
+            return;
+        }
+        // Energy bar (8–20, top 14, bottom 66)
+        if (mx >= leftPos + 8 && mx < leftPos + 20 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        // Fluid input bar (27–39, top 14, bottom 66)
+        if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Fluid Input: " + menu.getFluidInAmount() + " / " + menu.getFluidInMax() + " mB"),
+                    mx, my);
+            return;
+        }
+        // Fluid output bar (141–153, top 14, bottom 66)
+        if (mx >= leftPos + 141 && mx < leftPos + 153 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Fluid Output: " + menu.getFluidOutAmount() + " / " + menu.getFluidOutMax() + " mB"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

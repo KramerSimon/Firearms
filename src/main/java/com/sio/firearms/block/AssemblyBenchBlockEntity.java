@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.sio.firearms.energy.EnergyStorageBlock;
 import com.sio.firearms.menu.AssemblyBenchMenu;
 import com.sio.firearms.registry.ModBlockEntities;
+import com.sio.firearms.registry.ModBlocks;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -218,6 +219,34 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
             return new RecipeMatch(new ItemStack(ModItems.ARMOR_PIERCING_BULLET.get(), 4),
                     Map.of("firearms:tungsten_rod", 1, "firearms:bullet_casing", 1,
                             "firearms:propellant_powder", 1));
+        }
+
+        // Kanthal Alloy: chromium_ingot + iron_ingot + aluminum_ingot → 4x kanthal_alloy
+        if (total == 3 && in.size() == 3
+                && containsItem(in, "firearms:chromium_ingot", 1)
+                && containsItem(in, "minecraft:iron_ingot", 1)
+                && containsItem(in, "firearms:aluminum_ingot", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.KANTHAL_ALLOY.get(), 4),
+                    Map.of("firearms:chromium_ingot", 1, "minecraft:iron_ingot", 1,
+                            "firearms:aluminum_ingot", 1));
+        }
+
+        // Kanthal Coil: 4x kanthal_wire → kanthal_coil x1
+        if (in.size() == 1 && containsItem(in, "firearms:kanthal_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.KANTHAL_COIL.get().asItem()),
+                    Map.of("firearms:kanthal_wire", 4));
+        }
+
+        // Nichrome Coil: 4x nichrome_wire → nichrome_coil x1
+        if (in.size() == 1 && containsItem(in, "firearms:nichrome_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.NICHROME_COIL.get().asItem()),
+                    Map.of("firearms:nichrome_wire", 4));
+        }
+
+        // Tungsten Coil: 4x tungsten_wire → tungsten_coil x1
+        if (in.size() == 1 && containsItem(in, "firearms:tungsten_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.TUNGSTEN_COIL.get().asItem()),
+                    Map.of("firearms:tungsten_wire", 4));
         }
 
         return null;

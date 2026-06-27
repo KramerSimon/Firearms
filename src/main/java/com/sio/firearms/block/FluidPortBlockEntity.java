@@ -3,6 +3,7 @@ package com.sio.firearms.block;
 import com.mojang.logging.LogUtils;
 import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModBlocks;
+import com.sio.firearms.registry.ModFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -30,67 +32,73 @@ public class FluidPortBlockEntity extends BlockEntity {
 
     public enum Mode { INPUT, OUTPUT }
 
+    private static final String[] FLUID_CYCLE = {
+        "any", "butane", "gasoline", "naphtha", "kerosene",
+        "diesel", "heavy_gas_oil", "residual_fuel_oil", "oil"
+    };
+    private static final String[] FLUID_DISPLAY = {
+        "Any", "Butane", "Gasoline", "Naphtha", "Kerosene",
+        "Diesel", "Heavy Gas Oil", "Residual Fuel Oil", "Oil"
+    };
+
     private final FluidTank tank = new FluidTank(CAPACITY);
     private int tickCount = 0;
     private BlockPos cachedControllerPos = null;
     private Mode mode = Mode.INPUT;
+    private String targetFluid = "any";
 
     private final IFluidHandler fillOnlyHandler = new IFluidHandler() {
-        @Override
-        public int getTanks() { return 1; }
+        @Override public int getTanks() { return 1; }
+
+        @Override public FluidStack getFluidInTank(int t) { return tank.getFluidInTank(0); }
+
+        @Override public int getTankCapacity(int t) { return tank.getTankCapacity(0); }
 
         @Override
-        public FluidStack getFluidInTank(int t) { return tank.getFluidInTank(0); }
+        public boolean isFluidValid(int t, FluidStack stack) {
+            if (!"any".equals(targetFluid)) {
+                Fluid expected = getFluidByName(targetFluid);
+                if (expected == null || !stack.getFluid().isSame(expected)) return false;
+            }
+            return true;
+        }
 
         @Override
-        public int getTankCapacity(int t) { return tank.getTankCapacity(0); }
+        public int fill(FluidStack resource, FluidAction action) {
+            if (!"any".equals(targetFluid)) {
+                Fluid expected = getFluidByName(targetFluid);
+                if (expected == null || !resource.getFluid().isSame(expected)) return 0;
+            }
+            return tank.fill(resource, action);
+        }
 
-        @Override
-        public boolean isFluidValid(int t, FluidStack stack) { return tank.isFluidValid(0, stack); }
-
-        @Override
-        public int fill(FluidStack resource, FluidAction action) { return tank.fill(resource, action); }
-
-        @Override
-        public FluidStack drain(FluidStack resource, FluidAction action) { return FluidStack.EMPTY; }
-
-        @Override
-        public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
     };
 
     private final IFluidHandler drainOnlyHandler = new IFluidHandler() {
-        @Override
-        public int getTanks() { return 1; }
-
-        @Override
-        public FluidStack getFluidInTank(int t) { return tank.getFluidInTank(0); }
-
-        @Override
-        public int getTankCapacity(int t) { return tank.getTankCapacity(0); }
-
-        @Override
-        public boolean isFluidValid(int t, FluidStack stack) { return tank.isFluidValid(0, stack); }
-
-        @Override
-        public int fill(FluidStack resource, FluidAction action) { return 0; }
-
-        @Override
-        public FluidStack drain(FluidStack resource, FluidAction action) { return tank.drain(resource, action); }
-
-        @Override
-        public FluidStack drain(int maxDrain, FluidAction action) { return tank.drain(maxDrain, action); }
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int t) { return tank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int t) { return tank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int t, FluidStack stack) { return tank.isFluidValid(0, stack); }
+        @Override public int fill(FluidStack resource, FluidAction action) { return 0; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) { return tank.drain(resource, action); }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) { return tank.drain(maxDrain, action); }
     };
 
     public FluidPortBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FLUID_PORT.get(), pos, state);
     }
 
-    public FluidTank getFluidTank() {
-        return tank;
-    }
+    public FluidTank getFluidTank()  { return tank; }
+    public Mode getMode()            { return mode; }
+    public String getTargetFluid()   { return targetFluid; }
 
-    public Mode getMode() {
-        return mode;
+    public String getTargetFluidDisplayName() {
+        for (int i = 0; i < FLUID_CYCLE.length; i++) {
+            if (FLUID_CYCLE[i].equals(targetFluid)) return FLUID_DISPLAY[i];
+        }
+        return targetFluid;
     }
 
     public void toggleMode() {
@@ -98,8 +106,31 @@ public class FluidPortBlockEntity extends BlockEntity {
         setChanged();
     }
 
+    public void cycleTargetFluid() {
+        int idx = 0;
+        for (int i = 0; i < FLUID_CYCLE.length; i++) {
+            if (FLUID_CYCLE[i].equals(targetFluid)) { idx = i; break; }
+        }
+        targetFluid = FLUID_CYCLE[(idx + 1) % FLUID_CYCLE.length];
+        setChanged();
+    }
+
     public IFluidHandler getExposedHandler() {
         return mode == Mode.INPUT ? fillOnlyHandler : drainOnlyHandler;
+    }
+
+    private Fluid getFluidByName(String name) {
+        return switch (name) {
+            case "butane"            -> ModFluids.BUTANE_STILL.get();
+            case "gasoline"          -> ModFluids.GASOLINE_STILL.get();
+            case "naphtha"           -> ModFluids.NAPHTHA_STILL.get();
+            case "kerosene"          -> ModFluids.KEROSENE_STILL.get();
+            case "diesel"            -> ModFluids.DIESEL_STILL.get();
+            case "heavy_gas_oil"     -> ModFluids.HEAVY_GAS_OIL_STILL.get();
+            case "residual_fuel_oil" -> ModFluids.RESIDUAL_FUEL_OIL_STILL.get();
+            case "oil"               -> ModFluids.OIL_STILL.get();
+            default                  -> null;
+        };
     }
 
     public void serverTick() {
@@ -111,8 +142,8 @@ public class FluidPortBlockEntity extends BlockEntity {
         if (tickCount % RESCAN_INTERVAL == 0) {
             cachedControllerPos = findControllerBFS();
             if (shouldLog) {
-                LOGGER.info("FluidPort@{} [{}]: BFS rescan, controller={}",
-                        worldPosition.toShortString(), mode,
+                LOGGER.info("FluidPort@{} [{}] target={}: BFS rescan, controller={}",
+                        worldPosition.toShortString(), mode, targetFluid,
                         cachedControllerPos != null ? cachedControllerPos.toShortString() : "none");
             }
         }
@@ -153,12 +184,20 @@ public class FluidPortBlockEntity extends BlockEntity {
                         }
                     }
                 } else if (be instanceof RefineryControllerBlockEntity refinery) {
-                    IFluidHandler source = refinery.getFuelOutputHandler();
-                    FluidStack drained = source.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
-                    if (!drained.isEmpty()) {
-                        int accepted = tank.fill(drained, IFluidHandler.FluidAction.SIMULATE);
+                    IFluidHandler source = refinery.getOutputHandler();
+                    FluidStack toDrain;
+                    if ("any".equals(targetFluid)) {
+                        toDrain = source.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    } else {
+                        Fluid target = getFluidByName(targetFluid);
+                        toDrain = (target != null)
+                                ? source.drain(new FluidStack(target, MAX_TRANSFER), IFluidHandler.FluidAction.SIMULATE)
+                                : FluidStack.EMPTY;
+                    }
+                    if (!toDrain.isEmpty()) {
+                        int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
                         if (accepted > 0) {
-                            FluidStack actual = source.drain(new FluidStack(drained.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            FluidStack actual = source.drain(new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
                             if (!actual.isEmpty()) {
                                 tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
                                 changed = true;
@@ -219,6 +258,7 @@ public class FluidPortBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         tag.put("FluidTank", tank.writeToNBT(registries, new CompoundTag()));
         tag.putString("Mode", mode.name());
+        tag.putString("TargetFluid", targetFluid);
     }
 
     @Override
@@ -228,5 +268,6 @@ public class FluidPortBlockEntity extends BlockEntity {
         if (tag.contains("Mode")) {
             try { mode = Mode.valueOf(tag.getString("Mode")); } catch (IllegalArgumentException ignored) {}
         }
+        if (tag.contains("TargetFluid")) targetFluid = tag.getString("TargetFluid");
     }
 }

@@ -2,6 +2,16 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlockEntity;
+import com.sio.firearms.block.CrystalGrowthControllerBlockEntity;
+import com.sio.firearms.block.EuvLithographyControllerBlockEntity;
+import com.sio.firearms.block.WaferCuttingMachineBlockEntity;
+import com.sio.firearms.block.DepositionChamberBlockEntity;
+import com.sio.firearms.block.PlasmaEtcherBlockEntity;
+import com.sio.firearms.block.IonImplanterBlockEntity;
+import com.sio.firearms.block.MetallizationChamberBlockEntity;
+import com.sio.firearms.block.WaferTesterBlockEntity;
+import com.sio.firearms.block.DicingSawBlockEntity;
+import com.sio.firearms.block.ChipPackagingMachineBlockEntity;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
 import com.sio.firearms.block.ChemicalMixerBlockEntity;
 import com.sio.firearms.block.ElectrolysisMachineBlockEntity;
@@ -142,4 +152,48 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("item_pipe",
                     () -> BlockEntityType.Builder.of(ItemPipeBlockEntity::new,
                             ModBlocks.ITEM_PIPE.get()).build(null));
+
+    // ── Stage 2 microchip fabrication machines ───────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaferCuttingMachineBlockEntity>> WAFER_CUTTING_MACHINE =
+            BLOCK_ENTITIES.register("wafer_cutting_machine",
+                    () -> BlockEntityType.Builder.of(WaferCuttingMachineBlockEntity::new,
+                            ModBlocks.WAFER_CUTTING_MACHINE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DepositionChamberBlockEntity>> DEPOSITION_CHAMBER =
+            BLOCK_ENTITIES.register("deposition_chamber",
+                    () -> BlockEntityType.Builder.of(DepositionChamberBlockEntity::new,
+                            ModBlocks.DEPOSITION_CHAMBER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlasmaEtcherBlockEntity>> PLASMA_ETCHER =
+            BLOCK_ENTITIES.register("plasma_etcher",
+                    () -> BlockEntityType.Builder.of(PlasmaEtcherBlockEntity::new,
+                            ModBlocks.PLASMA_ETCHER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IonImplanterBlockEntity>> ION_IMPLANTER =
+            BLOCK_ENTITIES.register("ion_implanter",
+                    () -> BlockEntityType.Builder.of(IonImplanterBlockEntity::new,
+                            ModBlocks.ION_IMPLANTER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MetallizationChamberBlockEntity>> METALLIZATION_CHAMBER =
+            BLOCK_ENTITIES.register("metallization_chamber",
+                    () -> BlockEntityType.Builder.of(MetallizationChamberBlockEntity::new,
+                            ModBlocks.METALLIZATION_CHAMBER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaferTesterBlockEntity>> WAFER_TESTER =
+            BLOCK_ENTITIES.register("wafer_tester",
+                    () -> BlockEntityType.Builder.of(WaferTesterBlockEntity::new,
+                            ModBlocks.WAFER_TESTER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DicingSawBlockEntity>> DICING_SAW =
+            BLOCK_ENTITIES.register("dicing_saw",
+                    () -> BlockEntityType.Builder.of(DicingSawBlockEntity::new,
+                            ModBlocks.DICING_SAW.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChipPackagingMachineBlockEntity>> CHIP_PACKAGING_MACHINE =
+            BLOCK_ENTITIES.register("chip_packaging_machine",
+                    () -> BlockEntityType.Builder.of(ChipPackagingMachineBlockEntity::new,
+                            ModBlocks.CHIP_PACKAGING_MACHINE.get()).build(null));
+
+    // ── Multiblock controllers ───────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrystalGrowthControllerBlockEntity>> CRYSTAL_GROWTH_CONTROLLER =
+            BLOCK_ENTITIES.register("crystal_growth_controller",
+                    () -> BlockEntityType.Builder.of(CrystalGrowthControllerBlockEntity::new,
+                            ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EuvLithographyControllerBlockEntity>> EUV_LITHOGRAPHY_CONTROLLER =
+            BLOCK_ENTITIES.register("euv_lithography_controller",
+                    () -> BlockEntityType.Builder.of(EuvLithographyControllerBlockEntity::new,
+                            ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()).build(null));
 }

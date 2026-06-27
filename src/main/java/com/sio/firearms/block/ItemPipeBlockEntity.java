@@ -116,26 +116,28 @@ public class ItemPipeBlockEntity extends BlockEntity {
                 BlockEntity be = level.getBlockEntity(neighborPos);
 
                 if (doLog) {
-                    LOGGER.info("[ItemPipe]   neighbor @ {} = {}", neighborPos,
-                            be == null ? "null" : be.getClass().getSimpleName());
+                    String blockClass = level.getBlockState(neighborPos).getBlock().getClass().getSimpleName();
+                    String beClass    = be == null ? "null" : be.getClass().getSimpleName();
+                    LOGGER.info("[ItemPipe] EXTRACT neighbor @ {} | block={} be={}", neighborPos, blockClass, beClass);
                 }
 
                 if (be == null || be instanceof ItemPipeBlockEntity) continue;
 
                 // Try NeoForge capability first; fall back to InvWrapper for vanilla containers
-                IItemHandler inv = level.getCapability(
+                IItemHandler capHandler = level.getCapability(
                         Capabilities.ItemHandler.BLOCK, neighborPos, dir.getOpposite());
-                if (inv == null && be instanceof Container container) {
-                    inv = new InvWrapper(container);
+                boolean isContainer = be instanceof Container;
+                IItemHandler inv = capHandler;
+                if (inv == null && isContainer) {
+                    inv = new InvWrapper((Container) be);
                 }
 
                 if (doLog) {
-                    if (inv == null) {
-                        LOGGER.info("[ItemPipe]   cap=null (no IItemHandler or Container on {} face)", dir.getOpposite().getSerializedName());
-                    } else {
-                        LOGGER.info("[ItemPipe]   cap=found via {} ({} slots)",
-                                inv instanceof InvWrapper ? "InvWrapper" : "capability",
-                                inv.getSlots());
+                    LOGGER.info("[ItemPipe]   cap={} isContainer={} resolvedHandler={}",
+                            capHandler != null ? "non-null" : "null",
+                            isContainer,
+                            inv != null ? "found via " + (capHandler != null ? "capability" : "InvWrapper") + " (" + inv.getSlots() + " slots)" : "null");
+                    if (inv != null) {
                         for (int s = 0; s < inv.getSlots(); s++) {
                             LOGGER.info("[ItemPipe]     slot[{}] = {}", s, inv.getStackInSlot(s));
                         }
@@ -229,27 +231,36 @@ public class ItemPipeBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Buffer", buffer.serializeNBT(registries));
-        CompoundTag modesTag = new CompoundTag();
+        CompoundTag modes = new CompoundTag();
         for (Direction dir : Direction.values()) {
-            modesTag.putString(dir.getSerializedName(), sideModes.get(dir).name());
+            modes.putString(dir.getSerializedName(), sideModes.get(dir).name());
         }
-        tag.put("SideModes", modesTag);
+        tag.put("SideModes", modes);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if (tag.contains("Buffer")) buffer.deserializeNBT(registries, tag.getCompound("Buffer"));
+        if (tag.contains("Buffer")) {
+            buffer.deserializeNBT(registries, tag.getCompound("Buffer"));
+        }
         if (tag.contains("SideModes")) {
-            CompoundTag modesTag = tag.getCompound("SideModes");
+            CompoundTag modes = tag.getCompound("SideModes");
             for (Direction dir : Direction.values()) {
-                String val = modesTag.getString(dir.getSerializedName());
-                try {
-                    sideModes.put(dir, SideMode.valueOf(val));
-                } catch (IllegalArgumentException e) {
-                    sideModes.put(dir, SideMode.NONE);
-                }
+                String name = modes.getString(dir.getSerializedName());
+                sideModes.put(dir, name.isEmpty() ? SideMode.NONE : SideMode.valueOf(name));
             }
+            LOGGER.info("[ItemPipe] loadAdditional @ {} | modes: down={} up={} north={} south={} west={} east={}",
+                    worldPosition,
+                    sideModes.get(Direction.DOWN).name(),
+                    sideModes.get(Direction.UP).name(),
+                    sideModes.get(Direction.NORTH).name(),
+                    sideModes.get(Direction.SOUTH).name(),
+                    sideModes.get(Direction.WEST).name(),
+                    sideModes.get(Direction.EAST).name());
+        } else {
+            LOGGER.info("[ItemPipe] loadAdditional @ {} | no SideModes tag found, all modes defaulting to NONE",
+                    worldPosition);
         }
     }
 }

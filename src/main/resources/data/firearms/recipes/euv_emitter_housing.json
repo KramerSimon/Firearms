@@ -1,0 +1,10 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["TCT","CUC","TCT"],
+  "key": {
+    "T": {"item": "firearms:tungsten_ingot"},
+    "C": {"item": "firearms:tungsten_carbide"},
+    "U": {"item": "firearms:uranium_ingot"}
+  },
+  "result": {"id": "firearms:euv_emitter_housing", "count": 2}
+}

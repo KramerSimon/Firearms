@@ -42,11 +42,26 @@ public class OilDerrickScreen extends AbstractContainerScreen<OilDerrickMenu> {
         String status = menu.isStructureValid() ? "Structure: Valid" : "Structure: Incomplete";
         int statusColor = menu.isStructureValid() ? 0x00AA00 : 0xAA0000;
         gui.drawString(font, status, leftPos + 40, topPos + 80, statusColor, false);
-        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
-                leftPos + 7, topPos + 75, 0x404040, false);
-        gui.drawString(font, menu.getFluidAmount() + " / " + menu.getMaxFluid() + " mB",
-                leftPos + 120, topPos + 75, 0x404040, false);
 
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Energy bar (7–19, top 14, bottom 66)
+        if (mx >= leftPos + 7 && mx < leftPos + 19 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        // Oil output bar (150–162, top 14, bottom 66)
+        if (mx >= leftPos + 150 && mx < leftPos + 162 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Oil: " + menu.getFluidAmount() + " / " + menu.getMaxFluid() + " mB"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

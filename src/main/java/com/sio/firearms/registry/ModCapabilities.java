@@ -2,6 +2,16 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlockEntity;
+import com.sio.firearms.block.CrystalGrowthControllerBlockEntity;
+import com.sio.firearms.block.EuvLithographyControllerBlockEntity;
+import com.sio.firearms.block.WaferCuttingMachineBlockEntity;
+import com.sio.firearms.block.DepositionChamberBlockEntity;
+import com.sio.firearms.block.PlasmaEtcherBlockEntity;
+import com.sio.firearms.block.IonImplanterBlockEntity;
+import com.sio.firearms.block.MetallizationChamberBlockEntity;
+import com.sio.firearms.block.WaferTesterBlockEntity;
+import com.sio.firearms.block.DicingSawBlockEntity;
+import com.sio.firearms.block.ChipPackagingMachineBlockEntity;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
 import com.sio.firearms.block.ChemicalMixerBlockEntity;
 import com.sio.firearms.block.CokeOvenControllerBlockEntity;
@@ -251,5 +261,59 @@ public class ModCapabilities {
                         BatteryItem.CAPACITY, BatteryItem.MAX_TRANSFER, BatteryItem.MAX_TRANSFER),
                 ModItems.BATTERY.get()
         );
+
+        // ── Stage 2 machines: energy storage ────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.WAFER_CUTTING_MACHINE.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.DEPOSITION_CHAMBER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.PLASMA_ETCHER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.ION_IMPLANTER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.METALLIZATION_CHAMBER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.WAFER_TESTER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.DICING_SAW.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.CHIP_PACKAGING_MACHINE.get(),
+                (be, dir) -> be.getEnergyStorage());
+
+        // ── Stage 2 machines: item handler ──────────────────────────────────────
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.WAFER_CUTTING_MACHINE.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.DEPOSITION_CHAMBER.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.PLASMA_ETCHER.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ION_IMPLANTER.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.METALLIZATION_CHAMBER.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.WAFER_TESTER.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.DICING_SAW.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.CHIP_PACKAGING_MACHINE.get(),
+                (be, dir) -> be.getInventory());
+
+        // ── PlasmaEtcher: fluid handler ──────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.PLASMA_ETCHER.get(),
+                (be, dir) -> be.getFluidTank());
+
+        // ── Crystal Growth Chamber ────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.CRYSTAL_GROWTH_CONTROLLER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.CRYSTAL_GROWTH_CONTROLLER.get(),
+                (be, dir) -> be.getInventory());
+
+        // ── EUV Lithography Machine ───────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
+                (be, dir) -> be.getInventory());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
+                (be, dir) -> be.getPhotoresistTank());
     }
 }

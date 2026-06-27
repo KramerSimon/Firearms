@@ -30,6 +30,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
 
     private int progress = 0;
     private boolean structureValid = false;
+    private int installedCoilTemp = 0;
 
     public final ItemStackHandler inventory = new ItemStackHandler(3) {
         @Override
@@ -47,6 +48,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
                 case 2 -> progress;
                 case 3 -> MAX_PROCESS_TIME;
                 case 4 -> structureValid ? 1 : 0;
+                case 5 -> installedCoilTemp;
                 default -> 0;
             };
         }
@@ -58,7 +60,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
     };
 
@@ -84,15 +86,33 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     }
 
     private ItemStack getRecipeOutput(ItemStack in0, ItemStack in1) {
-        if (in0.isEmpty() || in1.isEmpty()) return ItemStack.EMPTY;
-        if (!stackIs(in1, "firearms:coal_coke")) return ItemStack.EMPTY;
-        if (stackIs(in0, "minecraft:raw_iron"))     return new ItemStack(ModItems.STEEL_INGOT.get(), 2);
-        if (stackIs(in0, "minecraft:iron_ingot"))   return new ItemStack(ModItems.STEEL_INGOT.get(), 3);
-        if (stackIs(in0, "firearms:steel_ingot"))   return new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 1);
-        if (stackIs(in0, "minecraft:raw_gold"))     return new ItemStack(Items.GOLD_INGOT, 2);
-        if (stackIs(in0, "minecraft:copper_ingot"))      return new ItemStack(ModItems.CARBON_STEEL.get(), 1);
-        if (stackIs(in0, "firearms:tungsten_ore_raw"))   return new ItemStack(ModItems.TUNGSTEN_INGOT.get(), 1);
+        if (in0.isEmpty()) return ItemStack.EMPTY;
+        boolean hasCoke = !in1.isEmpty() && stackIs(in1, "firearms:coal_coke");
+        if (hasCoke) {
+            if (stackIs(in0, "minecraft:raw_iron"))        return new ItemStack(ModItems.STEEL_INGOT.get(), 2);
+            if (stackIs(in0, "minecraft:iron_ingot"))      return new ItemStack(ModItems.STEEL_INGOT.get(), 3);
+            if (stackIs(in0, "firearms:steel_ingot"))      return new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 1);
+            if (stackIs(in0, "minecraft:raw_gold"))        return new ItemStack(Items.GOLD_INGOT, 2);
+            if (stackIs(in0, "minecraft:copper_ingot"))    return new ItemStack(ModItems.CARBON_STEEL.get(), 1);
+            if (stackIs(in0, "firearms:tungsten_ore_raw")) return new ItemStack(ModItems.TUNGSTEN_INGOT.get(), 1);
+            if (stackIs(in0, "firearms:uranium_ore_raw"))  return new ItemStack(ModItems.URANIUM_INGOT.get(), 1);
+        }
+        if (!in1.isEmpty() && stackIs(in1, "firearms:carbon_steel")
+                && stackIs(in0, "firearms:tungsten_ingot")) {
+            return new ItemStack(ModItems.TUNGSTEN_CARBIDE.get(), 2);
+        }
         return ItemStack.EMPTY;
+    }
+
+    private int getRequiredTemperature(ItemStack in0, ItemStack in1) {
+        if (in1.isEmpty()) return 0;
+        if (stackIs(in1, "firearms:coal_coke")) {
+            if (stackIs(in0, "firearms:uranium_ore_raw"))  return 2000;
+            if (stackIs(in0, "firearms:tungsten_ore_raw")) return 1200;
+            return 800;
+        }
+        if (stackIs(in1, "firearms:carbon_steel") && stackIs(in0, "firearms:tungsten_ingot")) return 800;
+        return 0;
     }
 
     private boolean canOutput(ItemStack result, ItemStack outputSlot) {
@@ -118,7 +138,8 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
 
         boolean canProcess = !result.isEmpty()
                 && canOutput(result, out)
-                && energy.getEnergyStored() >= FE_PER_TICK;
+                && energy.getEnergyStored() >= FE_PER_TICK
+                && installedCoilTemp >= getRequiredTemperature(in0, in1);
 
         if (canProcess) {
             energy.extractEnergy(FE_PER_TICK, false);
@@ -144,19 +165,23 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         if (level == null) return false;
         for (int dx = 0; dx <= 2; dx++) {
             for (int dz = 0; dz <= 2; dz++) {
-                if (dx == 1 && dz == 1) continue; // center is not a valid controller position
+                if (dx == 1 && dz == 1) continue;
                 BlockPos origin = worldPosition.offset(-dx, 0, -dz);
-                if (isValidStructureAt(origin)) {
+                CoilBlock coil = detectCoilAt(origin);
+                if (coil != null) {
                     structureValid = true;
+                    installedCoilTemp = coil.getTemperature();
                     return true;
                 }
             }
         }
         structureValid = false;
+        installedCoilTemp = 0;
         return false;
     }
 
-    private boolean isValidStructureAt(BlockPos origin) {
+    // Returns the detected CoilBlock if the structure is valid, null otherwise.
+    private CoilBlock detectCoilAt(BlockPos origin) {
         Block base  = ModBlocks.EBF_BASE.get();
         Block wall  = ModBlocks.EBF_WALL.get();
         Block top   = ModBlocks.EBF_TOP.get();
@@ -165,23 +190,33 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         Block fPort = ModBlocks.FLUID_PORT.get();
 
         for (int x = 0; x < 3; x++)
-            for (int z = 0; z < 3; z++) {
-                if (!isAnyOf(origin.offset(x, 0, z), base, ctrl, ePort, fPort)) return false;
-            }
+            for (int z = 0; z < 3; z++)
+                if (!isAnyOf(origin.offset(x, 0, z), base, ctrl, ePort, fPort)) return null;
 
-        for (int y = 1; y <= 2; y++)
-            for (int x = 0; x < 3; x++)
+        CoilBlock detectedCoil = null;
+        for (int y = 1; y <= 2; y++) {
+            for (int x = 0; x < 3; x++) {
                 for (int z = 0; z < 3; z++) {
-                    if (x == 1 && z == 1) continue; // hollow interior
-                    if (!isAnyOf(origin.offset(x, y, z), wall, ePort, fPort)) return false;
+                    if (x == 1 && z == 1) continue;
+                    BlockPos p = origin.offset(x, y, z);
+                    boolean isCorner = (x == 0 || x == 2) && (z == 0 || z == 2);
+                    if (isCorner) {
+                        Block b = level.getBlockState(p).getBlock();
+                        if (!(b instanceof CoilBlock coil)) return null;
+                        if (detectedCoil == null) detectedCoil = coil;
+                        else if (detectedCoil != coil) return null;
+                    } else {
+                        if (!isAnyOf(p, wall, ePort, fPort)) return null;
+                    }
                 }
+            }
+        }
 
         for (int x = 0; x < 3; x++)
-            for (int z = 0; z < 3; z++) {
-                if (!isAnyOf(origin.offset(x, 3, z), top, ePort, fPort)) return false;
-            }
+            for (int z = 0; z < 3; z++)
+                if (!isAnyOf(origin.offset(x, 3, z), top, ePort, fPort)) return null;
 
-        return true;
+        return detectedCoil;
     }
 
     private boolean isAnyOf(BlockPos pos, Block... valid) {
@@ -198,6 +233,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putInt("Progress", progress);
         tag.putBoolean("StructureValid", structureValid);
+        tag.putInt("CoilTemp", installedCoilTemp);
     }
 
     @Override
@@ -206,5 +242,6 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         progress = tag.getInt("Progress");
         structureValid = tag.getBoolean("StructureValid");
+        installedCoilTemp = tag.getInt("CoilTemp");
     }
 }

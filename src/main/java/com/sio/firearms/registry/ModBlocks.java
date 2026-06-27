@@ -2,6 +2,17 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlock;
+import com.sio.firearms.block.CrystalGrowthControllerBlock;
+import com.sio.firearms.block.EuvLithographyControllerBlock;
+import com.sio.firearms.block.WaferCuttingMachineBlock;
+import com.sio.firearms.block.DepositionChamberBlock;
+import com.sio.firearms.block.PlasmaEtcherBlock;
+import com.sio.firearms.block.IonImplanterBlock;
+import com.sio.firearms.block.MetallizationChamberBlock;
+import com.sio.firearms.block.WaferTesterBlock;
+import com.sio.firearms.block.DicingSawBlock;
+import com.sio.firearms.block.ChipPackagingMachineBlock;
+import com.sio.firearms.block.CoilBlock;
 import com.sio.firearms.block.AssemblyBenchBlock;
 import com.sio.firearms.block.ChemicalMixerBlock;
 import com.sio.firearms.block.EBFControllerBlock;
@@ -265,6 +276,44 @@ public class ModBlocks {
                             .sound(SoundType.STONE)
                             .lightLevel(state -> 2)));
 
+    public static final DeferredBlock<Block> CHROMIUM_ORE =
+            BLOCKS.register("chromium_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(0, 1), BlockBehaviour.Properties.of()
+                            .strength(3.0f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    public static final DeferredBlock<Block> NICKEL_ORE =
+            BLOCKS.register("nickel_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(0, 1), BlockBehaviour.Properties.of()
+                            .strength(3.0f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    public static final DeferredBlock<Block> BAUXITE_ORE =
+            BLOCKS.register("bauxite_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(0, 2), BlockBehaviour.Properties.of()
+                            .strength(2.5f, 3.0f)
+                            .sound(SoundType.STONE)));
+
+    // ── Coil blocks ──────────────────────────────────────────────────────────
+
+    public static final DeferredBlock<CoilBlock> KANTHAL_COIL =
+            BLOCKS.register("kanthal_coil",
+                    () -> new CoilBlock(800, BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<CoilBlock> NICHROME_COIL =
+            BLOCKS.register("nichrome_coil",
+                    () -> new CoilBlock(1200, BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<CoilBlock> TUNGSTEN_COIL =
+            BLOCKS.register("tungsten_coil",
+                    () -> new CoilBlock(2000, BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
     public static final DeferredBlock<LiquidBlock> CREOSOTE_OIL_FLUID =
             BLOCKS.register("creosote_oil_fluid",
                     () -> new LiquidBlock(ModFluids.CREOSOTE_OIL_STILL.get(), BlockBehaviour.Properties.of()
@@ -370,4 +419,116 @@ public class ModBlocks {
                     () -> new LiquidBlock(ModFluids.PVC_RESIN_STILL.get(), BlockBehaviour.Properties.of()
                             .replaceable().noCollission().strength(-1.0f).liquid()
                             .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    // ── Distillation product fluid blocks ────────────────────────────────────
+    public static final DeferredBlock<LiquidBlock> BUTANE_FLUID =
+            BLOCKS.register("butane_fluid",
+                    () -> new LiquidBlock(ModFluids.BUTANE_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static final DeferredBlock<LiquidBlock> GASOLINE_FLUID =
+            BLOCKS.register("gasoline_fluid",
+                    () -> new LiquidBlock(ModFluids.GASOLINE_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static final DeferredBlock<LiquidBlock> NAPHTHA_FLUID =
+            BLOCKS.register("naphtha_fluid",
+                    () -> new LiquidBlock(ModFluids.NAPHTHA_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static final DeferredBlock<LiquidBlock> KEROSENE_FLUID =
+            BLOCKS.register("kerosene_fluid",
+                    () -> new LiquidBlock(ModFluids.KEROSENE_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static final DeferredBlock<LiquidBlock> DIESEL_FLUID =
+            BLOCKS.register("diesel_fluid",
+                    () -> new LiquidBlock(ModFluids.DIESEL_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static final DeferredBlock<LiquidBlock> HEAVY_GAS_OIL_FLUID =
+            BLOCKS.register("heavy_gas_oil_fluid",
+                    () -> new LiquidBlock(ModFluids.HEAVY_GAS_OIL_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static final DeferredBlock<LiquidBlock> RESIDUAL_FUEL_OIL_FLUID =
+            BLOCKS.register("residual_fuel_oil_fluid",
+                    () -> new LiquidBlock(ModFluids.RESIDUAL_FUEL_OIL_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    // ── Photoresist fluid block ──────────────────────────────────────────────
+    public static final DeferredBlock<LiquidBlock> PHOTORESIST_FLUID =
+            BLOCKS.register("photoresist_fluid",
+                    () -> new LiquidBlock(ModFluids.PHOTORESIST_STILL.get(), BlockBehaviour.Properties.of()
+                            .replaceable().noCollission().strength(-1.0f).liquid()
+                            .pushReaction(PushReaction.DESTROY).noLootTable()));
+
+    // ── Crystal Growth Chamber blocks ────────────────────────────────────────
+    public static final DeferredBlock<Block> CRYSTAL_GROWTH_BASE =
+            BLOCKS.register("crystal_growth_base",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(4.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> CRYSTAL_GROWTH_WALL =
+            BLOCKS.register("crystal_growth_wall",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(4.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> CRYSTAL_GROWTH_TOP =
+            BLOCKS.register("crystal_growth_top",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(4.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> CRYSTAL_GROWTH_CONTROLLER =
+            BLOCKS.register("crystal_growth_controller",
+                    () -> new CrystalGrowthControllerBlock(BlockBehaviour.Properties.of().strength(4.0f).requiresCorrectToolForDrops()));
+
+    // ── EUV Lithography Machine blocks ───────────────────────────────────────
+    public static final DeferredBlock<Block> EUV_BASE =
+            BLOCKS.register("euv_base",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> EUV_WALL =
+            BLOCKS.register("euv_wall",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> EUV_LENS_HOUSING =
+            BLOCKS.register("euv_lens_housing",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> EUV_MIRROR_ARRAY =
+            BLOCKS.register("euv_mirror_array",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> EUV_EMITTER_HOUSING =
+            BLOCKS.register("euv_emitter_housing",
+                    () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> EUV_LITHOGRAPHY_CONTROLLER =
+            BLOCKS.register("euv_lithography_controller",
+                    () -> new EuvLithographyControllerBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+
+    // ── Stage 2 microchip fabrication machines ───────────────────────────────
+    public static final DeferredBlock<Block> WAFER_CUTTING_MACHINE =
+            BLOCKS.register("wafer_cutting_machine",
+                    () -> new WaferCuttingMachineBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> DEPOSITION_CHAMBER =
+            BLOCKS.register("deposition_chamber",
+                    () -> new DepositionChamberBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> PLASMA_ETCHER =
+            BLOCKS.register("plasma_etcher",
+                    () -> new PlasmaEtcherBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> ION_IMPLANTER =
+            BLOCKS.register("ion_implanter",
+                    () -> new IonImplanterBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> METALLIZATION_CHAMBER =
+            BLOCKS.register("metallization_chamber",
+                    () -> new MetallizationChamberBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> WAFER_TESTER =
+            BLOCKS.register("wafer_tester",
+                    () -> new WaferTesterBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> DICING_SAW =
+            BLOCKS.register("dicing_saw",
+                    () -> new DicingSawBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> CHIP_PACKAGING_MACHINE =
+            BLOCKS.register("chip_packaging_machine",
+                    () -> new ChipPackagingMachineBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
 }

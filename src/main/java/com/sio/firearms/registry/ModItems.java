@@ -16,6 +16,7 @@ import com.sio.firearms.item.MedikitItem;
 import com.sio.firearms.item.ShotgunItem;
 import com.sio.firearms.item.SMGItem;
 import com.sio.firearms.item.SniperRifleItem;
+import com.sio.firearms.item.WrenchItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -129,6 +130,29 @@ public class ModItems {
             () -> new NightVisionGogglesItem(ModArmorMaterials.NIGHT_VISION_GOGGLES,
                     new Item.Properties().stacksTo(1).durability(ArmorItem.Type.HELMET.getDurability(15))));
 
+    // ── Microchip production chain — Stage 1 ─────────────────────────────────
+    public static final DeferredItem<Item> METALLURGICAL_SILICON   = ITEMS.registerSimpleItem("metallurgical_silicon");
+    public static final DeferredItem<Item> ELECTRONIC_GRADE_SILICON = ITEMS.registerSimpleItem("electronic_grade_silicon");
+    public static final DeferredItem<Item> SILICON_INGOT           = ITEMS.registerSimpleItem("silicon_ingot");
+    public static final DeferredItem<Item> SILICON_WAFER           = ITEMS.registerSimpleItem("silicon_wafer");
+    public static final DeferredItem<Item> COATED_WAFER            = ITEMS.registerSimpleItem("coated_wafer");
+    public static final DeferredItem<Item> PATTERNED_WAFER         = ITEMS.registerSimpleItem("patterned_wafer");
+    public static final DeferredItem<Item> ETCHED_WAFER            = ITEMS.registerSimpleItem("etched_wafer");
+    public static final DeferredItem<Item> DOPED_WAFER             = ITEMS.registerSimpleItem("doped_wafer");
+    public static final DeferredItem<Item> FINISHED_WAFER          = ITEMS.registerSimpleItem("finished_wafer");
+    public static final DeferredItem<Item> TESTED_WAFER            = ITEMS.registerSimpleItem("tested_wafer");
+    public static final DeferredItem<Item> DEFECTIVE_WAFER         = ITEMS.registerSimpleItem("defective_wafer");
+    public static final DeferredItem<Item> SILICON_DIE             = ITEMS.registerSimpleItem("silicon_die");
+    public static final DeferredItem<Item> BASIC_MICROCHIP         = ITEMS.registerSimpleItem("basic_microchip");
+    public static final DeferredItem<Item> ADVANCED_MICROCHIP      = ITEMS.registerSimpleItem("advanced_microchip");
+    public static final DeferredItem<Item> PHOTOMASK =
+            ITEMS.register("photomask", () -> new Item(new Item.Properties().stacksTo(1).durability(10)));
+    public static final DeferredItem<Item> GOLD_FOIL               = ITEMS.registerSimpleItem("gold_foil");
+    public static final DeferredItem<Item> DIAMOND_SAW_BLADE =
+            ITEMS.register("diamond_saw_blade", () -> new Item(new Item.Properties().stacksTo(1).durability(64)));
+    public static final DeferredItem<Item> BORON              = ITEMS.registerSimpleItem("boron");
+    public static final DeferredItem<Item> PHOSPHORUS         = ITEMS.registerSimpleItem("phosphorus");
+
     // ── New chemical items ───────────────────────────────────────────────────
     public static final DeferredItem<Item> QUARTZ_SAND        = ITEMS.registerSimpleItem("quartz_sand");
     public static final DeferredItem<Item> ETCHED_STEEL       = ITEMS.registerSimpleItem("etched_steel");
@@ -190,12 +214,28 @@ public class ModItems {
     public static final DeferredItem<Item> URANIUM_ORE_RAW  = ITEMS.registerSimpleItem("uranium_ore_raw");
     public static final DeferredItem<Item> TUNGSTEN_INGOT   = ITEMS.registerSimpleItem("tungsten_ingot");
     public static final DeferredItem<Item> URANIUM_INGOT    = ITEMS.registerSimpleItem("uranium_ingot");
+    public static final DeferredItem<Item> CHROMIUM_INGOT   = ITEMS.registerSimpleItem("chromium_ingot");
+    public static final DeferredItem<Item> NICKEL_INGOT     = ITEMS.registerSimpleItem("nickel_ingot");
+    public static final DeferredItem<Item> BAUXITE_DUST     = ITEMS.registerSimpleItem("bauxite_dust");
+    public static final DeferredItem<Item> ALUMINUM_INGOT   = ITEMS.registerSimpleItem("aluminum_ingot");
+    public static final DeferredItem<Item> KANTHAL_ALLOY    = ITEMS.registerSimpleItem("kanthal_alloy");
+    public static final DeferredItem<Item> KANTHAL_WIRE     = ITEMS.registerSimpleItem("kanthal_wire");
+    public static final DeferredItem<Item> NICHROME_ALLOY   = ITEMS.registerSimpleItem("nichrome_alloy");
+    public static final DeferredItem<Item> NICHROME_WIRE    = ITEMS.registerSimpleItem("nichrome_wire");
+    public static final DeferredItem<Item> TUNGSTEN_CARBIDE = ITEMS.registerSimpleItem("tungsten_carbide");
+    public static final DeferredItem<Item> TUNGSTEN_WIRE    = ITEMS.registerSimpleItem("tungsten_wire");
 
     public static final DeferredItem<BlockItem> SULFUR_ORE    = ITEMS.registerSimpleBlockItem(ModBlocks.SULFUR_ORE);
     public static final DeferredItem<BlockItem> SALTPETER_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.SALTPETER_ORE);
     public static final DeferredItem<BlockItem> TUNGSTEN_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.TUNGSTEN_ORE);
     public static final DeferredItem<BlockItem> FLUORITE_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.FLUORITE_ORE);
     public static final DeferredItem<BlockItem> URANIUM_ORE   = ITEMS.registerSimpleBlockItem(ModBlocks.URANIUM_ORE);
+    public static final DeferredItem<BlockItem> CHROMIUM_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.CHROMIUM_ORE);
+    public static final DeferredItem<BlockItem> NICKEL_ORE    = ITEMS.registerSimpleBlockItem(ModBlocks.NICKEL_ORE);
+    public static final DeferredItem<BlockItem> BAUXITE_ORE   = ITEMS.registerSimpleBlockItem(ModBlocks.BAUXITE_ORE);
+    public static final DeferredItem<BlockItem> KANTHAL_COIL  = ITEMS.registerSimpleBlockItem(ModBlocks.KANTHAL_COIL);
+    public static final DeferredItem<BlockItem> NICHROME_COIL = ITEMS.registerSimpleBlockItem(ModBlocks.NICHROME_COIL);
+    public static final DeferredItem<BlockItem> TUNGSTEN_COIL = ITEMS.registerSimpleBlockItem(ModBlocks.TUNGSTEN_COIL);
 
     public static final DeferredItem<BlockItem> EBF_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_BASE);
     public static final DeferredItem<BlockItem> EBF_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_WALL);
@@ -230,4 +270,57 @@ public class ModItems {
     public static final DeferredItem<BlockItem> OIL_DERRICK_BASE = ITEMS.registerSimpleBlockItem(ModBlocks.OIL_DERRICK_BASE);
     public static final DeferredItem<BlockItem> OIL_DERRICK_PILLAR = ITEMS.registerSimpleBlockItem(ModBlocks.OIL_DERRICK_PILLAR);
     public static final DeferredItem<BlockItem> OIL_DERRICK_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.OIL_DERRICK_CONTROLLER);
+
+    public static final DeferredItem<Item> WRENCH =
+            ITEMS.register("wrench", () -> new WrenchItem());
+
+    // ── Distillation product buckets ─────────────────────────────────────────
+    public static final DeferredItem<Item> BUTANE_BUCKET = ITEMS.register("butane_bucket",
+            () -> new BucketItem(ModFluids.BUTANE_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> GASOLINE_BUCKET = ITEMS.register("gasoline_bucket",
+            () -> new BucketItem(ModFluids.GASOLINE_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> NAPHTHA_BUCKET = ITEMS.register("naphtha_bucket",
+            () -> new BucketItem(ModFluids.NAPHTHA_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> KEROSENE_BUCKET = ITEMS.register("kerosene_bucket",
+            () -> new BucketItem(ModFluids.KEROSENE_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> DIESEL_BUCKET = ITEMS.register("diesel_bucket",
+            () -> new BucketItem(ModFluids.DIESEL_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> HEAVY_GAS_OIL_BUCKET = ITEMS.register("heavy_gas_oil_bucket",
+            () -> new BucketItem(ModFluids.HEAVY_GAS_OIL_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> RESIDUAL_FUEL_OIL_BUCKET = ITEMS.register("residual_fuel_oil_bucket",
+            () -> new BucketItem(ModFluids.RESIDUAL_FUEL_OIL_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    // ── Photoresist bucket ────────────────────────────────────────────────────
+    public static final DeferredItem<Item> PHOTORESIST_BUCKET = ITEMS.register("photoresist_bucket",
+            () -> new BucketItem(ModFluids.PHOTORESIST_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    // ── Stage 2 machine block items ───────────────────────────────────────────
+    public static final DeferredItem<BlockItem> WAFER_CUTTING_MACHINE    = ITEMS.registerSimpleBlockItem(ModBlocks.WAFER_CUTTING_MACHINE);
+    public static final DeferredItem<BlockItem> DEPOSITION_CHAMBER       = ITEMS.registerSimpleBlockItem(ModBlocks.DEPOSITION_CHAMBER);
+    public static final DeferredItem<BlockItem> PLASMA_ETCHER            = ITEMS.registerSimpleBlockItem(ModBlocks.PLASMA_ETCHER);
+    public static final DeferredItem<BlockItem> ION_IMPLANTER            = ITEMS.registerSimpleBlockItem(ModBlocks.ION_IMPLANTER);
+    public static final DeferredItem<BlockItem> METALLIZATION_CHAMBER    = ITEMS.registerSimpleBlockItem(ModBlocks.METALLIZATION_CHAMBER);
+    public static final DeferredItem<BlockItem> WAFER_TESTER             = ITEMS.registerSimpleBlockItem(ModBlocks.WAFER_TESTER);
+    public static final DeferredItem<BlockItem> DICING_SAW               = ITEMS.registerSimpleBlockItem(ModBlocks.DICING_SAW);
+    public static final DeferredItem<BlockItem> CHIP_PACKAGING_MACHINE   = ITEMS.registerSimpleBlockItem(ModBlocks.CHIP_PACKAGING_MACHINE);
+
+    // ── Multiblock block items ────────────────────────────────────────────────
+    public static final DeferredItem<BlockItem> CRYSTAL_GROWTH_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.CRYSTAL_GROWTH_BASE);
+    public static final DeferredItem<BlockItem> CRYSTAL_GROWTH_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.CRYSTAL_GROWTH_WALL);
+    public static final DeferredItem<BlockItem> CRYSTAL_GROWTH_TOP        = ITEMS.registerSimpleBlockItem(ModBlocks.CRYSTAL_GROWTH_TOP);
+    public static final DeferredItem<BlockItem> CRYSTAL_GROWTH_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.CRYSTAL_GROWTH_CONTROLLER);
+    public static final DeferredItem<BlockItem> EUV_BASE                  = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_BASE);
+    public static final DeferredItem<BlockItem> EUV_WALL                  = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_WALL);
+    public static final DeferredItem<BlockItem> EUV_LENS_HOUSING          = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_LENS_HOUSING);
+    public static final DeferredItem<BlockItem> EUV_MIRROR_ARRAY          = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_MIRROR_ARRAY);
+    public static final DeferredItem<BlockItem> EUV_EMITTER_HOUSING       = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_EMITTER_HOUSING);
+    public static final DeferredItem<BlockItem> EUV_LITHOGRAPHY_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER);
 }

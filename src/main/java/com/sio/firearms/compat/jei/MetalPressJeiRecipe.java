@@ -2,6 +2,7 @@ package com.sio.firearms.compat.jei;
 
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.List;
 
@@ -42,7 +43,15 @@ public class MetalPressJeiRecipe {
                 new MetalPressJeiRecipe(
                         new ItemStack(ModItems.STEEL_ROD.get()),
                         new ItemStack(ModItems.STEEL_INGOT.get()),
-                        new ItemStack(ModItems.FIRING_MECHANISM.get()))
+                        new ItemStack(ModItems.FIRING_MECHANISM.get())),
+                new MetalPressJeiRecipe(
+                        new ItemStack(Items.GOLD_INGOT),
+                        ItemStack.EMPTY,
+                        new ItemStack(ModItems.GOLD_FOIL.get(), 4)),
+                new MetalPressJeiRecipe(
+                        new ItemStack(Items.DIAMOND),
+                        ItemStack.EMPTY,
+                        new ItemStack(ModItems.DIAMOND_SAW_BLADE.get(), 2))
         );
     }
 }

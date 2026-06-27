@@ -1,5 +1,6 @@
 package com.sio.firearms.compat.jei;
 
+import com.sio.firearms.registry.ModBlocks;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +35,12 @@ public class AssemblyBenchJeiRecipe {
                 createSMGRecipe(),
                 createSniperRifleRecipe(),
                 createAPBulletRecipe(),
-                createRefinedBulletRecipe()
+                createRefinedBulletRecipe(),
+                createKanthalAlloyRecipe(),
+                createKanthalCoilRecipe(),
+                createNichromeCoilRecipe(),
+                createTungstenCoilRecipe(),
+                createPhotomaskRecipe()
         );
     }
 
@@ -127,5 +133,48 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(ModItems.BULLET_CASING.get()),
                 new ItemStack(ModItems.REFINED_GUNPOWDER.get())
         }, new ItemStack(ModItems.REFINED_BULLET.get(), 8));
+    }
+
+    private static AssemblyBenchJeiRecipe createKanthalAlloyRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.CHROMIUM_INGOT.get()),
+                new ItemStack(net.minecraft.world.item.Items.IRON_INGOT),
+                new ItemStack(ModItems.ALUMINUM_INGOT.get())
+        }, new ItemStack(ModItems.KANTHAL_ALLOY.get(), 4));
+    }
+
+    private static AssemblyBenchJeiRecipe createKanthalCoilRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.KANTHAL_WIRE.get()),
+                new ItemStack(ModItems.KANTHAL_WIRE.get()),
+                new ItemStack(ModItems.KANTHAL_WIRE.get()),
+                new ItemStack(ModItems.KANTHAL_WIRE.get())
+        }, new ItemStack(ModBlocks.KANTHAL_COIL.get().asItem()));
+    }
+
+    private static AssemblyBenchJeiRecipe createNichromeCoilRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.NICHROME_WIRE.get()),
+                new ItemStack(ModItems.NICHROME_WIRE.get()),
+                new ItemStack(ModItems.NICHROME_WIRE.get()),
+                new ItemStack(ModItems.NICHROME_WIRE.get())
+        }, new ItemStack(ModBlocks.NICHROME_COIL.get().asItem()));
+    }
+
+    private static AssemblyBenchJeiRecipe createTungstenCoilRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.TUNGSTEN_WIRE.get()),
+                new ItemStack(ModItems.TUNGSTEN_WIRE.get()),
+                new ItemStack(ModItems.TUNGSTEN_WIRE.get()),
+                new ItemStack(ModItems.TUNGSTEN_WIRE.get())
+        }, new ItemStack(ModBlocks.TUNGSTEN_COIL.get().asItem()));
+    }
+
+    private static AssemblyBenchJeiRecipe createPhotomaskRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(net.minecraft.world.item.Items.QUARTZ),
+                new ItemStack(ModItems.GOLD_FOIL.get()),
+                new ItemStack(ModItems.BASIC_MICROCHIP.get())
+        }, new ItemStack(ModItems.PHOTOMASK.get()));
     }
 }

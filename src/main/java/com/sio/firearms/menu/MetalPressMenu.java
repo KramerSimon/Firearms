@@ -77,12 +77,41 @@ public class MetalPressMenu extends AbstractContainerMenu {
             return;
         }
 
+        // gold_ingot alone → 4x gold_foil
+        if (slotIs(0, "minecraft:gold_ingot") && slotEmpty(1)) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.GOLD_FOIL.get(), 4));
+            return;
+        }
+
+        // diamond alone → 2x diamond_saw_blade
+        if (slotIs(0, "minecraft:diamond") && slotEmpty(1)) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.DIAMOND_SAW_BLADE.get(), 2));
+            return;
+        }
+
         handler.setStackInSlot(2, ItemStack.EMPTY);
     }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slots 0-1: inputs; slot 2: output
+        if (index < 3) {
+            if (!moveItemStackTo(stack, 3, 39, false)) return ItemStack.EMPTY;
+        } else if (index < 30) {
+            if (!moveItemStackTo(stack, 0, 2, false)
+                    && !moveItemStackTo(stack, 30, 39, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 2, false)
+                    && !moveItemStackTo(stack, 3, 30, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
     }
 
     @Override

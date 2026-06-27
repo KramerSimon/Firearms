@@ -1,0 +1,8 @@
+﻿{
+  "type": "minecraft:block",
+  "pools": [{
+    "rolls": 1,
+    "entries": [{"type": "minecraft:item", "name": "firearms:euv_emitter_housing"}],
+    "conditions": [{"condition": "minecraft:survives_explosion"}]
+  }]
+}

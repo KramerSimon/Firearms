@@ -1,0 +1,10 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["GHG","HCH","GHG"],
+  "key": {
+    "G": {"item": "minecraft:gold_ingot"},
+    "H": {"item": "firearms:hardened_steel_ingot"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:chip_packaging_machine", "count": 1}
+}

@@ -103,7 +103,24 @@ public class GunModificationTableMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slots 0-2: inputs (gun, sight, underbarrel); slot 3: output
+        if (index < 4) {
+            if (!moveItemStackTo(stack, 4, 40, false)) return ItemStack.EMPTY;
+        } else if (index < 31) {
+            if (!moveItemStackTo(stack, 0, 3, false)
+                    && !moveItemStackTo(stack, 31, 40, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 3, false)
+                    && !moveItemStackTo(stack, 4, 31, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
     }
 
     @Override

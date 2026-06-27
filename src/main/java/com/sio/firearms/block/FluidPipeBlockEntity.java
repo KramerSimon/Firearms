@@ -45,9 +45,11 @@ public class FluidPipeBlockEntity extends BlockEntity {
         }
 
         EnumSet<Direction> pulledFrom = EnumSet.noneOf(Direction.class);
+        BlockState pipeState = level.getBlockState(worldPosition);
 
         for (Direction dir : Direction.values()) {
             if (tank.getFluidAmount() >= tank.getCapacity()) break;
+            if (pipeState.getValue(FluidPipeBlock.blockedPropFor(dir))) continue;
             BlockPos neighborPos = worldPosition.relative(dir);
             BlockEntity be = level.getBlockEntity(neighborPos);
             if (be == null || be instanceof FluidPipeBlockEntity) continue;
@@ -78,6 +80,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
 
         for (Direction dir : Direction.values()) {
             if (tank.getFluidAmount() <= 0) break;
+            if (pipeState.getValue(FluidPipeBlock.blockedPropFor(dir))) continue;
             if (pulledFrom.contains(dir)) continue;
             BlockPos neighborPos = worldPosition.relative(dir);
             BlockEntity be = level.getBlockEntity(neighborPos);
@@ -109,6 +112,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
 
         for (Direction dir : Direction.values()) {
             if (tank.getFluidAmount() <= 0) break;
+            if (pipeState.getValue(FluidPipeBlock.blockedPropFor(dir))) continue;
             BlockPos neighborPos = worldPosition.relative(dir);
             if (!(level.getBlockEntity(neighborPos) instanceof FluidPipeBlockEntity pipeNeighbor)) continue;
 

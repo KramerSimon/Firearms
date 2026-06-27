@@ -58,6 +58,27 @@ public class ChemicalMixerMenu extends AbstractContainerMenu {
     public int getFluidOutAmount() { return data.get(6); }
     public int getFluidOutMax()    { return data.get(7); }
 
-    @Override public ItemStack quickMoveStack(Player player, int index) { return ItemStack.EMPTY; }
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slots 0-2: inputs; slots 3-4: outputs
+        if (index < 5) {
+            if (!moveItemStackTo(stack, 5, 41, false)) return ItemStack.EMPTY;
+        } else if (index < 32) {
+            if (!moveItemStackTo(stack, 0, 3, false)
+                    && !moveItemStackTo(stack, 32, 41, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 3, false)
+                    && !moveItemStackTo(stack, 5, 32, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
+    }
+
     @Override public boolean stillValid(Player player) { return true; }
 }

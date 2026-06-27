@@ -60,6 +60,8 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
         if (be instanceof OilDerrickControllerBlockEntity derrick) return derrick.getEnergyStorage();
         if (be instanceof RefineryControllerBlockEntity refinery) return refinery.getEnergyStorage();
         if (be instanceof EBFControllerBlockEntity ebf) return ebf.getEnergyStorage();
+        if (be instanceof CrystalGrowthControllerBlockEntity cgc) return cgc.getEnergyStorage();
+        if (be instanceof EuvLithographyControllerBlockEntity euv) return euv.getEnergyStorage();
         return null;
     }
 
@@ -83,7 +85,9 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 BlockEntity be = level.getBlockEntity(neighbor);
                 if (be instanceof OilDerrickControllerBlockEntity
                         || be instanceof RefineryControllerBlockEntity
-                        || be instanceof EBFControllerBlockEntity) {
+                        || be instanceof EBFControllerBlockEntity
+                        || be instanceof CrystalGrowthControllerBlockEntity
+                        || be instanceof EuvLithographyControllerBlockEntity) {
                     return neighbor;
                 }
 
@@ -107,6 +111,16 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || block == ModBlocks.EBF_WALL.get()
                 || block == ModBlocks.EBF_TOP.get()
                 || block == ModBlocks.EBF_CONTROLLER.get()
+                || block == ModBlocks.CRYSTAL_GROWTH_BASE.get()
+                || block == ModBlocks.CRYSTAL_GROWTH_WALL.get()
+                || block == ModBlocks.CRYSTAL_GROWTH_TOP.get()
+                || block == ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get()
+                || block == ModBlocks.EUV_BASE.get()
+                || block == ModBlocks.EUV_WALL.get()
+                || block == ModBlocks.EUV_LENS_HOUSING.get()
+                || block == ModBlocks.EUV_MIRROR_ARRAY.get()
+                || block == ModBlocks.EUV_EMITTER_HOUSING.get()
+                || block == ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()
                 || block == ModBlocks.ENERGY_PORT.get()
                 || block == ModBlocks.FLUID_PORT.get();
     }

@@ -1,0 +1,9 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SSS","SGS","SSS"],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "G": {"item": "minecraft:glass"}
+  },
+  "result": {"id": "firearms:crystal_growth_base", "count": 4}
+}

@@ -61,7 +61,24 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slots 0-8: inputs; slot 9: output
+        if (index < 10) {
+            if (!moveItemStackTo(stack, 10, 46, false)) return ItemStack.EMPTY;
+        } else if (index < 37) {
+            if (!moveItemStackTo(stack, 0, 9, false)
+                    && !moveItemStackTo(stack, 37, 46, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 9, false)
+                    && !moveItemStackTo(stack, 10, 37, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
     }
 
     @Override

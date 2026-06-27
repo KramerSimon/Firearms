@@ -1,0 +1,9 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["TGT","G G","TGT"],
+  "key": {
+    "T": {"item": "firearms:tungsten_ingot"},
+    "G": {"item": "minecraft:glass"}
+  },
+  "result": {"id": "firearms:euv_wall", "count": 4}
+}

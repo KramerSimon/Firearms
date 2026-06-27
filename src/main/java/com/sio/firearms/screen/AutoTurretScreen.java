@@ -40,4 +40,16 @@ public class AutoTurretScreen extends AbstractContainerScreen<AutoTurretMenu> {
 
         renderTooltip(gui, mouseX, mouseY);
     }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Energy bar (150–162, top 14, bottom 66)
+        if (mx >= leftPos + 150 && mx < leftPos + 162 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
+    }
 }

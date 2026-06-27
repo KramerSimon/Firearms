@@ -1,0 +1,10 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["GGG","TAT","GGG"],
+  "key": {
+    "G": {"item": "minecraft:glass"},
+    "T": {"item": "firearms:tungsten_ingot"},
+    "A": {"item": "firearms:aluminum_ingot"}
+  },
+  "result": {"id": "firearms:euv_mirror_array", "count": 2}
+}

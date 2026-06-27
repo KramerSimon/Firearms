@@ -35,13 +35,13 @@ public class ItemPipeBlock extends Block implements EntityBlock {
     public static final BooleanProperty UP    = BlockStateProperties.UP;
     public static final BooleanProperty DOWN  = BlockStateProperties.DOWN;
 
-    private static final VoxelShape CENTER      = Block.box(5, 5,  5, 11, 11, 11);
-    private static final VoxelShape NORTH_SHAPE = Block.box(5, 5,  0, 11, 11,  5);
-    private static final VoxelShape SOUTH_SHAPE = Block.box(5, 5, 11, 11, 11, 16);
-    private static final VoxelShape EAST_SHAPE  = Block.box(11, 5, 5, 16, 11, 11);
-    private static final VoxelShape WEST_SHAPE  = Block.box( 0, 5, 5,  5, 11, 11);
-    private static final VoxelShape UP_SHAPE    = Block.box(5, 11, 5, 11, 16, 11);
-    private static final VoxelShape DOWN_SHAPE  = Block.box(5,  0, 5, 11,  5, 11);
+    private static final VoxelShape CENTER      = Block.box(6, 6,  6, 10, 10, 10);
+    private static final VoxelShape NORTH_SHAPE = Block.box(6, 6,  0, 10, 10,  6);
+    private static final VoxelShape SOUTH_SHAPE = Block.box(6, 6, 10, 10, 10, 16);
+    private static final VoxelShape EAST_SHAPE  = Block.box(10, 6, 6, 16, 10, 10);
+    private static final VoxelShape WEST_SHAPE  = Block.box( 0, 6, 6,  6, 10, 10);
+    private static final VoxelShape UP_SHAPE    = Block.box(6, 10, 6, 10, 16, 10);
+    private static final VoxelShape DOWN_SHAPE  = Block.box(6,  0, 6, 10,  6, 10);
 
     public ItemPipeBlock(BlockBehaviour.Properties properties) {
         super(properties);

@@ -39,9 +39,28 @@ public class CoalGeneratorScreen extends AbstractContainerScreen<CoalGeneratorMe
             gui.fill(leftPos + 150, topPos + 66 - barHeight, leftPos + 162, topPos + 66, 0xFFCC0000);
         }
 
-        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
-                leftPos + 7, topPos + 75, 0x404040, false);
-
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Burn indicator (14×14 at 79,34)
+        if (mx >= leftPos + 79 && mx < leftPos + 93 && my >= topPos + 34 && my < topPos + 48) {
+            int maxBurn = menu.getMaxBurnTime();
+            if (maxBurn > 0) {
+                gui.renderTooltip(font,
+                        Component.literal("Burn Time: " + menu.getBurnTime() + " / " + maxBurn + " ticks"),
+                        mx, my);
+                return;
+            }
+        }
+        // Energy bar (150–162, top at 14, bottom at 66)
+        if (mx >= leftPos + 150 && mx < leftPos + 162 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

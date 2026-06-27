@@ -231,6 +231,21 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 ItemStack.EMPTY, new FluidStack(ModFluids.PVC_RESIN_STILL.get(), 500));
         }
 
+        // 7. bauxite_dust + sulfuric_acid 500mB → aluminum_ingot x2
+        if (itemIs(slotA, "firearms:bauxite_dust", 1) && fluidIs("firearms:sulfuric_acid_still", 500)
+                && canOutputItem(outSlot, new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2))) {
+            return new RecipeResult("firearms:bauxite_dust", 1, null, 0, 500,
+                new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2), FluidStack.EMPTY);
+        }
+
+        // 8. nickel_ingot + chromium_ingot → nichrome_alloy x2 (no fluid)
+        if (itemIs(slotA, "firearms:nickel_ingot", 1) && itemIs(slotB, "firearms:chromium_ingot", 1)
+                && fluidInputTank.isEmpty()
+                && canOutputItem(outSlot, new ItemStack(ModItems.NICHROME_ALLOY.get(), 2))) {
+            return new RecipeResult("firearms:nickel_ingot", 1, "firearms:chromium_ingot", 1, 0,
+                new ItemStack(ModItems.NICHROME_ALLOY.get(), 2), FluidStack.EMPTY);
+        }
+
         return null;
     }
 

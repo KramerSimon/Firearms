@@ -2,6 +2,16 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.menu.AcidBathMenu;
+import com.sio.firearms.menu.CrystalGrowthControllerMenu;
+import com.sio.firearms.menu.EuvLithographyMenu;
+import com.sio.firearms.menu.WaferCuttingMachineMenu;
+import com.sio.firearms.menu.DepositionChamberMenu;
+import com.sio.firearms.menu.PlasmaEtcherMenu;
+import com.sio.firearms.menu.IonImplanterMenu;
+import com.sio.firearms.menu.MetallizationChamberMenu;
+import com.sio.firearms.menu.WaferTesterMenu;
+import com.sio.firearms.menu.DicingSawMenu;
+import com.sio.firearms.menu.ChipPackagingMachineMenu;
 import com.sio.firearms.menu.AssemblyBenchMenu;
 import com.sio.firearms.menu.ElectrolysisMachineMenu;
 import com.sio.firearms.menu.ChemicalMixerMenu;
@@ -91,4 +101,38 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<ElectrolysisMachineMenu>> ELECTROLYSIS_MACHINE_MENU =
             MENU_TYPES.register("electrolysis_machine",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new ElectrolysisMachineMenu(windowId, inv)));
+
+    // ── Stage 2 microchip fabrication machines ───────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<WaferCuttingMachineMenu>> WAFER_CUTTING_MACHINE_MENU =
+            MENU_TYPES.register("wafer_cutting_machine",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new WaferCuttingMachineMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<DepositionChamberMenu>> DEPOSITION_CHAMBER_MENU =
+            MENU_TYPES.register("deposition_chamber",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new DepositionChamberMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<PlasmaEtcherMenu>> PLASMA_ETCHER_MENU =
+            MENU_TYPES.register("plasma_etcher",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new PlasmaEtcherMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<IonImplanterMenu>> ION_IMPLANTER_MENU =
+            MENU_TYPES.register("ion_implanter",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new IonImplanterMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<MetallizationChamberMenu>> METALLIZATION_CHAMBER_MENU =
+            MENU_TYPES.register("metallization_chamber",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new MetallizationChamberMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<WaferTesterMenu>> WAFER_TESTER_MENU =
+            MENU_TYPES.register("wafer_tester",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new WaferTesterMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<DicingSawMenu>> DICING_SAW_MENU =
+            MENU_TYPES.register("dicing_saw",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new DicingSawMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<ChipPackagingMachineMenu>> CHIP_PACKAGING_MACHINE_MENU =
+            MENU_TYPES.register("chip_packaging_machine",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new ChipPackagingMachineMenu(windowId, inv)));
+
+    // ── Multiblock controllers ───────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<CrystalGrowthControllerMenu>> CRYSTAL_GROWTH_CONTROLLER_MENU =
+            MENU_TYPES.register("crystal_growth_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new CrystalGrowthControllerMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<EuvLithographyMenu>> EUV_LITHOGRAPHY_MENU =
+            MENU_TYPES.register("euv_lithography_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new EuvLithographyMenu(windowId, inv)));
 }

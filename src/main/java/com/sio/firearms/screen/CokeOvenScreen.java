@@ -41,4 +41,23 @@ public class CokeOvenScreen extends AbstractContainerScreen<CokeOvenMenu> {
 
         renderTooltip(gui, mouseX, mouseY);
     }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Progress arrow (88–112, 34–50)
+        if (mx >= leftPos + 88 && mx < leftPos + 112 && my >= topPos + 34 && my < topPos + 50) {
+            gui.renderTooltip(font,
+                    Component.literal("Progress: " + menu.getProgress() + " / " + menu.getMaxProgress() + " ticks"),
+                    mx, my);
+            return;
+        }
+        // Creosote oil bar (150–162, top 14, bottom 66)
+        if (mx >= leftPos + 150 && mx < leftPos + 162 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Creosote Oil: " + menu.getFluidAmount() + " / " + menu.getMaxFluid() + " mB"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
+    }
 }

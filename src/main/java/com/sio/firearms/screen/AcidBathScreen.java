@@ -33,14 +33,12 @@ public class AcidBathScreen extends AbstractContainerScreen<AcidBathMenu> {
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
 
-        // energy bar (red)
         int maxE = menu.getMaxEnergy();
         if (maxE > 0) {
             int h = menu.getEnergyStored() * 52 / maxE;
             gui.fill(leftPos + 8, topPos + 66 - h, leftPos + 20, topPos + 66, 0xFFCC0000);
         }
 
-        // acid bar (yellow-green — sulfuric acid colour)
         int maxA = menu.getAcidMax();
         if (maxA > 0 && menu.getAcidAmount() > 0) {
             int h = menu.getAcidAmount() * 52 / maxA;
@@ -48,5 +46,31 @@ public class AcidBathScreen extends AbstractContainerScreen<AcidBathMenu> {
         }
 
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Progress arrow (80–104, 35–51)
+        if (mx >= leftPos + 80 && mx < leftPos + 104 && my >= topPos + 35 && my < topPos + 51) {
+            gui.renderTooltip(font,
+                    Component.literal("Progress: " + menu.getProgress() + " / " + menu.getMaxProgress() + " ticks"),
+                    mx, my);
+            return;
+        }
+        // Energy bar (8–20, top 14, bottom 66)
+        if (mx >= leftPos + 8 && mx < leftPos + 20 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        // Sulfuric acid bar (27–39, top 14, bottom 66)
+        if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Sulfuric Acid: " + menu.getAcidAmount() + " / " + menu.getAcidMax() + " mB"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

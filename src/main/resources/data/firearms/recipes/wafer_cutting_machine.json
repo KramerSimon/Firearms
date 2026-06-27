@@ -1,0 +1,11 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["H H","SCS","D S"],
+  "key": {
+    "H": {"item": "firearms:hardened_steel_ingot"},
+    "S": {"item": "firearms:steel_ingot"},
+    "C": {"item": "firearms:circuit_board"},
+    "D": {"item": "firearms:diamond_saw_blade"}
+  },
+  "result": {"id": "firearms:wafer_cutting_machine", "count": 1}
+}

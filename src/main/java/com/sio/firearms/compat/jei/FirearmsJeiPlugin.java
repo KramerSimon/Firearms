@@ -27,27 +27,60 @@ public class FirearmsJeiPlugin implements IModPlugin {
                 new LatheRecipeCategory(gui),
                 new EBFRecipeCategory(gui),
                 new ChemicalMixerRecipeCategory(gui),
-                new ElectrolysisRecipeCategory(gui)
+                new ElectrolysisRecipeCategory(gui),
+                // Semiconductor fabrication machines
+                new WaferCuttingMachineRecipeCategory(gui),
+                new DepositionChamberRecipeCategory(gui),
+                new PlasmaEtcherRecipeCategory(gui),
+                new IonImplanterRecipeCategory(gui),
+                new MetallizationChamberRecipeCategory(gui),
+                new WaferTesterRecipeCategory(gui),
+                new DicingSawRecipeCategory(gui),
+                new ChipPackagingMachineRecipeCategory(gui),
+                new CrystalGrowthRecipeCategory(gui),
+                new EuvLithographyRecipeCategory(gui)
         );
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(MetalPressRecipeCategory.RECIPE_TYPE, MetalPressJeiRecipe.getAllRecipes());
+        registration.addRecipes(MetalPressRecipeCategory.RECIPE_TYPE,    MetalPressJeiRecipe.getAllRecipes());
         registration.addRecipes(AssemblyBenchRecipeCategory.RECIPE_TYPE, AssemblyBenchJeiRecipe.getAllRecipes());
-        registration.addRecipes(LatheRecipeCategory.RECIPE_TYPE, LatheJeiRecipe.getAllRecipes());
-        registration.addRecipes(EBFRecipeCategory.RECIPE_TYPE, EBFJeiRecipe.getAllRecipes());
+        registration.addRecipes(LatheRecipeCategory.RECIPE_TYPE,         LatheJeiRecipe.getAllRecipes());
+        registration.addRecipes(EBFRecipeCategory.RECIPE_TYPE,           EBFJeiRecipe.getAllRecipes());
         registration.addRecipes(ChemicalMixerRecipeCategory.RECIPE_TYPE, ChemicalMixerJeiRecipe.getAllRecipes());
-        registration.addRecipes(ElectrolysisRecipeCategory.RECIPE_TYPE, ElectrolysisJeiRecipe.getAllRecipes());
+        registration.addRecipes(ElectrolysisRecipeCategory.RECIPE_TYPE,  ElectrolysisJeiRecipe.getAllRecipes());
+        // Semiconductor fabrication machines
+        registration.addRecipes(WaferCuttingMachineRecipeCategory.RECIPE_TYPE,  WaferCuttingMachineJeiRecipe.getAllRecipes());
+        registration.addRecipes(DepositionChamberRecipeCategory.RECIPE_TYPE,    DepositionChamberJeiRecipe.getAllRecipes());
+        registration.addRecipes(PlasmaEtcherRecipeCategory.RECIPE_TYPE,         PlasmaEtcherJeiRecipe.getAllRecipes());
+        registration.addRecipes(IonImplanterRecipeCategory.RECIPE_TYPE,         IonImplanterJeiRecipe.getAllRecipes());
+        registration.addRecipes(MetallizationChamberRecipeCategory.RECIPE_TYPE, MetallizationChamberJeiRecipe.getAllRecipes());
+        registration.addRecipes(WaferTesterRecipeCategory.RECIPE_TYPE,          WaferTesterJeiRecipe.getAllRecipes());
+        registration.addRecipes(DicingSawRecipeCategory.RECIPE_TYPE,            DicingSawJeiRecipe.getAllRecipes());
+        registration.addRecipes(ChipPackagingMachineRecipeCategory.RECIPE_TYPE, ChipPackagingMachineJeiRecipe.getAllRecipes());
+        registration.addRecipes(CrystalGrowthRecipeCategory.RECIPE_TYPE,       CrystalGrowthJeiRecipe.getAllRecipes());
+        registration.addRecipes(EuvLithographyRecipeCategory.RECIPE_TYPE,      EuvLithographyJeiRecipe.getAllRecipes());
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.METAL_PRESS.get()), MetalPressRecipeCategory.RECIPE_TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ASSEMBLY_BENCH.get()), AssemblyBenchRecipeCategory.RECIPE_TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.LATHE.get()), LatheRecipeCategory.RECIPE_TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EBF_CONTROLLER.get()), EBFRecipeCategory.RECIPE_TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_MIXER.get()), ChemicalMixerRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.METAL_PRESS.get()),          MetalPressRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ASSEMBLY_BENCH.get()),       AssemblyBenchRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.LATHE.get()),                LatheRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EBF_CONTROLLER.get()),       EBFRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_MIXER.get()),       ChemicalMixerRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELECTROLYSIS_MACHINE.get()), ElectrolysisRecipeCategory.RECIPE_TYPE);
+        // Semiconductor fabrication machines
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.WAFER_CUTTING_MACHINE.get()),  WaferCuttingMachineRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.DEPOSITION_CHAMBER.get()),    DepositionChamberRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PLASMA_ETCHER.get()),         PlasmaEtcherRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ION_IMPLANTER.get()),         IonImplanterRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.METALLIZATION_CHAMBER.get()), MetallizationChamberRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.WAFER_TESTER.get()),          WaferTesterRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.DICING_SAW.get()),            DicingSawRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHIP_PACKAGING_MACHINE.get()),      ChipPackagingMachineRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get()),   CrystalGrowthRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()),  EuvLithographyRecipeCategory.RECIPE_TYPE);
     }
 }

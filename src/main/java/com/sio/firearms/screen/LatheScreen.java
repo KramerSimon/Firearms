@@ -39,8 +39,24 @@ public class LatheScreen extends AbstractContainerScreen<LatheMenu> {
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
         renderTooltip(gui, mouseX, mouseY);
+    }
 
-        String energyText = menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE";
-        gui.drawString(font, energyText, leftPos + 8, topPos + 66, 0x404040, false);
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Progress arrow (79–103, 40–56)
+        if (mx >= leftPos + 79 && mx < leftPos + 103 && my >= topPos + 40 && my < topPos + 56) {
+            gui.renderTooltip(font,
+                    Component.literal("Progress: " + menu.getProgress() + " / " + menu.getMaxProgress() + " ticks"),
+                    mx, my);
+            return;
+        }
+        // Energy bar (152–164, top 10, bottom 62)
+        if (mx >= leftPos + 152 && mx < leftPos + 164 && my >= topPos + 10 && my <= topPos + 62) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

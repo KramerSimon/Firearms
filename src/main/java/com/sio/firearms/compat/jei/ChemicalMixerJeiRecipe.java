@@ -87,6 +87,29 @@ public class ChemicalMixerJeiRecipe {
                 new ItemStack(ModItems.SALTPETER.get()),
                 new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 250),
                 new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4),
+                FluidStack.EMPTY),
+
+            // bauxite_dust + sulfuric_acid 500mB → aluminum_ingot x2
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.BAUXITE_DUST.get()),
+                new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 500),
+                new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2),
+                FluidStack.EMPTY),
+
+            // nickel_ingot + chromium_ingot (no fluid) → nichrome_alloy x2
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.NICKEL_INGOT.get()),
+                new ItemStack(ModItems.CHROMIUM_INGOT.get()),
+                FluidStack.EMPTY,
+                new ItemStack(ModItems.NICHROME_ALLOY.get(), 2),
+                FluidStack.EMPTY),
+
+            // metallurgical_silicon + sulfuric_acid 500mB + nitric_acid_bucket (250mB) → electronic_grade_silicon
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.METALLURGICAL_SILICON.get()),
+                new ItemStack(ModItems.NITRIC_ACID_BUCKET.get()),
+                new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 500),
+                new ItemStack(ModItems.ELECTRONIC_GRADE_SILICON.get()),
                 FluidStack.EMPTY)
         );
     }

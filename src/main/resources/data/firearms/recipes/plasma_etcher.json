@@ -1,0 +1,11 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SES","HCH","SES"],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "E": {"item": "firearms:etched_steel"},
+    "H": {"item": "firearms:hardened_steel_ingot"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:plasma_etcher", "count": 1}
+}

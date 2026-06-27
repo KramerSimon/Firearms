@@ -1,0 +1,9 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["TTT","THT","TTT"],
+  "key": {
+    "T": {"item": "firearms:tungsten_ingot"},
+    "H": {"item": "firearms:hardened_steel_ingot"}
+  },
+  "result": {"id": "firearms:euv_base", "count": 4}
+}

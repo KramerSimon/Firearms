@@ -21,9 +21,11 @@ public class WireBlockEntity extends EnergyStorageBlock {
     public void serverTick() {
         if (level == null) return;
         boolean changed = false;
+        BlockState wireState = level.getBlockState(worldPosition);
 
         for (Direction dir : Direction.values()) {
             if (energy.getEnergyStored() >= energy.getMaxEnergyStored()) break;
+            if (wireState.getValue(WireBlock.blockedPropFor(dir))) continue;
             BlockPos neighborPos = worldPosition.relative(dir);
             BlockEntity be = level.getBlockEntity(neighborPos);
             if (be == null || be instanceof WireBlockEntity) continue;
@@ -41,6 +43,7 @@ public class WireBlockEntity extends EnergyStorageBlock {
 
         for (Direction dir : Direction.values()) {
             if (energy.getEnergyStored() <= 0) break;
+            if (wireState.getValue(WireBlock.blockedPropFor(dir))) continue;
             BlockPos neighborPos = worldPosition.relative(dir);
             BlockEntity be = level.getBlockEntity(neighborPos);
             if (be == null || be instanceof WireBlockEntity) continue;
@@ -57,6 +60,7 @@ public class WireBlockEntity extends EnergyStorageBlock {
 
         for (Direction dir : Direction.values()) {
             if (energy.getEnergyStored() <= 0) break;
+            if (wireState.getValue(WireBlock.blockedPropFor(dir))) continue;
             BlockPos neighborPos = worldPosition.relative(dir);
             if (level.getBlockEntity(neighborPos) instanceof WireBlockEntity wireNeighbor) {
                 int myEnergy = energy.getEnergyStored();

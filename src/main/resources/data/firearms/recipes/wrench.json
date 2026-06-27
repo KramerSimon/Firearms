@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "S": { "item": "firearms:steel_ingot" },
+    "R": { "item": "firearms:steel_rod" }
+  },
+  "result": {
+    "id": "firearms:wrench",
+    "count": 1
+  }
+}

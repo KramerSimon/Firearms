@@ -103,5 +103,32 @@ public class FluidClientSetup {
             @Override
             public int getTintColor() { return 0xFF2A2A2A; }
         }, ModFluids.SYNTHETIC_RUBBER_TYPE.get());
+
+        // ── Distillation products ─────────────────────────────────────────────
+        registerSimpleFluid(event, "butane",           0xFFB8D4E8, ModFluids.BUTANE_TYPE.get());
+        registerSimpleFluid(event, "gasoline",         0xFFFFE680, ModFluids.GASOLINE_TYPE.get());
+        registerSimpleFluid(event, "naphtha",          0xFFFFCC44, ModFluids.NAPHTHA_TYPE.get());
+        registerSimpleFluid(event, "kerosene",         0xFFFF9900, ModFluids.KEROSENE_TYPE.get());
+        registerSimpleFluid(event, "diesel",           0xFFCC7700, ModFluids.DIESEL_TYPE.get());
+        registerSimpleFluid(event, "heavy_gas_oil",    0xFF8B4513, ModFluids.HEAVY_GAS_OIL_TYPE.get());
+        registerSimpleFluid(event, "residual_fuel_oil",0xFF3D1C00, ModFluids.RESIDUAL_FUEL_OIL_TYPE.get());
+        registerSimpleFluid(event, "photoresist",      0xFFCC88FF, ModFluids.PHOTORESIST_TYPE.get());
+    }
+
+    private static void registerSimpleFluid(RegisterClientExtensionsEvent event,
+                                            String name, int tint,
+                                            net.neoforged.neoforge.fluids.FluidType type) {
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/" + name + "_still");
+            }
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "fluid/" + name + "_flowing");
+            }
+            @Override
+            public int getTintColor() { return tint; }
+        }, type);
     }
 }

@@ -1,0 +1,10 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["EHE","HCH","EHE"],
+  "key": {
+    "E": {"item": "firearms:etched_copper"},
+    "H": {"item": "firearms:hardened_steel_ingot"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {"id": "firearms:wafer_tester", "count": 1}
+}

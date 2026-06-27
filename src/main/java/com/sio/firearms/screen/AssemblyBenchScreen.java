@@ -39,9 +39,25 @@ public class AssemblyBenchScreen extends AbstractContainerScreen<AssemblyBenchMe
             gui.fill(leftPos + 152, topPos + 62 - barH, leftPos + 164, topPos + 62, 0xFFCC0000);
         }
 
-        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
-                leftPos + 7, topPos + 75, 0x404040, false);
-
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Progress arrow (88–112, 35–51)
+        if (mx >= leftPos + 88 && mx < leftPos + 112 && my >= topPos + 35 && my < topPos + 51) {
+            gui.renderTooltip(font,
+                    Component.literal("Progress: " + menu.getProgress() + " / " + menu.getMaxProgress() + " ticks"),
+                    mx, my);
+            return;
+        }
+        // Energy bar (152–164, top 10, bottom 62)
+        if (mx >= leftPos + 152 && mx < leftPos + 164 && my >= topPos + 10 && my <= topPos + 62) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

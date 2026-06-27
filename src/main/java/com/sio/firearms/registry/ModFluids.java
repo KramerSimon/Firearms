@@ -305,4 +305,119 @@ public class ModFluids {
                 .block(() -> ModBlocks.PVC_RESIN_FLUID.get())
                 .slopeFindDistance(2).levelDecreasePerBlock(2).tickRate(20);
     }
+
+    // ── Distillation products ─────────────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> BUTANE_TYPE =
+            FLUID_TYPES.register("butane", () -> new FluidType(FluidType.Properties.create()
+                    .density(600).viscosity(500).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> BUTANE_STILL =
+            FLUIDS.register("butane_still", () -> new BaseFlowingFluid.Source(butaneProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> BUTANE_FLOWING =
+            FLUIDS.register("butane_flowing", () -> new BaseFlowingFluid.Flowing(butaneProperties()));
+    public static BaseFlowingFluid.Properties butaneProperties() {
+        return new BaseFlowingFluid.Properties(() -> BUTANE_TYPE.get(), () -> BUTANE_STILL.get(), () -> BUTANE_FLOWING.get())
+                .bucket(() -> ModItems.BUTANE_BUCKET.get()).block(() -> ModBlocks.BUTANE_FLUID.get())
+                .slopeFindDistance(4).levelDecreasePerBlock(1).tickRate(5);
+    }
+
+    public static final DeferredHolder<FluidType, FluidType> GASOLINE_TYPE =
+            FLUID_TYPES.register("gasoline", () -> new FluidType(FluidType.Properties.create()
+                    .density(750).viscosity(800).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> GASOLINE_STILL =
+            FLUIDS.register("gasoline_still", () -> new BaseFlowingFluid.Source(gasolineProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> GASOLINE_FLOWING =
+            FLUIDS.register("gasoline_flowing", () -> new BaseFlowingFluid.Flowing(gasolineProperties()));
+    public static BaseFlowingFluid.Properties gasolineProperties() {
+        return new BaseFlowingFluid.Properties(() -> GASOLINE_TYPE.get(), () -> GASOLINE_STILL.get(), () -> GASOLINE_FLOWING.get())
+                .bucket(() -> ModItems.GASOLINE_BUCKET.get()).block(() -> ModBlocks.GASOLINE_FLUID.get())
+                .slopeFindDistance(4).levelDecreasePerBlock(1).tickRate(5);
+    }
+
+    public static final DeferredHolder<FluidType, FluidType> NAPHTHA_TYPE =
+            FLUID_TYPES.register("naphtha", () -> new FluidType(FluidType.Properties.create()
+                    .density(700).viscosity(700).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> NAPHTHA_STILL =
+            FLUIDS.register("naphtha_still", () -> new BaseFlowingFluid.Source(naphthaProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> NAPHTHA_FLOWING =
+            FLUIDS.register("naphtha_flowing", () -> new BaseFlowingFluid.Flowing(naphthaProperties()));
+    public static BaseFlowingFluid.Properties naphthaProperties() {
+        return new BaseFlowingFluid.Properties(() -> NAPHTHA_TYPE.get(), () -> NAPHTHA_STILL.get(), () -> NAPHTHA_FLOWING.get())
+                .bucket(() -> ModItems.NAPHTHA_BUCKET.get()).block(() -> ModBlocks.NAPHTHA_FLUID.get())
+                .slopeFindDistance(4).levelDecreasePerBlock(1).tickRate(5);
+    }
+
+    public static final DeferredHolder<FluidType, FluidType> KEROSENE_TYPE =
+            FLUID_TYPES.register("kerosene", () -> new FluidType(FluidType.Properties.create()
+                    .density(820).viscosity(1200).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> KEROSENE_STILL =
+            FLUIDS.register("kerosene_still", () -> new BaseFlowingFluid.Source(keroseneProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> KEROSENE_FLOWING =
+            FLUIDS.register("kerosene_flowing", () -> new BaseFlowingFluid.Flowing(keroseneProperties()));
+    public static BaseFlowingFluid.Properties keroseneProperties() {
+        return new BaseFlowingFluid.Properties(() -> KEROSENE_TYPE.get(), () -> KEROSENE_STILL.get(), () -> KEROSENE_FLOWING.get())
+                .bucket(() -> ModItems.KEROSENE_BUCKET.get()).block(() -> ModBlocks.KEROSENE_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(8);
+    }
+
+    public static final DeferredHolder<FluidType, FluidType> DIESEL_TYPE =
+            FLUID_TYPES.register("diesel", () -> new FluidType(FluidType.Properties.create()
+                    .density(850).viscosity(1500).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> DIESEL_STILL =
+            FLUIDS.register("diesel_still", () -> new BaseFlowingFluid.Source(dieselProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> DIESEL_FLOWING =
+            FLUIDS.register("diesel_flowing", () -> new BaseFlowingFluid.Flowing(dieselProperties()));
+    public static BaseFlowingFluid.Properties dieselProperties() {
+        return new BaseFlowingFluid.Properties(() -> DIESEL_TYPE.get(), () -> DIESEL_STILL.get(), () -> DIESEL_FLOWING.get())
+                .bucket(() -> ModItems.DIESEL_BUCKET.get()).block(() -> ModBlocks.DIESEL_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
+    }
+
+    public static final DeferredHolder<FluidType, FluidType> HEAVY_GAS_OIL_TYPE =
+            FLUID_TYPES.register("heavy_gas_oil", () -> new FluidType(FluidType.Properties.create()
+                    .density(1000).viscosity(2500).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> HEAVY_GAS_OIL_STILL =
+            FLUIDS.register("heavy_gas_oil_still", () -> new BaseFlowingFluid.Source(heavyGasOilProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> HEAVY_GAS_OIL_FLOWING =
+            FLUIDS.register("heavy_gas_oil_flowing", () -> new BaseFlowingFluid.Flowing(heavyGasOilProperties()));
+    public static BaseFlowingFluid.Properties heavyGasOilProperties() {
+        return new BaseFlowingFluid.Properties(() -> HEAVY_GAS_OIL_TYPE.get(), () -> HEAVY_GAS_OIL_STILL.get(), () -> HEAVY_GAS_OIL_FLOWING.get())
+                .bucket(() -> ModItems.HEAVY_GAS_OIL_BUCKET.get()).block(() -> ModBlocks.HEAVY_GAS_OIL_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(12);
+    }
+
+    public static final DeferredHolder<FluidType, FluidType> RESIDUAL_FUEL_OIL_TYPE =
+            FLUID_TYPES.register("residual_fuel_oil", () -> new FluidType(FluidType.Properties.create()
+                    .density(1100).viscosity(4000).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> RESIDUAL_FUEL_OIL_STILL =
+            FLUIDS.register("residual_fuel_oil_still", () -> new BaseFlowingFluid.Source(residualFuelOilProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> RESIDUAL_FUEL_OIL_FLOWING =
+            FLUIDS.register("residual_fuel_oil_flowing", () -> new BaseFlowingFluid.Flowing(residualFuelOilProperties()));
+    public static BaseFlowingFluid.Properties residualFuelOilProperties() {
+        return new BaseFlowingFluid.Properties(() -> RESIDUAL_FUEL_OIL_TYPE.get(), () -> RESIDUAL_FUEL_OIL_STILL.get(), () -> RESIDUAL_FUEL_OIL_FLOWING.get())
+                .bucket(() -> ModItems.RESIDUAL_FUEL_OIL_BUCKET.get()).block(() -> ModBlocks.RESIDUAL_FUEL_OIL_FLUID.get())
+                .slopeFindDistance(2).levelDecreasePerBlock(2).tickRate(15);
+    }
+
+    // ── Photoresist ──────────────────────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> PHOTORESIST_TYPE =
+            FLUID_TYPES.register("photoresist", () -> new FluidType(FluidType.Properties.create()
+                    .density(1050).viscosity(2500).lightLevel(0).canConvertToSource(false)));
+
+    public static final DeferredHolder<Fluid, FlowingFluid> PHOTORESIST_STILL =
+            FLUIDS.register("photoresist_still", () -> new BaseFlowingFluid.Source(photoresistProperties()));
+
+    public static final DeferredHolder<Fluid, FlowingFluid> PHOTORESIST_FLOWING =
+            FLUIDS.register("photoresist_flowing", () -> new BaseFlowingFluid.Flowing(photoresistProperties()));
+
+    public static BaseFlowingFluid.Properties photoresistProperties() {
+        return new BaseFlowingFluid.Properties(
+                        () -> PHOTORESIST_TYPE.get(),
+                        () -> PHOTORESIST_STILL.get(),
+                        () -> PHOTORESIST_FLOWING.get())
+                .bucket(() -> ModItems.PHOTORESIST_BUCKET.get())
+                .block(() -> ModBlocks.PHOTORESIST_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
+    }
 }

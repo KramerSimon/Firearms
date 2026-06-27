@@ -66,7 +66,24 @@ public class HeatTreatmentFurnaceMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slots 0-1: inputs; slot 2: output
+        if (index < 3) {
+            if (!moveItemStackTo(stack, 3, 39, false)) return ItemStack.EMPTY;
+        } else if (index < 30) {
+            if (!moveItemStackTo(stack, 0, 2, false)
+                    && !moveItemStackTo(stack, 30, 39, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 2, false)
+                    && !moveItemStackTo(stack, 3, 30, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
     }
 
     @Override

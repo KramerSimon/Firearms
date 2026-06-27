@@ -43,11 +43,32 @@ public class FuelGeneratorScreen extends AbstractContainerScreen<FuelGeneratorMe
             gui.fill(leftPos + 150, topPos + 66 - barHeight, leftPos + 162, topPos + 66, 0xFFCC0000);
         }
 
-        gui.drawString(font, menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE",
-                leftPos + 7, topPos + 75, 0x404040, false);
-        gui.drawString(font, menu.getFuelAmount() + " / " + menu.getMaxFuel() + " mB",
-                leftPos + 100, topPos + 75, 0x404040, false);
-
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Burn indicator (14×14 at 79,34)
+        if (mx >= leftPos + 79 && mx < leftPos + 93 && my >= topPos + 34 && my < topPos + 48) {
+            gui.renderTooltip(font,
+                    Component.literal(menu.isBurning() ? "Burning" : "Not Burning"),
+                    mx, my);
+            return;
+        }
+        // Fuel bar (7–19, top 14, bottom 66)
+        if (mx >= leftPos + 7 && mx < leftPos + 19 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Fuel: " + menu.getFuelAmount() + " / " + menu.getMaxFuel() + " mB"),
+                    mx, my);
+            return;
+        }
+        // Energy bar (150–162, top 14, bottom 66)
+        if (mx >= leftPos + 150 && mx < leftPos + 162 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

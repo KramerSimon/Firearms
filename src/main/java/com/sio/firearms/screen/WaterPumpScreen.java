@@ -27,14 +27,12 @@ public class WaterPumpScreen extends AbstractContainerScreen<WaterPumpMenu> {
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         super.render(gui, mouseX, mouseY, partialTick);
 
-        // Energy bar (red)
         int maxE = menu.getMaxEnergy();
         if (maxE > 0) {
             int h = menu.getEnergyStored() * 52 / maxE;
             gui.fill(leftPos + 8, topPos + 66 - h, leftPos + 20, topPos + 66, 0xFFCC0000);
         }
 
-        // Water tank bar (blue)
         int maxW = menu.getWaterMax();
         if (maxW > 0 && menu.getWaterAmount() > 0) {
             int h = menu.getWaterAmount() * 52 / maxW;
@@ -42,5 +40,24 @@ public class WaterPumpScreen extends AbstractContainerScreen<WaterPumpMenu> {
         }
 
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics gui, int mx, int my) {
+        // Energy bar (8–20, top 14, bottom 66)
+        if (mx >= leftPos + 8 && mx < leftPos + 20 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Energy: " + menu.getEnergyStored() + " / " + menu.getMaxEnergy() + " FE"),
+                    mx, my);
+            return;
+        }
+        // Water bar (27–39, top 14, bottom 66)
+        if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Water: " + menu.getWaterAmount() + " / " + menu.getWaterMax() + " mB"),
+                    mx, my);
+            return;
+        }
+        super.renderTooltip(gui, mx, my);
     }
 }

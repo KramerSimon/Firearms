@@ -74,7 +74,24 @@ public class FuelGeneratorMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) return ItemStack.EMPTY;
+        ItemStack stack = slot.getItem();
+        ItemStack original = stack.copy();
+        // slot 0: fuel input; slot 1: empty bucket output
+        if (index < 2) {
+            if (!moveItemStackTo(stack, 2, 38, false)) return ItemStack.EMPTY;
+        } else if (index < 29) {
+            if (!moveItemStackTo(stack, 0, 1, false)
+                    && !moveItemStackTo(stack, 29, 38, false)) return ItemStack.EMPTY;
+        } else {
+            if (!moveItemStackTo(stack, 0, 1, false)
+                    && !moveItemStackTo(stack, 2, 29, false)) return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        slot.onTake(player, stack);
+        return original;
     }
 
     @Override
