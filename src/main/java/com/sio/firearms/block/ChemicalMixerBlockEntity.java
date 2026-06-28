@@ -48,7 +48,19 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
             return key.equals("minecraft:water")
                 || key.equals("firearms:fuel_still")
                 || key.equals("firearms:sulfuric_acid_still")
-                || key.equals("firearms:nitric_acid_still");
+                || key.equals("firearms:nitric_acid_still")
+                || key.equals("firearms:uranium_hexafluoride_still")
+                || key.equals("firearms:enriched_uf6_still");
+        }
+        @Override
+        protected void onContentsChanged() { setChanged(); }
+    };
+
+    public final FluidTank fluidInputTank2 = new FluidTank(TANK_SIZE) {
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            if (stack.isEmpty()) return false;
+            return fluidKey(stack).equals("firearms:naphtha_still");
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -60,6 +72,7 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
     };
 
     private int progress = 0;
+    private int currentProcessTime = PROCESS_TIME;
 
     private final ContainerData data = new ContainerData() {
         @Override
@@ -68,35 +81,119 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 case 0 -> energy.getEnergyStored();
                 case 1 -> energy.getMaxEnergyStored();
                 case 2 -> progress;
-                case 3 -> PROCESS_TIME;
+                case 3 -> currentProcessTime;
                 case 4 -> fluidInputTank.getFluidAmount();
                 case 5 -> TANK_SIZE;
                 case 6 -> fluidOutputTank.getFluidAmount();
                 case 7 -> TANK_SIZE;
+                case 8 -> fluidInputTank2.getFluidAmount();
+                case 9 -> TANK_SIZE;
                 default -> 0;
             };
         }
         @Override
         public void set(int i, int v) { if (i == 2) progress = v; }
         @Override
-        public int getCount() { return 8; }
+        public int getCount() { return 10; }
     };
 
     public ChemicalMixerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CHEMICAL_MIXER.get(), pos, state, CAPACITY, MAX_RECEIVE, 0);
     }
 
-    public ItemStackHandler getInventory()  { return inventory; }
+    public ItemStackHandler getInventory()   { return inventory; }
     public FluidTank getFluidInputTank()    { return fluidInputTank; }
+    public FluidTank getFluidInputTank2()   { return fluidInputTank2; }
     public FluidTank getFluidOutputTank()   { return fluidOutputTank; }
 
-    // Fill-only wrapper — pipes can push fluid in, never pull out.
+    // Fill-only wrapper for tank1 (water, fuel, sulfuric acid, nitric acid)
     public final IFluidHandler fluidInputHandler = new IFluidHandler() {
         @Override public int getTanks() { return 1; }
         @Override public FluidStack getFluidInTank(int tank) { return fluidInputTank.getFluidInTank(0); }
         @Override public int getTankCapacity(int tank) { return fluidInputTank.getTankCapacity(0); }
         @Override public boolean isFluidValid(int tank, FluidStack stack) { return fluidInputTank.isFluidValid(0, stack); }
         @Override public int fill(FluidStack resource, FluidAction action) { return fluidInputTank.fill(resource, action); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
+    };
+
+    // Fill-only wrapper for tank2 (naphtha)
+    public final IFluidHandler fluidInputHandler2 = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int tank) { return fluidInputTank2.getFluidInTank(0); }
+        @Override public int getTankCapacity(int tank) { return fluidInputTank2.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int tank, FluidStack stack) { return fluidInputTank2.isFluidValid(0, stack); }
+        @Override public int fill(FluidStack resource, FluidAction action) { return fluidInputTank2.fill(resource, action); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
+    };
+
+    // Drain-only wrapper for fluidOutputTank — pipes and fluid ports extract from it
+    public final IFluidHandler fluidOutputHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int tank) { return fluidOutputTank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int tank) { return fluidOutputTank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int tank, FluidStack stack) { return false; }
+        @Override public int fill(FluidStack resource, FluidAction action) { return 0; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) { return fluidOutputTank.drain(resource, action); }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) { return fluidOutputTank.drain(maxDrain, action); }
+    };
+
+    public IFluidHandler getFluidOutputHandler() { return fluidOutputHandler; }
+
+    // Full-access handler: fill() routes to input tanks, drain() routes to output tank.
+    // Exposed on all sides so pipes can push in and pull out from any face.
+    public final IFluidHandler fullAccessHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 3; }
+        @Override public FluidStack getFluidInTank(int tank) {
+            return switch (tank) {
+                case 0 -> fluidInputTank.getFluidInTank(0);
+                case 1 -> fluidInputTank2.getFluidInTank(0);
+                default -> fluidOutputTank.getFluidInTank(0);
+            };
+        }
+        @Override public int getTankCapacity(int tank) {
+            return switch (tank) {
+                case 0 -> fluidInputTank.getTankCapacity(0);
+                case 1 -> fluidInputTank2.getTankCapacity(0);
+                default -> fluidOutputTank.getTankCapacity(0);
+            };
+        }
+        @Override public boolean isFluidValid(int tank, FluidStack stack) {
+            return switch (tank) {
+                case 0 -> fluidInputTank.isFluidValid(0, stack);
+                case 1 -> fluidInputTank2.isFluidValid(0, stack);
+                default -> false;
+            };
+        }
+        @Override public int fill(FluidStack resource, FluidAction action) {
+            return combinedFluidInputHandler.fill(resource, action);
+        }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) {
+            return fluidOutputHandler.drain(resource, action);
+        }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) {
+            return fluidOutputHandler.drain(maxDrain, action);
+        }
+    };
+
+    // Combined fill-only handler — routes to tank1 or tank2 based on fluid type
+    public final IFluidHandler combinedFluidInputHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 2; }
+        @Override public FluidStack getFluidInTank(int tank) {
+            return tank == 0 ? fluidInputTank.getFluidInTank(0) : fluidInputTank2.getFluidInTank(0);
+        }
+        @Override public int getTankCapacity(int tank) {
+            return tank == 0 ? fluidInputTank.getTankCapacity(0) : fluidInputTank2.getTankCapacity(0);
+        }
+        @Override public boolean isFluidValid(int tank, FluidStack stack) {
+            return tank == 0 ? fluidInputTank.isFluidValid(0, stack) : fluidInputTank2.isFluidValid(0, stack);
+        }
+        @Override public int fill(FluidStack resource, FluidAction action) {
+            int filled = fluidInputTank.fill(resource, action);
+            if (filled == 0) filled = fluidInputTank2.fill(resource, action);
+            return filled;
+        }
         @Override public FluidStack drain(FluidStack resource, FluidAction action) { return FluidStack.EMPTY; }
         @Override public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
     };
@@ -132,6 +229,11 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
             && fluidInputTank.getFluidAmount() >= mb;
     }
 
+    private boolean fluid2Is(String id, int mb) {
+        return fluidKey(fluidInputTank2.getFluid()).equals(id)
+            && fluidInputTank2.getFluidAmount() >= mb;
+    }
+
     // ── Bucket draining ───────────────────────────────────────────────────────
 
     private void tryDrainBucket() {
@@ -140,7 +242,7 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
 
         // Simulate to check feasibility
         FluidActionResult sim = FluidUtil.tryEmptyContainer(
-            bucketStack, fluidInputTank, Integer.MAX_VALUE, null, false);
+            bucketStack, combinedFluidInputHandler, Integer.MAX_VALUE, null, false);
         if (!sim.isSuccess()) return;
 
         // Check the empty-bucket output slot can accept the result
@@ -153,7 +255,7 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
 
         // Execute
         FluidActionResult result = FluidUtil.tryEmptyContainer(
-            bucketStack, fluidInputTank, Integer.MAX_VALUE, null, true);
+            bucketStack, combinedFluidInputHandler, Integer.MAX_VALUE, null, true);
         if (result.isSuccess()) {
             inventory.setStackInSlot(2, ItemStack.EMPTY);
             if (emptyOut.isEmpty()) {
@@ -171,8 +273,10 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         String consumeAId, int consumeAQty,
         String consumeBId, int consumeBQty,
         int consumeFluidMb,
+        int consumeFluid2Mb,
         ItemStack itemOutput,
-        FluidStack fluidOutput
+        FluidStack fluidOutput,
+        int processTime
     ) {}
 
     private RecipeResult findRecipe() {
@@ -184,66 +288,111 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         if (itemIs(slotA, "firearms:sulfur", 1) && itemIs(slotB, "firearms:saltpeter", 1)
                 && fluidIs("minecraft:water", 250)
                 && canOutputItem(outSlot, new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4))) {
-            return new RecipeResult("firearms:sulfur", 1, "firearms:saltpeter", 1, 250,
-                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4), FluidStack.EMPTY);
+            return new RecipeResult("firearms:sulfur", 1, "firearms:saltpeter", 1, 250, 0,
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         // 1. sulfur + water 500mB → sulfuric_acid 500mB
         if (itemIs(slotA, "firearms:sulfur", 1) && fluidIs("minecraft:water", 500)
                 && fluidOutputTank.getSpace() >= 500) {
-            return new RecipeResult("firearms:sulfur", 1, null, 0, 500,
-                ItemStack.EMPTY, new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 500));
+            return new RecipeResult("firearms:sulfur", 1, null, 0, 500, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 500), PROCESS_TIME);
         }
 
         // 2. rubber_sheet + fuel 500mB → synthetic_rubber 500mB
         if (itemIs(slotA, "firearms:rubber_sheet", 1) && fluidIs("firearms:fuel_still", 500)
                 && fluidOutputTank.getSpace() >= 500) {
-            return new RecipeResult("firearms:rubber_sheet", 1, null, 0, 500,
-                ItemStack.EMPTY, new FluidStack(ModFluids.SYNTHETIC_RUBBER_STILL.get(), 500));
+            return new RecipeResult("firearms:rubber_sheet", 1, null, 0, 500, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.SYNTHETIC_RUBBER_STILL.get(), 500), PROCESS_TIME);
         }
 
         // 3. sand + quartz → quartz_sand×2  (no fluid)
         if (itemIs(slotA, "minecraft:sand", 1) && itemIs(slotB, "minecraft:quartz", 1)
                 && fluidInputTank.isEmpty()
                 && canOutputItem(outSlot, new ItemStack(ModItems.QUARTZ_SAND.get(), 2))) {
-            return new RecipeResult("minecraft:sand", 1, "minecraft:quartz", 1, 0,
-                new ItemStack(ModItems.QUARTZ_SAND.get(), 2), FluidStack.EMPTY);
+            return new RecipeResult("minecraft:sand", 1, "minecraft:quartz", 1, 0, 0,
+                new ItemStack(ModItems.QUARTZ_SAND.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         // 4. saltpeter + sulfuric_acid 250mB → nitric_acid 250mB
         if (itemIs(slotA, "firearms:saltpeter", 1) && fluidIs("firearms:sulfuric_acid_still", 250)
                 && fluidOutputTank.getSpace() >= 250) {
-            return new RecipeResult("firearms:saltpeter", 1, null, 0, 250,
-                ItemStack.EMPTY, new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 250));
+            return new RecipeResult("firearms:saltpeter", 1, null, 0, 250, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 250), PROCESS_TIME);
         }
 
         // 5. paper + nitric_acid 250mB → nitrocellulose×1
         if (itemIs(slotA, "minecraft:paper", 1) && fluidIs("firearms:nitric_acid_still", 250)
                 && canOutputItem(outSlot, new ItemStack(ModItems.NITROCELLULOSE.get(), 1))) {
-            return new RecipeResult("minecraft:paper", 1, null, 0, 250,
-                new ItemStack(ModItems.NITROCELLULOSE.get(), 1), FluidStack.EMPTY);
+            return new RecipeResult("minecraft:paper", 1, null, 0, 250, 0,
+                new ItemStack(ModItems.NITROCELLULOSE.get(), 1), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         // 6. chlorine_gas_bucket + fuel 500mB → pvc_resin 500mB
         if (itemIs(slotA, "firearms:chlorine_gas_bucket", 1) && fluidIs("firearms:fuel_still", 500)
                 && fluidOutputTank.getSpace() >= 500) {
-            return new RecipeResult("firearms:chlorine_gas_bucket", 1, null, 0, 500,
-                ItemStack.EMPTY, new FluidStack(ModFluids.PVC_RESIN_STILL.get(), 500));
+            return new RecipeResult("firearms:chlorine_gas_bucket", 1, null, 0, 500, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.PVC_RESIN_STILL.get(), 500), PROCESS_TIME);
         }
 
         // 7. bauxite_dust + sulfuric_acid 500mB → aluminum_ingot x2
         if (itemIs(slotA, "firearms:bauxite_dust", 1) && fluidIs("firearms:sulfuric_acid_still", 500)
                 && canOutputItem(outSlot, new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2))) {
-            return new RecipeResult("firearms:bauxite_dust", 1, null, 0, 500,
-                new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2), FluidStack.EMPTY);
+            return new RecipeResult("firearms:bauxite_dust", 1, null, 0, 500, 0,
+                new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         // 8. nickel_ingot + chromium_ingot → nichrome_alloy x2 (no fluid)
         if (itemIs(slotA, "firearms:nickel_ingot", 1) && itemIs(slotB, "firearms:chromium_ingot", 1)
                 && fluidInputTank.isEmpty()
                 && canOutputItem(outSlot, new ItemStack(ModItems.NICHROME_ALLOY.get(), 2))) {
-            return new RecipeResult("firearms:nickel_ingot", 1, "firearms:chromium_ingot", 1, 0,
-                new ItemStack(ModItems.NICHROME_ALLOY.get(), 2), FluidStack.EMPTY);
+            return new RecipeResult("firearms:nickel_ingot", 1, "firearms:chromium_ingot", 1, 0, 0,
+                new ItemStack(ModItems.NICHROME_ALLOY.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 9. naphtha 500mB (tank2) + nitric_acid 500mB (tank1) → photoresist 1000mB
+        if (fluid2Is("firearms:naphtha_still", 500) && fluidIs("firearms:nitric_acid_still", 500)
+                && fluidOutputTank.getSpace() >= 1000) {
+            return new RecipeResult(null, 0, null, 0, 500, 500,
+                ItemStack.EMPTY, new FluidStack(ModFluids.PHOTORESIST_STILL.get(), 1000), 300);
+        }
+
+        // 10. synthetic_rubber + nitric_acid 500mB → photoresist 1000mB
+        if (itemIs(slotA, "firearms:synthetic_rubber", 1) && fluidIs("firearms:nitric_acid_still", 500)
+                && fluidOutputTank.getSpace() >= 1000) {
+            return new RecipeResult("firearms:synthetic_rubber", 1, null, 0, 500, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.PHOTORESIST_STILL.get(), 1000), 300);
+        }
+
+        // ── Nuclear Reactor Stage 1 recipes ───────────────────────────────────
+
+        // 11. uranium_ingot + fluorine_gas_bucket 500mB → uranium_hexafluoride_fluid 1000mB
+        if (itemIs(slotA, "firearms:uranium_ingot", 1) && itemIs(slotB, "firearms:fluorine_gas_bucket", 1)
+                && fluidOutputTank.getSpace() >= 1000) {
+            return new RecipeResult("firearms:uranium_ingot", 1, "firearms:fluorine_gas_bucket", 1, 0, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.URANIUM_HEXAFLUORIDE_STILL.get(), 1000), PROCESS_TIME);
+        }
+
+        // 12. enriched_uf6 500mB → uranium_dioxide_powder x4
+        if (fluidIs("firearms:enriched_uf6_still", 500)
+                && canOutputItem(outSlot, new ItemStack(ModItems.URANIUM_DIOXIDE_POWDER.get(), 4))) {
+            return new RecipeResult(null, 0, null, 0, 500, 0,
+                new ItemStack(ModItems.URANIUM_DIOXIDE_POWDER.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 13. boron + coal → boron_carbide x2 (no fluid)
+        if (itemIs(slotA, "firearms:boron", 1) && itemIs(slotB, "minecraft:coal", 1)
+                && fluidInputTank.isEmpty()
+                && canOutputItem(outSlot, new ItemStack(ModItems.BORON_CARBIDE.get(), 2))) {
+            return new RecipeResult("firearms:boron", 1, "minecraft:coal", 1, 0, 0,
+                new ItemStack(ModItems.BORON_CARBIDE.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 14. water 1000mB → heavy_water 500mB
+        if (fluidIs("minecraft:water", 1000) && fluidOutputTank.getSpace() >= 500
+                && slotA.isEmpty() && slotB.isEmpty()) {
+            return new RecipeResult(null, 0, null, 0, 1000, 0,
+                ItemStack.EMPTY, new FluidStack(ModFluids.HEAVY_WATER_STILL.get(), 500), 400);
         }
 
         return null;
@@ -272,15 +421,18 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         RecipeResult recipe = findRecipe();
 
         if (recipe != null && energy.getEnergyStored() >= FE_PER_TICK) {
+            currentProcessTime = recipe.processTime();
             energy.extractEnergy(FE_PER_TICK, false);
             progress++;
             changed = true;
 
-            if (progress >= PROCESS_TIME) {
+            if (progress >= currentProcessTime) {
                 consumeItem(recipe.consumeAId(), recipe.consumeAQty(), 0);
                 consumeItem(recipe.consumeBId(), recipe.consumeBQty(), 1);
                 if (recipe.consumeFluidMb() > 0)
                     fluidInputTank.drain(recipe.consumeFluidMb(), IFluidHandler.FluidAction.EXECUTE);
+                if (recipe.consumeFluid2Mb() > 0)
+                    fluidInputTank2.drain(recipe.consumeFluid2Mb(), IFluidHandler.FluidAction.EXECUTE);
 
                 if (!recipe.itemOutput().isEmpty()) {
                     ItemStack outSlot = inventory.getStackInSlot(4);
@@ -307,6 +459,7 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         super.saveAdditional(tag, registries);
         tag.put("Inventory",   inventory.serializeNBT(registries));
         tag.put("FluidIn",     fluidInputTank.writeToNBT(registries, new CompoundTag()));
+        tag.put("FluidIn2",    fluidInputTank2.writeToNBT(registries, new CompoundTag()));
         tag.put("FluidOut",    fluidOutputTank.writeToNBT(registries, new CompoundTag()));
         tag.putInt("Progress", progress);
     }
@@ -316,6 +469,7 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         super.loadAdditional(tag, registries);
         if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         if (tag.contains("FluidIn"))   fluidInputTank.readFromNBT(registries, tag.getCompound("FluidIn"));
+        if (tag.contains("FluidIn2"))  fluidInputTank2.readFromNBT(registries, tag.getCompound("FluidIn2"));
         if (tag.contains("FluidOut"))  fluidOutputTank.readFromNBT(registries, tag.getCompound("FluidOut"));
         progress = tag.getInt("Progress");
     }

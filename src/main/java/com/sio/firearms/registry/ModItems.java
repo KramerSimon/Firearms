@@ -323,4 +323,42 @@ public class ModItems {
     public static final DeferredItem<BlockItem> EUV_MIRROR_ARRAY          = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_MIRROR_ARRAY);
     public static final DeferredItem<BlockItem> EUV_EMITTER_HOUSING       = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_EMITTER_HOUSING);
     public static final DeferredItem<BlockItem> EUV_LITHOGRAPHY_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER);
+
+    // ── Nuclear Reactor Stage 1 items ─────────────────────────────────────────
+    public static final DeferredItem<Item> ZIRCONIUM_ORE_RAW          = ITEMS.registerSimpleItem("zirconium_ore_raw");
+    public static final DeferredItem<Item> ZIRCONIUM_INGOT             = ITEMS.registerSimpleItem("zirconium_ingot");
+    public static final DeferredItem<Item> URANIUM_HEXAFLUORIDE        = ITEMS.registerSimpleItem("uranium_hexafluoride");
+    public static final DeferredItem<Item> ENRICHED_URANIUM_HEXAFLUORIDE = ITEMS.registerSimpleItem("enriched_uranium_hexafluoride");
+    public static final DeferredItem<Item> DEPLETED_URANIUM_HEXAFLUORIDE = ITEMS.registerSimpleItem("depleted_uranium_hexafluoride");
+    public static final DeferredItem<Item> URANIUM_DIOXIDE_POWDER      = ITEMS.registerSimpleItem("uranium_dioxide_powder");
+    public static final DeferredItem<Item> URANIUM_DIOXIDE_PELLET      = ITEMS.registerSimpleItem("uranium_dioxide_pellet");
+    public static final DeferredItem<Item> FUEL_ROD_CLADDING           = ITEMS.registerSimpleItem("fuel_rod_cladding");
+    public static final DeferredItem<Item> FUEL_ROD                    = ITEMS.registerSimpleItem("fuel_rod");
+    public static final DeferredItem<Item> FUEL_ROD_ASSEMBLY           = ITEMS.registerSimpleItem("fuel_rod_assembly");
+    public static final DeferredItem<Item> SPENT_FUEL_ROD              = ITEMS.registerSimpleItem("spent_fuel_rod");
+    public static final DeferredItem<Item> DEPLETED_URANIUM            = ITEMS.registerSimpleItem("depleted_uranium");
+    public static final DeferredItem<Item> CONTROL_ROD                 = ITEMS.registerSimpleItem("control_rod");
+    public static final DeferredItem<Item> BORON_CARBIDE               = ITEMS.registerSimpleItem("boron_carbide");
+    public static final DeferredItem<Item> GRAPHITE_BLOCK_ITEM         = ITEMS.registerSimpleItem("graphite_block_item");
+
+    // ── Nuclear fluid buckets ─────────────────────────────────────────────────
+    public static final DeferredItem<Item> URANIUM_HEXAFLUORIDE_BUCKET = ITEMS.register("uranium_hexafluoride_bucket",
+            () -> new BucketItem(ModFluids.URANIUM_HEXAFLUORIDE_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> ENRICHED_UF6_BUCKET = ITEMS.register("enriched_uf6_bucket",
+            () -> new BucketItem(ModFluids.ENRICHED_UF6_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> DEPLETED_UF6_BUCKET = ITEMS.register("depleted_uf6_bucket",
+            () -> new BucketItem(ModFluids.DEPLETED_UF6_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> HEAVY_WATER_BUCKET = ITEMS.register("heavy_water_bucket",
+            () -> new BucketItem(ModFluids.HEAVY_WATER_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> STEAM_BUCKET = ITEMS.register("steam_bucket",
+            () -> new BucketItem(ModFluids.STEAM_STILL.get(),
+                    new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    // ── Nuclear block items ───────────────────────────────────────────────────
+    public static final DeferredItem<BlockItem> ZIRCONITE_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.ZIRCONITE_ORE);
+    public static final DeferredItem<BlockItem> GAS_CENTRIFUGE = ITEMS.registerSimpleBlockItem(ModBlocks.GAS_CENTRIFUGE);
 }

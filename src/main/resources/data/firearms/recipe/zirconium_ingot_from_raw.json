@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "firearms:zirconium_ore_raw"
+  },
+  "result": {
+    "id": "firearms:zirconium_ingot"
+  },
+  "experience": 1.5,
+  "cookingtime": 300
+}

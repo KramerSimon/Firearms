@@ -12,30 +12,40 @@ public class ChemicalMixerJeiRecipe {
 
     private final ItemStack inputItem;        // slot A — may be EMPTY
     private final ItemStack secondInputItem;  // slot B — may be EMPTY
-    private final FluidStack inputFluid;
+    private final FluidStack inputFluid;      // tank1
+    private final FluidStack secondInputFluid; // tank2 — may be EMPTY
     private final ItemStack outputItem;       // may be EMPTY
     private final FluidStack outputFluid;     // may be EMPTY
 
+    public ChemicalMixerJeiRecipe(ItemStack inputItem, ItemStack secondInputItem,
+                                   FluidStack inputFluid, FluidStack secondInputFluid,
+                                   ItemStack outputItem, FluidStack outputFluid) {
+        this.inputItem         = inputItem;
+        this.secondInputItem   = secondInputItem;
+        this.inputFluid        = inputFluid;
+        this.secondInputFluid  = secondInputFluid;
+        this.outputItem        = outputItem;
+        this.outputFluid       = outputFluid;
+    }
+
+    // No second fluid (most recipes)
     public ChemicalMixerJeiRecipe(ItemStack inputItem, ItemStack secondInputItem, FluidStack inputFluid,
                                    ItemStack outputItem, FluidStack outputFluid) {
-        this.inputItem        = inputItem;
-        this.secondInputItem  = secondInputItem;
-        this.inputFluid       = inputFluid;
-        this.outputItem       = outputItem;
-        this.outputFluid      = outputFluid;
+        this(inputItem, secondInputItem, inputFluid, FluidStack.EMPTY, outputItem, outputFluid);
     }
 
-    // Single-item-input convenience constructor (second slot empty)
+    // Single-item-input convenience constructor (second item slot empty, no second fluid)
     public ChemicalMixerJeiRecipe(ItemStack inputItem, FluidStack inputFluid,
                                    ItemStack outputItem, FluidStack outputFluid) {
-        this(inputItem, ItemStack.EMPTY, inputFluid, outputItem, outputFluid);
+        this(inputItem, ItemStack.EMPTY, inputFluid, FluidStack.EMPTY, outputItem, outputFluid);
     }
 
-    public ItemStack  getInputItem()        { return inputItem; }
-    public ItemStack  getSecondInputItem()  { return secondInputItem; }
-    public FluidStack getInputFluid()       { return inputFluid; }
-    public ItemStack  getOutputItem()       { return outputItem; }
-    public FluidStack getOutputFluid()      { return outputFluid; }
+    public ItemStack  getInputItem()         { return inputItem; }
+    public ItemStack  getSecondInputItem()   { return secondInputItem; }
+    public FluidStack getInputFluid()        { return inputFluid; }
+    public FluidStack getSecondInputFluid()  { return secondInputFluid; }
+    public ItemStack  getOutputItem()        { return outputItem; }
+    public FluidStack getOutputFluid()       { return outputFluid; }
 
     public static List<ChemicalMixerJeiRecipe> getAllRecipes() {
         return List.of(
@@ -110,7 +120,53 @@ public class ChemicalMixerJeiRecipe {
                 new ItemStack(ModItems.NITRIC_ACID_BUCKET.get()),
                 new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 500),
                 new ItemStack(ModItems.ELECTRONIC_GRADE_SILICON.get()),
-                FluidStack.EMPTY)
+                FluidStack.EMPTY),
+
+            // naphtha 500mB (tank2) + nitric_acid 500mB (tank1) → photoresist 1000mB
+            new ChemicalMixerJeiRecipe(
+                ItemStack.EMPTY, ItemStack.EMPTY,
+                new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 500),
+                new FluidStack(ModFluids.NAPHTHA_STILL.get(), 500),
+                ItemStack.EMPTY,
+                new FluidStack(ModFluids.PHOTORESIST_STILL.get(), 1000)),
+
+            // synthetic_rubber + nitric_acid 500mB → photoresist 1000mB
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.SYNTHETIC_RUBBER.get()),
+                new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 500),
+                ItemStack.EMPTY,
+                new FluidStack(ModFluids.PHOTORESIST_STILL.get(), 1000)),
+
+            // ── Nuclear Reactor Stage 1 ───────────────────────────────────────
+            // uranium_ingot + fluorine_gas_bucket → uranium_hexafluoride 1000mB
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.URANIUM_INGOT.get()),
+                new ItemStack(ModItems.FLUORINE_GAS_BUCKET.get()),
+                FluidStack.EMPTY,
+                ItemStack.EMPTY,
+                new FluidStack(ModFluids.URANIUM_HEXAFLUORIDE_STILL.get(), 1000)),
+
+            // enriched_uf6 500mB → uranium_dioxide_powder x4
+            new ChemicalMixerJeiRecipe(
+                ItemStack.EMPTY,
+                new FluidStack(ModFluids.ENRICHED_UF6_STILL.get(), 500),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_POWDER.get(), 4),
+                FluidStack.EMPTY),
+
+            // boron + coal → boron_carbide x2 (no fluid)
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.BORON.get()),
+                new ItemStack(net.minecraft.world.item.Items.COAL),
+                FluidStack.EMPTY,
+                new ItemStack(ModItems.BORON_CARBIDE.get(), 2),
+                FluidStack.EMPTY),
+
+            // water 1000mB → heavy_water 500mB
+            new ChemicalMixerJeiRecipe(
+                ItemStack.EMPTY,
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 1000),
+                ItemStack.EMPTY,
+                new FluidStack(ModFluids.HEAVY_WATER_STILL.get(), 500))
         );
     }
 }

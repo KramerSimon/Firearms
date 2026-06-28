@@ -76,6 +76,17 @@ public class EBFJeiRecipe {
                 new ItemStack(ModItems.QUARTZ_SAND.get(), 4),
                 new ItemStack(ModItems.COAL_COKE.get()),
                 new ItemStack(ModItems.METALLURGICAL_SILICON.get(), 2),
+                800),
+            // ── Nuclear Reactor Stage 1 @800°C ────────────────────────────────
+            new EBFJeiRecipe(
+                new ItemStack(net.minecraft.world.item.Items.COAL),
+                new ItemStack(ModItems.COAL_COKE.get()),
+                new ItemStack(ModItems.GRAPHITE_BLOCK_ITEM.get(), 2),
+                800),
+            new EBFJeiRecipe(
+                new ItemStack(ModItems.ZIRCONIUM_ORE_RAW.get()),
+                new ItemStack(ModItems.COAL_COKE.get()),
+                new ItemStack(ModItems.ZIRCONIUM_INGOT.get()),
                 800)
         );
     }

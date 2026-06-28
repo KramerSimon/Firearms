@@ -51,6 +51,12 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
             gui.fill(leftPos + 141, topPos + 66 - h, leftPos + 153, topPos + 66, 0xFFCCCC00);
         }
 
+        int maxFI2 = menu.getFluidIn2Max();
+        if (maxFI2 > 0 && menu.getFluidIn2Amount() > 0) {
+            int h = menu.getFluidIn2Amount() * 52 / maxFI2;
+            gui.fill(leftPos + 154, topPos + 66 - h, leftPos + 166, topPos + 66, 0xFFFF8800);
+        }
+
         renderTooltip(gui, mouseX, mouseY);
     }
 
@@ -81,6 +87,13 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
         if (mx >= leftPos + 141 && mx < leftPos + 153 && my >= topPos + 14 && my <= topPos + 66) {
             gui.renderTooltip(font,
                     Component.literal("Fluid Output: " + menu.getFluidOutAmount() + " / " + menu.getFluidOutMax() + " mB"),
+                    mx, my);
+            return;
+        }
+        // Fluid input 2 bar (154–166, top 14, bottom 66)
+        if (mx >= leftPos + 154 && mx < leftPos + 166 && my >= topPos + 14 && my <= topPos + 66) {
+            gui.renderTooltip(font,
+                    Component.literal("Fluid Input 2: " + menu.getFluidIn2Amount() + " / " + menu.getFluidIn2Max() + " mB"),
                     mx, my);
             return;
         }

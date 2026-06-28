@@ -38,7 +38,8 @@ public class FirearmsJeiPlugin implements IModPlugin {
                 new DicingSawRecipeCategory(gui),
                 new ChipPackagingMachineRecipeCategory(gui),
                 new CrystalGrowthRecipeCategory(gui),
-                new EuvLithographyRecipeCategory(gui)
+                new EuvLithographyRecipeCategory(gui),
+                new GasCentrifugeRecipeCategory(gui)
         );
     }
 
@@ -61,6 +62,7 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipes(ChipPackagingMachineRecipeCategory.RECIPE_TYPE, ChipPackagingMachineJeiRecipe.getAllRecipes());
         registration.addRecipes(CrystalGrowthRecipeCategory.RECIPE_TYPE,       CrystalGrowthJeiRecipe.getAllRecipes());
         registration.addRecipes(EuvLithographyRecipeCategory.RECIPE_TYPE,      EuvLithographyJeiRecipe.getAllRecipes());
+        registration.addRecipes(GasCentrifugeRecipeCategory.RECIPE_TYPE,      GasCentrifugeJeiRecipe.getAllRecipes());
     }
 
     @Override
@@ -82,5 +84,6 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHIP_PACKAGING_MACHINE.get()),      ChipPackagingMachineRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get()),   CrystalGrowthRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()),  EuvLithographyRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GAS_CENTRIFUGE.get()),             GasCentrifugeRecipeCategory.RECIPE_TYPE);
     }
 }

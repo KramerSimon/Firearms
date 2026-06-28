@@ -86,6 +86,19 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
     public boolean isStructureValid()      { return structureValid; }
     public boolean isCleanRoom()           { return cleanRoom; }
 
+    // Fill-only wrapper — pipes and fluid ports push photoresist in; machine drains internally
+    public final IFluidHandler fillOnlyPhotoresistHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int tank) { return photoresistTank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int tank) { return photoresistTank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int tank, FluidStack stack) { return photoresistTank.isFluidValid(0, stack); }
+        @Override public int fill(FluidStack resource, FluidAction action) { return photoresistTank.fill(resource, action); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
+    };
+
+    public IFluidHandler getPhotoresistInputHandler() { return fillOnlyPhotoresistHandler; }
+
     @Override
     public Component getDisplayName() {
         return Component.translatable("block.firearms.euv_lithography_controller");
@@ -152,89 +165,113 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
     public boolean checkStructure() {
         if (level == null) return false;
         LOGGER.info("[EUV] checkStructure() called, controller at {}", worldPosition);
+
+        // Try all 16 outer border positions of the 5x5 grid as the controller's grid position.
+        // origin is the SW corner (min x, min z); structure extends +X, +Z from there.
         for (int ox = 0; ox <= 4; ox++) {
             for (int oz = 0; oz <= 4; oz++) {
-                if (ox > 0 && ox < 4 && oz > 0 && oz < 4) continue;
+                if (ox > 0 && ox < 4 && oz > 0 && oz < 4) continue; // interior can't be the controller
                 BlockPos origin = worldPosition.offset(-ox, 0, -oz);
-                LOGGER.info("[EUV] Trying origin {} (controller offset ox={} oz={})", origin, ox, oz);
+                LOGGER.info("[EUV] Trying origin {} (ox={} oz={})", origin, ox, oz);
                 if (isValidAt(origin)) {
-                    LOGGER.info("[EUV] Structure VALID at origin {}", origin);
                     structureValid = true;
                     checkCleanRoom(origin);
+                    LOGGER.info("[EUV] Structure VALID — origin {}", origin);
                     return true;
                 }
             }
         }
+
         LOGGER.info("[EUV] Structure INVALID — no valid origin found");
         structureValid = false;
         cleanRoom = false;
         return false;
     }
 
+    private boolean isPort(Block b) {
+        return b == ModBlocks.ENERGY_PORT.get() || b == ModBlocks.FLUID_PORT.get();
+    }
+
     private boolean isValidAt(BlockPos origin) {
-        // Layer 0: base
-        for (int x = 0; x < 5; x++) for (int z = 0; z < 5; z++) {
-            Block b = level.getBlockState(origin.offset(x, 0, z)).getBlock();
-            if (b != ModBlocks.EUV_BASE.get() && b != ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()
-                    && b != ModBlocks.ENERGY_PORT.get()) {
-                LOGGER.info("[EUV]   FAIL base layer y=0 x={} z={}: found {}", x, z,
-                        BuiltInRegistries.BLOCK.getKey(b));
-                return false;
-            }
-        }
-        // Layers 1-2: wall
-        for (int y = 1; y <= 2; y++) for (int x = 0; x < 5; x++) for (int z = 0; z < 5; z++) {
-            Block b = level.getBlockState(origin.offset(x, y, z)).getBlock();
-            if (b != ModBlocks.EUV_WALL.get() && b != ModBlocks.ENERGY_PORT.get()) {
-                LOGGER.info("[EUV]   FAIL wall layer y={} x={} z={}: found {}", y, x, z,
-                        BuiltInRegistries.BLOCK.getKey(b));
-                return false;
-            }
-        }
-        // Layers 3-4: wall + mirror corners
-        for (int y = 3; y <= 4; y++) for (int x = 0; x < 5; x++) for (int z = 0; z < 5; z++) {
-            Block b = level.getBlockState(origin.offset(x, y, z)).getBlock();
-            boolean isCorner = (x == 0 || x == 4) && (z == 0 || z == 4);
-            if (isCorner) {
-                if (b != ModBlocks.EUV_MIRROR_ARRAY.get()) {
-                    LOGGER.info("[EUV]   FAIL mirror corner y={} x={} z={}: found {}", y, x, z,
-                            BuiltInRegistries.BLOCK.getKey(b));
-                    return false;
-                }
-            } else {
-                if (b != ModBlocks.EUV_WALL.get() && b != ModBlocks.ENERGY_PORT.get()) {
-                    LOGGER.info("[EUV]   FAIL mirror layer (non-corner) y={} x={} z={}: found {}", y, x, z,
-                            BuiltInRegistries.BLOCK.getKey(b));
+        // Layer 0: early-exit per position to quickly discard wrong origin candidates
+        for (int x = 0; x < 5; x++) {
+            for (int z = 0; z < 5; z++) {
+                Block b = level.getBlockState(origin.offset(x, 0, z)).getBlock();
+                if (b != ModBlocks.EUV_BASE.get() && b != ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()
+                        && !isPort(b)) {
+                    LOGGER.info("[EUV]   FAIL y=0 x={} z={} expected euv_base/controller/port, found {}",
+                            x, z, BuiltInRegistries.BLOCK.getKey(b));
                     return false;
                 }
             }
         }
-        // Layer 5: lens center + wall
-        for (int x = 0; x < 5; x++) for (int z = 0; z < 5; z++) {
-            Block b = level.getBlockState(origin.offset(x, 5, z)).getBlock();
-            if (x == 2 && z == 2) {
-                if (b != ModBlocks.EUV_LENS_HOUSING.get()) {
-                    LOGGER.info("[EUV]   FAIL lens center y=5 x=2 z=2: found {}",
-                            BuiltInRegistries.BLOCK.getKey(b));
-                    return false;
-                }
-            } else {
-                if (b != ModBlocks.EUV_WALL.get() && b != ModBlocks.ENERGY_PORT.get()) {
-                    LOGGER.info("[EUV]   FAIL lens layer (non-center) y=5 x={} z={}: found {}", x, z,
-                            BuiltInRegistries.BLOCK.getKey(b));
-                    return false;
+        LOGGER.info("[EUV]   PASS y=0 base layer for origin {}", origin);
+
+        // Layers 1-2: border (16 positions) must be euv_wall or a port; interior 3x3 may be air
+        boolean ok = true;
+        for (int y = 1; y <= 2; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    if (x > 0 && x < 4 && z > 0 && z < 4) continue;
+                    Block b = level.getBlockState(origin.offset(x, y, z)).getBlock();
+                    if (b != ModBlocks.EUV_WALL.get() && !isPort(b)) {
+                        LOGGER.info("[EUV]   FAIL y={} x={} z={} expected euv_wall/port, found {}",
+                                y, x, z, BuiltInRegistries.BLOCK.getKey(b));
+                        ok = false;
+                    }
                 }
             }
         }
-        // Layer 6: emitter
-        for (int x = 0; x < 5; x++) for (int z = 0; z < 5; z++) {
-            Block b = level.getBlockState(origin.offset(x, 6, z)).getBlock();
-            if (b != ModBlocks.EUV_EMITTER_HOUSING.get() && b != ModBlocks.ENERGY_PORT.get()) {
-                LOGGER.info("[EUV]   FAIL emitter layer y=6 x={} z={}: found {}", x, z,
-                        BuiltInRegistries.BLOCK.getKey(b));
-                return false;
+        if (!ok) return false;
+        LOGGER.info("[EUV]   PASS y=1-2 wall layers");
+
+        // Layers 3-4: 4 corners = euv_mirror_array, 12 border non-corner positions = euv_wall,
+        // interior 3x3 may be air; ports are valid at any border position
+        ok = true;
+        for (int y = 3; y <= 4; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    boolean corner = (x == 0 || x == 4) && (z == 0 || z == 4);
+                    boolean interior = (x > 0 && x < 4) && (z > 0 && z < 4);
+                    if (interior) continue;
+                    Block b = level.getBlockState(origin.offset(x, y, z)).getBlock();
+                    if (isPort(b)) continue;
+                    if (corner) {
+                        if (b != ModBlocks.EUV_MIRROR_ARRAY.get()) {
+                            LOGGER.info("[EUV]   FAIL y={} x={} z={} expected euv_mirror_array/port, found {}",
+                                    y, x, z, BuiltInRegistries.BLOCK.getKey(b));
+                            ok = false;
+                        }
+                    } else {
+                        if (b != ModBlocks.EUV_WALL.get()) {
+                            LOGGER.info("[EUV]   FAIL y={} x={} z={} expected euv_wall/port, found {}",
+                                    y, x, z, BuiltInRegistries.BLOCK.getKey(b));
+                            ok = false;
+                        }
+                    }
+                }
             }
         }
+        if (!ok) return false;
+        LOGGER.info("[EUV]   PASS y=3-4 mirror layers");
+
+        // Layers 5-6: all 25 positions = euv_emitter_housing or a port
+        ok = true;
+        for (int y = 5; y <= 6; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    Block b = level.getBlockState(origin.offset(x, y, z)).getBlock();
+                    if (b != ModBlocks.EUV_EMITTER_HOUSING.get() && !isPort(b)) {
+                        LOGGER.info("[EUV]   FAIL y={} x={} z={} expected euv_emitter_housing/port, found {}",
+                                y, x, z, BuiltInRegistries.BLOCK.getKey(b));
+                        ok = false;
+                    }
+                }
+            }
+        }
+        if (!ok) return false;
+        LOGGER.info("[EUV]   PASS y=5-6 emitter layers");
+
         return true;
     }
 
@@ -248,12 +285,15 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
                     BlockPos check = origin.offset(x, y, z);
                     Block b = level.getBlockState(check).getBlock();
                     if (!level.getBlockState(check).isAir() && b != ModBlocks.EUV_WALL.get()) {
+                        LOGGER.info("[EUV]   clean room FAIL at {}: found {}", check,
+                                BuiltInRegistries.BLOCK.getKey(b));
                         cleanRoom = false;
                         return;
                     }
                 }
             }
         }
+        LOGGER.info("[EUV]   PASS clean room check");
     }
 
     @Override

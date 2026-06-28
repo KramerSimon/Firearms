@@ -1,6 +1,7 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.screen.AcidBathScreen;
+import com.sio.firearms.screen.GasCentrifugeScreen;
 import com.sio.firearms.screen.CrystalGrowthControllerScreen;
 import com.sio.firearms.screen.EuvLithographyScreen;
 import com.sio.firearms.screen.WaferCuttingMachineScreen;
@@ -62,5 +63,6 @@ public class ModScreens {
         event.register(ModMenuTypes.CHIP_PACKAGING_MACHINE_MENU.get(), ChipPackagingMachineScreen::new);
         event.register(ModMenuTypes.CRYSTAL_GROWTH_CONTROLLER_MENU.get(), CrystalGrowthControllerScreen::new);
         event.register(ModMenuTypes.EUV_LITHOGRAPHY_MENU.get(), EuvLithographyScreen::new);
+        event.register(ModMenuTypes.GAS_CENTRIFUGE_MENU.get(), GasCentrifugeScreen::new);
     }
 }

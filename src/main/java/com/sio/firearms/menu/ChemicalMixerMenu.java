@@ -16,7 +16,7 @@ public class ChemicalMixerMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public ChemicalMixerMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new ItemStackHandler(5), new SimpleContainerData(8));
+        this(containerId, playerInventory, new ItemStackHandler(5), new SimpleContainerData(10));
     }
 
     public ChemicalMixerMenu(int containerId, Inventory playerInventory,
@@ -55,8 +55,10 @@ public class ChemicalMixerMenu extends AbstractContainerMenu {
     public int getMaxProgress()    { return data.get(3); }
     public int getFluidInAmount()  { return data.get(4); }
     public int getFluidInMax()     { return data.get(5); }
-    public int getFluidOutAmount() { return data.get(6); }
-    public int getFluidOutMax()    { return data.get(7); }
+    public int getFluidOutAmount()  { return data.get(6); }
+    public int getFluidOutMax()     { return data.get(7); }
+    public int getFluidIn2Amount()  { return data.get(8); }
+    public int getFluidIn2Max()     { return data.get(9); }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {

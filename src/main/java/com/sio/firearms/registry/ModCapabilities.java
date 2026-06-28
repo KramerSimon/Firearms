@@ -2,6 +2,7 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlockEntity;
+import com.sio.firearms.block.GasCentrifugeBlockEntity;
 import com.sio.firearms.block.CrystalGrowthControllerBlockEntity;
 import com.sio.firearms.block.EuvLithographyControllerBlockEntity;
 import com.sio.firearms.block.WaferCuttingMachineBlockEntity;
@@ -154,7 +155,8 @@ public class ModCapabilities {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.CHEMICAL_MIXER.get(),
-                (blockEntity, direction) -> blockEntity.fluidInputHandler
+                // All faces: fill() routes to input tanks, drain() routes to output tank
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
         );
 
         event.registerBlockEntity(
@@ -314,6 +316,13 @@ public class ModCapabilities {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
                 (be, dir) -> be.getInventory());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
-                (be, dir) -> be.getPhotoresistTank());
+                (be, dir) -> be.getPhotoresistInputHandler());
+
+        // ── Gas Centrifuge ────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.GAS_CENTRIFUGE.get(),
+                (be, dir) -> be.getEnergyStorage());
+        // Fluid input (UF6 in) — fill only
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.GAS_CENTRIFUGE.get(),
+                (be, dir) -> be.fluidInputHandler);
     }
 }

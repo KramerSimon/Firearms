@@ -2,6 +2,7 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.menu.AcidBathMenu;
+import com.sio.firearms.menu.GasCentrifugeMenu;
 import com.sio.firearms.menu.CrystalGrowthControllerMenu;
 import com.sio.firearms.menu.EuvLithographyMenu;
 import com.sio.firearms.menu.WaferCuttingMachineMenu;
@@ -135,4 +136,9 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<EuvLithographyMenu>> EUV_LITHOGRAPHY_MENU =
             MENU_TYPES.register("euv_lithography_controller",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new EuvLithographyMenu(windowId, inv)));
+
+    // ── Nuclear Reactor Stage 1 ───────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<GasCentrifugeMenu>> GAS_CENTRIFUGE_MENU =
+            MENU_TYPES.register("gas_centrifuge",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new GasCentrifugeMenu(windowId, inv, data)));
 }

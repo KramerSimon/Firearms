@@ -1,6 +1,7 @@
 package com.sio.firearms.item;
 
 import com.sio.firearms.block.FluidPipeBlock;
+import com.sio.firearms.block.FluidPipeBlockEntity;
 import com.sio.firearms.block.FluidPortBlock;
 import com.sio.firearms.block.FluidPortBlockEntity;
 import com.sio.firearms.block.ItemPipeBlock;
@@ -9,6 +10,7 @@ import com.sio.firearms.block.WireBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
@@ -60,7 +62,12 @@ public class WrenchItem extends Item {
             String msg = !wasBlocked
                     ? "Pipe " + face.getSerializedName() + ": blocked"
                     : "Pipe " + face.getSerializedName() + ": open";
-            ctx.getPlayer().displayClientMessage(Component.literal(msg), true);
+            String lockMsg = "";
+            if (level.getBlockEntity(pos) instanceof FluidPipeBlockEntity pipe) {
+                ResourceLocation lf = pipe.getLockedFluid();
+                lockMsg = " | locked: " + (lf != null ? lf : "none");
+            }
+            ctx.getPlayer().displayClientMessage(Component.literal(msg + lockMsg), true);
             return InteractionResult.SUCCESS;
         }
 

@@ -96,6 +96,10 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
             if (stackIs(in0, "minecraft:copper_ingot"))    return new ItemStack(ModItems.CARBON_STEEL.get(), 1);
             if (stackIs(in0, "firearms:tungsten_ore_raw")) return new ItemStack(ModItems.TUNGSTEN_INGOT.get(), 1);
             if (stackIs(in0, "firearms:uranium_ore_raw"))  return new ItemStack(ModItems.URANIUM_INGOT.get(), 1);
+            // coal + coal_coke → graphite_block x2
+            if (stackIs(in0, "minecraft:coal")) return new ItemStack(ModItems.GRAPHITE_BLOCK_ITEM.get(), 2);
+            // zirconium_ore_raw + coal_coke → zirconium_ingot
+            if (stackIs(in0, "firearms:zirconium_ore_raw")) return new ItemStack(ModItems.ZIRCONIUM_INGOT.get(), 1);
         }
         if (!in1.isEmpty() && stackIs(in1, "firearms:carbon_steel")
                 && stackIs(in0, "firearms:tungsten_ingot")) {

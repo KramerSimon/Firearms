@@ -193,6 +193,29 @@ public class ModCreativeTabs {
                         output.accept(ModItems.EUV_MIRROR_ARRAY.get());
                         output.accept(ModItems.EUV_EMITTER_HOUSING.get());
                         output.accept(ModItems.EUV_LITHOGRAPHY_CONTROLLER.get());
+                        // ── Nuclear Reactor Stage 1 ───────────────────────────
+                        output.accept(ModItems.ZIRCONITE_ORE.get());
+                        output.accept(ModItems.ZIRCONIUM_ORE_RAW.get());
+                        output.accept(ModItems.ZIRCONIUM_INGOT.get());
+                        output.accept(ModItems.URANIUM_HEXAFLUORIDE.get());
+                        output.accept(ModItems.ENRICHED_URANIUM_HEXAFLUORIDE.get());
+                        output.accept(ModItems.DEPLETED_URANIUM_HEXAFLUORIDE.get());
+                        output.accept(ModItems.URANIUM_DIOXIDE_POWDER.get());
+                        output.accept(ModItems.URANIUM_DIOXIDE_PELLET.get());
+                        output.accept(ModItems.FUEL_ROD_CLADDING.get());
+                        output.accept(ModItems.FUEL_ROD.get());
+                        output.accept(ModItems.FUEL_ROD_ASSEMBLY.get());
+                        output.accept(ModItems.SPENT_FUEL_ROD.get());
+                        output.accept(ModItems.DEPLETED_URANIUM.get());
+                        output.accept(ModItems.BORON_CARBIDE.get());
+                        output.accept(ModItems.CONTROL_ROD.get());
+                        output.accept(ModItems.GRAPHITE_BLOCK_ITEM.get());
+                        output.accept(ModItems.URANIUM_HEXAFLUORIDE_BUCKET.get());
+                        output.accept(ModItems.ENRICHED_UF6_BUCKET.get());
+                        output.accept(ModItems.DEPLETED_UF6_BUCKET.get());
+                        output.accept(ModItems.HEAVY_WATER_BUCKET.get());
+                        output.accept(ModItems.STEAM_BUCKET.get());
+                        output.accept(ModItems.GAS_CENTRIFUGE.get());
                     })
                     .build());
 }

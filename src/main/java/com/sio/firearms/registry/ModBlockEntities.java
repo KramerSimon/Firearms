@@ -2,6 +2,7 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlockEntity;
+import com.sio.firearms.block.GasCentrifugeBlockEntity;
 import com.sio.firearms.block.CrystalGrowthControllerBlockEntity;
 import com.sio.firearms.block.EuvLithographyControllerBlockEntity;
 import com.sio.firearms.block.WaferCuttingMachineBlockEntity;
@@ -196,4 +197,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("euv_lithography_controller",
                     () -> BlockEntityType.Builder.of(EuvLithographyControllerBlockEntity::new,
                             ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()).build(null));
+
+    // ── Nuclear Reactor Stage 1 ───────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GasCentrifugeBlockEntity>> GAS_CENTRIFUGE =
+            BLOCK_ENTITIES.register("gas_centrifuge",
+                    () -> BlockEntityType.Builder.of(GasCentrifugeBlockEntity::new,
+                            ModBlocks.GAS_CENTRIFUGE.get()).build(null));
 }

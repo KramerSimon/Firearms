@@ -112,7 +112,13 @@ public class FluidClientSetup {
         registerSimpleFluid(event, "diesel",           0xFFCC7700, ModFluids.DIESEL_TYPE.get());
         registerSimpleFluid(event, "heavy_gas_oil",    0xFF8B4513, ModFluids.HEAVY_GAS_OIL_TYPE.get());
         registerSimpleFluid(event, "residual_fuel_oil",0xFF3D1C00, ModFluids.RESIDUAL_FUEL_OIL_TYPE.get());
-        registerSimpleFluid(event, "photoresist",      0xFFCC88FF, ModFluids.PHOTORESIST_TYPE.get());
+        registerSimpleFluid(event, "photoresist",          0xFFCC88FF, ModFluids.PHOTORESIST_TYPE.get());
+        // ── Nuclear fluids ────────────────────────────────────────────────────
+        registerSimpleFluid(event, "uranium_hexafluoride", 0xFF90EE90, ModFluids.URANIUM_HEXAFLUORIDE_TYPE.get());
+        registerSimpleFluid(event, "enriched_uf6",         0xFF00FF7F, ModFluids.ENRICHED_UF6_TYPE.get());
+        registerSimpleFluid(event, "depleted_uf6",         0xFF808080, ModFluids.DEPLETED_UF6_TYPE.get());
+        registerSimpleFluid(event, "heavy_water",          0xFF9999FF, ModFluids.HEAVY_WATER_TYPE.get());
+        registerSimpleFluid(event, "steam",                0xAAFFFFFF, ModFluids.STEAM_TYPE.get());
     }
 
     private static void registerSimpleFluid(RegisterClientExtensionsEvent event,

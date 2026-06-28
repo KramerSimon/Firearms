@@ -420,4 +420,79 @@ public class ModFluids {
                 .block(() -> ModBlocks.PHOTORESIST_FLUID.get())
                 .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
     }
+
+    // ── Uranium Hexafluoride (UF6) ───────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> URANIUM_HEXAFLUORIDE_TYPE =
+            FLUID_TYPES.register("uranium_hexafluoride", () -> new FluidType(FluidType.Properties.create()
+                    .density(1300).viscosity(1500).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> URANIUM_HEXAFLUORIDE_STILL =
+            FLUIDS.register("uranium_hexafluoride_still", () -> new BaseFlowingFluid.Source(uraniumHexafluorideProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> URANIUM_HEXAFLUORIDE_FLOWING =
+            FLUIDS.register("uranium_hexafluoride_flowing", () -> new BaseFlowingFluid.Flowing(uraniumHexafluorideProperties()));
+    public static BaseFlowingFluid.Properties uraniumHexafluorideProperties() {
+        return new BaseFlowingFluid.Properties(() -> URANIUM_HEXAFLUORIDE_TYPE.get(), () -> URANIUM_HEXAFLUORIDE_STILL.get(), () -> URANIUM_HEXAFLUORIDE_FLOWING.get())
+                .bucket(() -> ModItems.URANIUM_HEXAFLUORIDE_BUCKET.get()).block(() -> ModBlocks.URANIUM_HEXAFLUORIDE_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
+    }
+
+    // ── Enriched UF6 ────────────────────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> ENRICHED_UF6_TYPE =
+            FLUID_TYPES.register("enriched_uf6", () -> new FluidType(FluidType.Properties.create()
+                    .density(1300).viscosity(1500).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> ENRICHED_UF6_STILL =
+            FLUIDS.register("enriched_uf6_still", () -> new BaseFlowingFluid.Source(enrichedUf6Properties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> ENRICHED_UF6_FLOWING =
+            FLUIDS.register("enriched_uf6_flowing", () -> new BaseFlowingFluid.Flowing(enrichedUf6Properties()));
+    public static BaseFlowingFluid.Properties enrichedUf6Properties() {
+        return new BaseFlowingFluid.Properties(() -> ENRICHED_UF6_TYPE.get(), () -> ENRICHED_UF6_STILL.get(), () -> ENRICHED_UF6_FLOWING.get())
+                .bucket(() -> ModItems.ENRICHED_UF6_BUCKET.get()).block(() -> ModBlocks.ENRICHED_UF6_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
+    }
+
+    // ── Depleted UF6 ────────────────────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> DEPLETED_UF6_TYPE =
+            FLUID_TYPES.register("depleted_uf6", () -> new FluidType(FluidType.Properties.create()
+                    .density(1300).viscosity(1500).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> DEPLETED_UF6_STILL =
+            FLUIDS.register("depleted_uf6_still", () -> new BaseFlowingFluid.Source(depletedUf6Properties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> DEPLETED_UF6_FLOWING =
+            FLUIDS.register("depleted_uf6_flowing", () -> new BaseFlowingFluid.Flowing(depletedUf6Properties()));
+    public static BaseFlowingFluid.Properties depletedUf6Properties() {
+        return new BaseFlowingFluid.Properties(() -> DEPLETED_UF6_TYPE.get(), () -> DEPLETED_UF6_STILL.get(), () -> DEPLETED_UF6_FLOWING.get())
+                .bucket(() -> ModItems.DEPLETED_UF6_BUCKET.get()).block(() -> ModBlocks.DEPLETED_UF6_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
+    }
+
+    // ── Heavy Water ──────────────────────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> HEAVY_WATER_TYPE =
+            FLUID_TYPES.register("heavy_water", () -> new FluidType(FluidType.Properties.create()
+                    .density(1100).viscosity(1200).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> HEAVY_WATER_STILL =
+            FLUIDS.register("heavy_water_still", () -> new BaseFlowingFluid.Source(heavyWaterProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> HEAVY_WATER_FLOWING =
+            FLUIDS.register("heavy_water_flowing", () -> new BaseFlowingFluid.Flowing(heavyWaterProperties()));
+    public static BaseFlowingFluid.Properties heavyWaterProperties() {
+        return new BaseFlowingFluid.Properties(() -> HEAVY_WATER_TYPE.get(), () -> HEAVY_WATER_STILL.get(), () -> HEAVY_WATER_FLOWING.get())
+                .bucket(() -> ModItems.HEAVY_WATER_BUCKET.get()).block(() -> ModBlocks.HEAVY_WATER_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(10);
+    }
+
+    // ── Steam ────────────────────────────────────────────────────────────────
+
+    public static final DeferredHolder<FluidType, FluidType> STEAM_TYPE =
+            FLUID_TYPES.register("steam", () -> new FluidType(FluidType.Properties.create()
+                    .density(1).viscosity(200).lightLevel(0).canConvertToSource(false)));
+    public static final DeferredHolder<Fluid, FlowingFluid> STEAM_STILL =
+            FLUIDS.register("steam_still", () -> new BaseFlowingFluid.Source(steamProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> STEAM_FLOWING =
+            FLUIDS.register("steam_flowing", () -> new BaseFlowingFluid.Flowing(steamProperties()));
+    public static BaseFlowingFluid.Properties steamProperties() {
+        return new BaseFlowingFluid.Properties(() -> STEAM_TYPE.get(), () -> STEAM_STILL.get(), () -> STEAM_FLOWING.get())
+                .bucket(() -> ModItems.STEAM_BUCKET.get()).block(() -> ModBlocks.STEAM_FLUID.get())
+                .slopeFindDistance(3).levelDecreasePerBlock(2).tickRate(5);
+    }
 }

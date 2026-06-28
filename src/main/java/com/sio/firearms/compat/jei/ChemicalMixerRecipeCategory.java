@@ -66,6 +66,13 @@ public class ChemicalMixerRecipeCategory implements IRecipeCategory<ChemicalMixe
                     .addItemStack(recipe.getOutputItem());
         }
 
+        // Second fluid input: abs fluid bar at (154,14) → JEI (146,6). Rendered as 12x52 fluid tank.
+        if (!recipe.getSecondInputFluid().isEmpty()) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 146, 6)
+                    .setFluidRenderer(recipe.getSecondInputFluid().getAmount(), false, 12, 52)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.getSecondInputFluid());
+        }
+
         // Fluid output: abs fluid bar at (141,14) → JEI (133,6). Rendered as 16x52 fluid tank.
         if (!recipe.getOutputFluid().isEmpty()) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 133, 6)

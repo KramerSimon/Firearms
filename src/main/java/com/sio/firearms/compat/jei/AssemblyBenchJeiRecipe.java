@@ -40,7 +40,11 @@ public class AssemblyBenchJeiRecipe {
                 createKanthalCoilRecipe(),
                 createNichromeCoilRecipe(),
                 createTungstenCoilRecipe(),
-                createPhotomaskRecipe()
+                createPhotomaskRecipe(),
+                // ── Nuclear Reactor Stage 1 ───────────────────────────────────
+                createFuelRodRecipe(),
+                createFuelRodAssemblyRecipe(),
+                createControlRodRecipe()
         );
     }
 
@@ -176,5 +180,36 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(ModItems.GOLD_FOIL.get()),
                 new ItemStack(ModItems.BASIC_MICROCHIP.get())
         }, new ItemStack(ModItems.PHOTOMASK.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createFuelRodRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()),
+                new ItemStack(ModItems.FUEL_ROD_CLADDING.get())
+        }, new ItemStack(ModItems.FUEL_ROD.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createFuelRodAssemblyRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.FUEL_ROD.get()),
+                new ItemStack(ModItems.FUEL_ROD.get()),
+                new ItemStack(ModItems.FUEL_ROD.get()),
+                new ItemStack(ModItems.FUEL_ROD.get())
+        }, new ItemStack(ModItems.FUEL_ROD_ASSEMBLY.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createControlRodRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.BORON_CARBIDE.get()),
+                new ItemStack(ModItems.ZIRCONIUM_INGOT.get()),
+                new ItemStack(ModItems.STEEL_ROD.get())
+        }, new ItemStack(ModItems.CONTROL_ROD.get()));
     }
 }

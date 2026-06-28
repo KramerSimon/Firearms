@@ -89,6 +89,18 @@ public class MetalPressMenu extends AbstractContainerMenu {
             return;
         }
 
+        // uranium_dioxide_powder → uranium_dioxide_pellet
+        if (slotIs(0, "firearms:uranium_dioxide_powder") && slotEmpty(1)) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get()));
+            return;
+        }
+
+        // zirconium_ingot → fuel_rod_cladding x2
+        if (slotIs(0, "firearms:zirconium_ingot") && slotEmpty(1)) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.FUEL_ROD_CLADDING.get(), 2));
+            return;
+        }
+
         handler.setStackInSlot(2, ItemStack.EMPTY);
     }
 

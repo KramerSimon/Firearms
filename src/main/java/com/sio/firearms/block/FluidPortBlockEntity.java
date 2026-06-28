@@ -34,15 +34,18 @@ public class FluidPortBlockEntity extends BlockEntity {
 
     private static final String[] FLUID_CYCLE = {
         "any", "butane", "gasoline", "naphtha", "kerosene",
-        "diesel", "heavy_gas_oil", "residual_fuel_oil", "oil"
+        "diesel", "heavy_gas_oil", "residual_fuel_oil", "oil", "photoresist",
+        "uranium_hexafluoride", "enriched_uf6", "depleted_uf6", "heavy_water"
     };
     private static final String[] FLUID_DISPLAY = {
         "Any", "Butane", "Gasoline", "Naphtha", "Kerosene",
-        "Diesel", "Heavy Gas Oil", "Residual Fuel Oil", "Oil"
+        "Diesel", "Heavy Gas Oil", "Residual Fuel Oil", "Oil", "Photoresist",
+        "Uranium Hexafluoride", "Enriched UF6", "Depleted UF6", "Heavy Water"
     };
 
     private final FluidTank tank = new FluidTank(CAPACITY);
     private int tickCount = 0;
+    private int ticksSinceSearch = RESCAN_INTERVAL; // start at max so BFS fires on first tick
     private BlockPos cachedControllerPos = null;
     private Mode mode = Mode.INPUT;
     private String targetFluid = "any";
@@ -129,7 +132,12 @@ public class FluidPortBlockEntity extends BlockEntity {
             case "heavy_gas_oil"     -> ModFluids.HEAVY_GAS_OIL_STILL.get();
             case "residual_fuel_oil" -> ModFluids.RESIDUAL_FUEL_OIL_STILL.get();
             case "oil"               -> ModFluids.OIL_STILL.get();
-            default                  -> null;
+            case "photoresist"           -> ModFluids.PHOTORESIST_STILL.get();
+            case "uranium_hexafluoride"  -> ModFluids.URANIUM_HEXAFLUORIDE_STILL.get();
+            case "enriched_uf6"          -> ModFluids.ENRICHED_UF6_STILL.get();
+            case "depleted_uf6"          -> ModFluids.DEPLETED_UF6_STILL.get();
+            case "heavy_water"           -> ModFluids.HEAVY_WATER_STILL.get();
+            default                      -> null;
         };
     }
 
@@ -139,16 +147,24 @@ public class FluidPortBlockEntity extends BlockEntity {
         tickCount++;
         boolean shouldLog = tickCount % 40 == 0;
 
-        if (tickCount % RESCAN_INTERVAL == 0) {
-            cachedControllerPos = findControllerBFS();
+        ticksSinceSearch++;
+        if (cachedControllerPos == null || ticksSinceSearch >= RESCAN_INTERVAL) {
+            ticksSinceSearch = 0;
+            cachedControllerPos = findControllerBFS(shouldLog);
             if (shouldLog) {
-                LOGGER.info("FluidPort@{} [{}] target={}: BFS rescan, controller={}",
+                LOGGER.info("FluidPort@{} [{}] target={}: BFS rescan → controller={}",
                         worldPosition.toShortString(), mode, targetFluid,
                         cachedControllerPos != null ? cachedControllerPos.toShortString() : "none");
             }
         }
 
-        if (cachedControllerPos == null) return;
+        if (cachedControllerPos == null) {
+            if (shouldLog && mode == Mode.OUTPUT) {
+                LOGGER.info("[FluidPort OUTPUT]@{} target={} — 0 controllers found (BFS cache empty)",
+                        worldPosition.toShortString(), targetFluid);
+            }
+            return;
+        }
 
         BlockEntity be = level.getBlockEntity(cachedControllerPos);
         if (be == null) {
@@ -157,53 +173,181 @@ public class FluidPortBlockEntity extends BlockEntity {
         }
 
         if (mode == Mode.INPUT) {
-            if (tank.getFluidAmount() > 0 && be instanceof RefineryControllerBlockEntity refinery) {
-                IFluidHandler target = refinery.getOilInputHandler();
-                FluidStack toOffer = tank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
-                if (!toOffer.isEmpty()) {
-                    int filled = target.fill(toOffer, IFluidHandler.FluidAction.EXECUTE);
-                    if (filled > 0) {
-                        tank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
-                        changed = true;
+            if (tank.getFluidAmount() > 0) {
+                IFluidHandler target = null;
+                if (be instanceof RefineryControllerBlockEntity refinery) {
+                    target = refinery.getOilInputHandler();
+                } else if (be instanceof ChemicalMixerBlockEntity mixer) {
+                    // Route to the correct input tank based on the fluid being carried
+                    FluidStack carrying = tank.getFluid();
+                    target = mixer.getFluidInputTank2().isFluidValid(carrying)
+                            ? mixer.fluidInputHandler2
+                            : mixer.fluidInputHandler;
+                } else if (be instanceof EuvLithographyControllerBlockEntity euv) {
+                    target = euv.getPhotoresistInputHandler();
+                } else if (be instanceof GasCentrifugeBlockEntity gc) {
+                    target = gc.fluidInputHandler;
+                }
+                if (target != null) {
+                    FluidStack toOffer = tank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    if (!toOffer.isEmpty()) {
+                        int filled = target.fill(toOffer, IFluidHandler.FluidAction.EXECUTE);
+                        if (filled > 0) {
+                            tank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
+                            changed = true;
+                        }
                     }
                 }
             }
         } else {
-            if (tank.getFluidAmount() < tank.getCapacity()) {
-                if (be instanceof OilDerrickControllerBlockEntity derrick) {
-                    FluidTank source = derrick.getFluidTank();
-                    FluidStack drained = source.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
-                    if (!drained.isEmpty()) {
-                        int accepted = tank.fill(drained, IFluidHandler.FluidAction.SIMULATE);
-                        if (accepted > 0) {
-                            FluidStack actual = source.drain(new FluidStack(drained.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
-                            if (!actual.isEmpty()) {
-                                tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
-                                changed = true;
-                            }
+            // ── OUTPUT mode: pull from controller into local buffer each tick ─────
+            // The buffer is exposed as drain-only to pipes via getExposedHandler().
+            // tank.fill() caps the transfer naturally when the buffer is full.
+            String controllerType = be instanceof OilDerrickControllerBlockEntity ? "OilDerrick"
+                    : be instanceof RefineryControllerBlockEntity ? "Refinery"
+                    : be instanceof ChemicalMixerBlockEntity ? "ChemicalMixer"
+                    : be.getClass().getSimpleName();
+
+            if (shouldLog) {
+                LOGGER.info("[FluidPort OUTPUT]@{} target={} buffer={}/{}mB — pulling from {} at {}",
+                        worldPosition.toShortString(), targetFluid,
+                        tank.getFluidAmount(), tank.getCapacity(),
+                        controllerType, cachedControllerPos.toShortString());
+            }
+
+            if (be instanceof OilDerrickControllerBlockEntity derrick) {
+                FluidTank source = derrick.getFluidTank();
+                if (shouldLog) {
+                    LOGGER.info("[FluidPort OUTPUT]@{} OilDerrick tank: {}mB of {}",
+                            worldPosition.toShortString(), source.getFluidAmount(),
+                            source.isEmpty() ? "empty" : source.getFluid().getFluid());
+                }
+                FluidStack toDrain = source.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                if (!toDrain.isEmpty()) {
+                    int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                    if (accepted > 0) {
+                        FluidStack actual = source.drain(new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                        if (!actual.isEmpty()) {
+                            tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                            changed = true;
+                            if (shouldLog) LOGGER.info("[FluidPort OUTPUT]@{} transferred {}mB from OilDerrick",
+                                    worldPosition.toShortString(), actual.getAmount());
                         }
+                    } else if (shouldLog) {
+                        LOGGER.info("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
+                                worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
                     }
-                } else if (be instanceof RefineryControllerBlockEntity refinery) {
-                    IFluidHandler source = refinery.getOutputHandler();
-                    FluidStack toDrain;
-                    if ("any".equals(targetFluid)) {
-                        toDrain = source.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
-                    } else {
-                        Fluid target = getFluidByName(targetFluid);
-                        toDrain = (target != null)
-                                ? source.drain(new FluidStack(target, MAX_TRANSFER), IFluidHandler.FluidAction.SIMULATE)
-                                : FluidStack.EMPTY;
+                } else if (shouldLog) {
+                    LOGGER.info("[FluidPort OUTPUT]@{} OilDerrick tank empty — nothing to transfer",
+                            worldPosition.toShortString());
+                }
+
+            } else if (be instanceof RefineryControllerBlockEntity refinery) {
+                int availableMb;
+                FluidStack toDrain;
+                if ("any".equals(targetFluid)) {
+                    toDrain = refinery.getOutputHandler().drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    availableMb = 0;
+                    for (FluidTank t : refinery.getOutputTanks()) availableMb += t.getFluidAmount();
+                } else {
+                    FluidTank specificTank = refinery.getOutputTank(targetFluid);
+                    availableMb = specificTank != null ? specificTank.getFluidAmount() : 0;
+                    toDrain = (specificTank != null && !specificTank.isEmpty())
+                            ? specificTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE)
+                            : FluidStack.EMPTY;
+                }
+                if (shouldLog) {
+                    LOGGER.info("[FluidPort OUTPUT]@{} Refinery tank[{}]: {}mB available",
+                            worldPosition.toShortString(), targetFluid, availableMb);
+                }
+                if (!toDrain.isEmpty()) {
+                    int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                    if (accepted > 0) {
+                        FluidStack actual;
+                        if ("any".equals(targetFluid)) {
+                            actual = refinery.getOutputHandler().drain(new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                        } else {
+                            FluidTank specificTank = refinery.getOutputTank(targetFluid);
+                            actual = (specificTank != null)
+                                    ? specificTank.drain(new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE)
+                                    : FluidStack.EMPTY;
+                        }
+                        if (!actual.isEmpty()) {
+                            tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                            changed = true;
+                            if (shouldLog) LOGGER.info("[FluidPort OUTPUT]@{} transferred {}mB {} from Refinery",
+                                    worldPosition.toShortString(), actual.getAmount(), actual.getFluid());
+                        }
+                    } else if (shouldLog) {
+                        LOGGER.info("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
+                                worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
                     }
-                    if (!toDrain.isEmpty()) {
+                } else if (shouldLog) {
+                    LOGGER.info("[FluidPort OUTPUT]@{} Refinery tank[{}] empty — nothing to transfer",
+                            worldPosition.toShortString(), targetFluid);
+                }
+
+            } else if (be instanceof GasCentrifugeBlockEntity gc) {
+                IFluidHandler outputHandler = gc.fluidOutputHandler;
+                FluidStack toDrain = outputHandler.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                if (!toDrain.isEmpty()) {
+                    boolean fluidMatches = "any".equals(targetFluid);
+                    if (!fluidMatches) {
+                        Fluid expected = getFluidByName(targetFluid);
+                        fluidMatches = expected != null && toDrain.getFluid().isSame(expected);
+                    }
+                    if (fluidMatches) {
                         int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
                         if (accepted > 0) {
-                            FluidStack actual = source.drain(new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            FluidStack actual = outputHandler.drain(
+                                    new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
                             if (!actual.isEmpty()) {
                                 tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
                                 changed = true;
                             }
                         }
                     }
+                }
+
+            } else if (be instanceof ChemicalMixerBlockEntity mixer) {
+                FluidTank outputTank = mixer.getFluidOutputTank();
+                if (shouldLog) {
+                    LOGGER.info("[FluidPort OUTPUT]@{} ChemicalMixer output tank: {}mB of {}",
+                            worldPosition.toShortString(), outputTank.getFluidAmount(),
+                            outputTank.isEmpty() ? "empty" : outputTank.getFluid().getFluid());
+                }
+                if (!outputTank.isEmpty()) {
+                    boolean fluidMatches = "any".equals(targetFluid);
+                    if (!fluidMatches) {
+                        Fluid expected = getFluidByName(targetFluid);
+                        fluidMatches = expected != null && outputTank.getFluid().getFluid().isSame(expected);
+                        if (!fluidMatches && shouldLog) {
+                            LOGGER.info("[FluidPort OUTPUT]@{} ChemicalMixer fluid mismatch: expected={} actual={}",
+                                    worldPosition.toShortString(), targetFluid, outputTank.getFluid().getFluid());
+                        }
+                    }
+                    if (fluidMatches) {
+                        FluidStack toDrain = outputTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                        if (!toDrain.isEmpty()) {
+                            int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                            if (accepted > 0) {
+                                FluidStack actual = outputTank.drain(
+                                        new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                                if (!actual.isEmpty()) {
+                                    tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                    changed = true;
+                                    if (shouldLog) LOGGER.info("[FluidPort OUTPUT]@{} transferred {}mB from ChemicalMixer",
+                                            worldPosition.toShortString(), actual.getAmount());
+                                }
+                            } else if (shouldLog) {
+                                LOGGER.info("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
+                                        worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
+                            }
+                        }
+                    }
+                } else if (shouldLog) {
+                    LOGGER.info("[FluidPort OUTPUT]@{} ChemicalMixer output tank empty — nothing to transfer",
+                            worldPosition.toShortString());
                 }
             }
         }
@@ -211,13 +355,17 @@ public class FluidPortBlockEntity extends BlockEntity {
         if (changed) setChanged();
     }
 
-    private BlockPos findControllerBFS() {
+    private BlockPos findControllerBFS(boolean verbose) {
         if (level == null) return null;
+
+        LOGGER.info("[FluidPort BFS]@{} starting search (maxDepth={}, verbose={})",
+                worldPosition.toShortString(), MAX_BFS_DEPTH, verbose);
 
         Set<BlockPos> visited = new HashSet<>();
         Queue<BlockPos> queue = new ArrayDeque<>();
         visited.add(worldPosition);
         queue.add(worldPosition);
+        int visitCount = 0;
 
         while (!queue.isEmpty()) {
             BlockPos current = queue.poll();
@@ -227,17 +375,46 @@ public class FluidPortBlockEntity extends BlockEntity {
                 if (visited.contains(neighbor)) continue;
                 if (neighbor.distManhattan(worldPosition) > MAX_BFS_DEPTH) continue;
                 visited.add(neighbor);
+                visitCount++;
 
+                Block block = level.getBlockState(neighbor).getBlock();
                 BlockEntity be = level.getBlockEntity(neighbor);
-                if (be instanceof OilDerrickControllerBlockEntity || be instanceof RefineryControllerBlockEntity) {
+
+                if (verbose) {
+                    LOGGER.info("[FluidPort BFS]@{} visit#{} {} — block={} hasBE={}",
+                            worldPosition.toShortString(), visitCount,
+                            neighbor.toShortString(),
+                            net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block),
+                            be != null);
+                }
+
+                if (be instanceof OilDerrickControllerBlockEntity
+                        || be instanceof RefineryControllerBlockEntity
+                        || be instanceof ChemicalMixerBlockEntity
+                        || be instanceof EuvLithographyControllerBlockEntity
+                        || be instanceof GasCentrifugeBlockEntity) {
+                    LOGGER.info("[FluidPort BFS]@{} FOUND controller: {} at {} (after {} visits)",
+                            worldPosition.toShortString(),
+                            be.getClass().getSimpleName(),
+                            neighbor.toShortString(),
+                            visitCount);
                     return neighbor;
                 }
 
-                if (isStructureBlock(level.getBlockState(neighbor).getBlock())) {
+                if (isStructureBlock(block)) {
+                    if (verbose) {
+                        LOGGER.info("[FluidPort BFS]@{} queuing structure block {} at {}",
+                                worldPosition.toShortString(),
+                                net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block),
+                                neighbor.toShortString());
+                    }
                     queue.add(neighbor);
                 }
             }
         }
+
+        LOGGER.info("[FluidPort BFS]@{} search complete — visited {} blocks, no controller found",
+                worldPosition.toShortString(), visitCount);
         return null;
     }
 
@@ -249,6 +426,13 @@ public class FluidPortBlockEntity extends BlockEntity {
                 || block == ModBlocks.REFINERY_WALL.get()
                 || block == ModBlocks.REFINERY_TOP.get()
                 || block == ModBlocks.REFINERY_CONTROLLER.get()
+                || block == ModBlocks.EUV_BASE.get()
+                || block == ModBlocks.EUV_WALL.get()
+                || block == ModBlocks.EUV_LENS_HOUSING.get()
+                || block == ModBlocks.EUV_MIRROR_ARRAY.get()
+                || block == ModBlocks.EUV_EMITTER_HOUSING.get()
+                || block == ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()
+                || block == ModBlocks.CHEMICAL_MIXER.get()
                 || block == ModBlocks.ENERGY_PORT.get()
                 || block == ModBlocks.FLUID_PORT.get();
     }

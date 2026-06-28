@@ -1,5 +1,6 @@
 package com.sio.firearms.block;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.menu.RefineryMenu;
 import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModBlocks;
@@ -7,6 +8,7 @@ import com.sio.firearms.registry.ModFluids;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -24,8 +26,11 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.slf4j.Logger;
 
 public class RefineryControllerBlockEntity extends BlockEntity implements MenuProvider {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final int ENERGY_CAPACITY  = 50_000;
     private static final int MAX_RECEIVE       = 1_000;
@@ -157,6 +162,19 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
     public IFluidHandler getOutputHandler()   { return combinedOutputHandler; }
     public ItemStackHandler getInventory()    { return inventory; }
 
+    public FluidTank getOutputTank(String fluidName) {
+        return switch (fluidName) {
+            case "butane"            -> butaneTank;
+            case "gasoline"          -> gasolineTank;
+            case "naphtha"           -> naphthaTank;
+            case "kerosene"          -> keroseneTank;
+            case "diesel"            -> dieselTank;
+            case "heavy_gas_oil"     -> heavyGasOilTank;
+            case "residual_fuel_oil" -> residualFuelOilTank;
+            default                  -> null;
+        };
+    }
+
     @Override public Component getDisplayName() {
         return Component.translatable("block.firearms.refinery_controller");
     }
@@ -169,51 +187,66 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
     // ── Structure validation (5×5×6) ─────────────────────────────────────────
     public boolean checkStructure() {
         if (level == null) return false;
+        LOGGER.info("[Refinery] checkStructure() called, controller at {}", worldPosition);
+
         structureCenter = findCenter();
-        if (structureCenter == null) { structureValid = false; return false; }
-        BlockPos center = structureCenter;
-
-        // Bottom layer (y=0): 5×5 refinery_base; controller is on outer border
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                BlockPos p = center.offset(x, 0, z);
-                if (p.equals(worldPosition)) continue;
-                if (!isValidStructureBlock(p, ModBlocks.REFINERY_BASE.get())) {
-                    structureValid = false; return false;
-                }
-            }
+        if (structureCenter == null) {
+            LOGGER.info("[Refinery] Structure INVALID — no valid base layer found");
+            structureValid = false;
+            return false;
         }
+        BlockPos center = structureCenter;
+        LOGGER.info("[Refinery]   PASS y=0 base layer, center = {}", center);
 
-        // Layers 1-4 (y=1 to y=4): 5×5 refinery_wall
+        // Layers 1-4 (y=1 to y=4): border (16 positions) must be refinery_wall; interior 3×3 may be air
+        boolean ok = true;
         for (int y = 1; y <= 4; y++) {
             for (int x = -2; x <= 2; x++) {
                 for (int z = -2; z <= 2; z++) {
-                    if (!isValidStructureBlock(center.offset(x, y, z), ModBlocks.REFINERY_WALL.get())) {
-                        structureValid = false; return false;
+                    if (Math.abs(x) < 2 && Math.abs(z) < 2) continue;
+                    BlockPos p = center.offset(x, y, z);
+                    if (!isValidStructureBlock(p, ModBlocks.REFINERY_WALL.get())) {
+                        Block found = level.getBlockState(p).getBlock();
+                        LOGGER.info("[Refinery]   FAIL y={} dx={} dz={} expected refinery_wall, found {}",
+                                y, x, z, BuiltInRegistries.BLOCK.getKey(found));
+                        ok = false;
                     }
                 }
             }
         }
+        if (!ok) { structureValid = false; return false; }
+        LOGGER.info("[Refinery]   PASS y=1-4 wall layers");
 
         // Top layer (y=5): 5×5 refinery_top
+        ok = true;
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
-                if (!isValidStructureBlock(center.offset(x, 5, z), ModBlocks.REFINERY_TOP.get())) {
-                    structureValid = false; return false;
+                BlockPos p = center.offset(x, 5, z);
+                if (!isValidStructureBlock(p, ModBlocks.REFINERY_TOP.get())) {
+                    Block found = level.getBlockState(p).getBlock();
+                    LOGGER.info("[Refinery]   FAIL y=5 dx={} dz={} expected refinery_top, found {}",
+                            x, z, BuiltInRegistries.BLOCK.getKey(found));
+                    ok = false;
                 }
             }
         }
+        if (!ok) { structureValid = false; return false; }
+        LOGGER.info("[Refinery]   PASS y=5 top layer");
 
+        LOGGER.info("[Refinery] Structure VALID — center {}", center);
         structureValid = true;
         return true;
     }
 
-    // Controller is on the outer border of the 5×5 (|dx|=2 or |dz|=2 from center)
+    // Controller is on the outer border of the 5×5 (|dx|=2 or |dz|=2 from center).
+    // isValidCenter() is used purely to find the right center; failures are not logged
+    // individually here because all 16 candidates are tried before giving up.
     private BlockPos findCenter() {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 if (Math.abs(dx) != 2 && Math.abs(dz) != 2) continue;
                 BlockPos candidate = worldPosition.offset(-dx, 0, -dz);
+                LOGGER.info("[Refinery]   Trying center {} (dx={} dz={})", candidate, dx, dz);
                 if (isValidCenter(candidate)) return candidate;
             }
         }
@@ -225,7 +258,12 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
             for (int z = -2; z <= 2; z++) {
                 BlockPos p = center.offset(x, 0, z);
                 if (p.equals(worldPosition)) continue;
-                if (!isValidStructureBlock(p, ModBlocks.REFINERY_BASE.get())) return false;
+                if (!isValidStructureBlock(p, ModBlocks.REFINERY_BASE.get())) {
+                    Block found = level.getBlockState(p).getBlock();
+                    LOGGER.info("[Refinery]     base FAIL dx={} dz={} expected refinery_base, found {}",
+                            x, z, BuiltInRegistries.BLOCK.getKey(found));
+                    return false;
+                }
             }
         }
         return true;

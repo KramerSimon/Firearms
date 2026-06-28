@@ -1,14 +1,21 @@
 package com.sio.firearms.client;
 
 import com.sio.firearms.Firearms;
+import com.sio.firearms.block.FluidPipeBlock;
+import com.sio.firearms.block.FluidPipeBlockEntity;
 import com.sio.firearms.item.GunItem;
 import com.sio.firearms.item.SMGItem;
+import com.sio.firearms.item.WrenchItem;
 import com.sio.firearms.keybind.ModKeybinds;
 import com.sio.firearms.network.ReloadGunPayload;
 import com.sio.firearms.network.ShootGunPayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -67,6 +74,29 @@ public class ClientEvents {
             event.setCanceled(true);
             event.setSwingHand(false);
         }
+    }
+
+    @SubscribeEvent
+    public static void onClientTickPipeHover(ClientTickEvent.Post event) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null || mc.level == null || mc.screen != null) return;
+
+        boolean hasWrench = player.getMainHandItem().getItem() instanceof WrenchItem
+                || player.getOffhandItem().getItem() instanceof WrenchItem;
+        if (!hasWrench) return;
+
+        if (!(mc.hitResult instanceof BlockHitResult bhr)) return;
+        BlockPos pos = bhr.getBlockPos();
+        if (!(mc.level.getBlockState(pos).getBlock() instanceof FluidPipeBlock)) return;
+        if (!(mc.level.getBlockEntity(pos) instanceof FluidPipeBlockEntity pipe)) return;
+
+        ResourceLocation lf = pipe.getLockedFluid();
+        String fluidStr = lf != null ? lf.toString() : "any";
+        int amount = pipe.getFluidTank().getFluidAmount();
+        int cap = pipe.getFluidTank().getCapacity();
+        player.displayClientMessage(
+                Component.literal("Pipe: " + fluidStr + " | " + amount + "/" + cap + " mB"), true);
     }
 
     @SubscribeEvent

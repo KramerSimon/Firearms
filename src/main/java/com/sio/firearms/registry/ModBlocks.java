@@ -2,6 +2,7 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlock;
+import com.sio.firearms.block.GasCentrifugeBlock;
 import com.sio.firearms.block.CrystalGrowthControllerBlock;
 import com.sio.firearms.block.EuvLithographyControllerBlock;
 import com.sio.firearms.block.WaferCuttingMachineBlock;
@@ -531,4 +532,47 @@ public class ModBlocks {
             BLOCKS.register("chip_packaging_machine",
                     () -> new ChipPackagingMachineBlock(BlockBehaviour.Properties.of()
                             .strength(3.5f).requiresCorrectToolForDrops()));
+
+    // ── Nuclear Reactor Stage 1 ──────────────────────────────────────────────
+    public static final DeferredBlock<Block> ZIRCONITE_ORE =
+            BLOCKS.register("zirconite_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(1, 3),
+                            BlockBehaviour.Properties.of().strength(3.0f).sound(SoundType.STONE)
+                                    .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> GAS_CENTRIFUGE =
+            BLOCKS.register("gas_centrifuge",
+                    () -> new GasCentrifugeBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f).requiresCorrectToolForDrops()));
+
+    // ── Nuclear fluid blocks ──────────────────────────────────────────────────
+    public static final DeferredBlock<LiquidBlock> URANIUM_HEXAFLUORIDE_FLUID =
+            BLOCKS.register("uranium_hexafluoride_fluid",
+                    () -> new LiquidBlock(ModFluids.URANIUM_HEXAFLUORIDE_STILL.get(),
+                            BlockBehaviour.Properties.of().noCollission().strength(100f).noLootTable()
+                                    .pushReaction(PushReaction.DESTROY)));
+
+    public static final DeferredBlock<LiquidBlock> ENRICHED_UF6_FLUID =
+            BLOCKS.register("enriched_uf6_fluid",
+                    () -> new LiquidBlock(ModFluids.ENRICHED_UF6_STILL.get(),
+                            BlockBehaviour.Properties.of().noCollission().strength(100f).noLootTable()
+                                    .pushReaction(PushReaction.DESTROY)));
+
+    public static final DeferredBlock<LiquidBlock> DEPLETED_UF6_FLUID =
+            BLOCKS.register("depleted_uf6_fluid",
+                    () -> new LiquidBlock(ModFluids.DEPLETED_UF6_STILL.get(),
+                            BlockBehaviour.Properties.of().noCollission().strength(100f).noLootTable()
+                                    .pushReaction(PushReaction.DESTROY)));
+
+    public static final DeferredBlock<LiquidBlock> HEAVY_WATER_FLUID =
+            BLOCKS.register("heavy_water_fluid",
+                    () -> new LiquidBlock(ModFluids.HEAVY_WATER_STILL.get(),
+                            BlockBehaviour.Properties.of().noCollission().strength(100f).noLootTable()
+                                    .pushReaction(PushReaction.DESTROY)));
+
+    public static final DeferredBlock<LiquidBlock> STEAM_FLUID =
+            BLOCKS.register("steam_fluid",
+                    () -> new LiquidBlock(ModFluids.STEAM_STILL.get(),
+                            BlockBehaviour.Properties.of().noCollission().strength(100f).noLootTable()
+                                    .pushReaction(PushReaction.DESTROY)));
 }

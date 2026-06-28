@@ -249,6 +249,31 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                     Map.of("firearms:tungsten_wire", 4));
         }
 
+        // ── Nuclear Reactor Stage 1 recipes ───────────────────────────────────
+
+        // Fuel Rod: 8x uranium_dioxide_pellet + fuel_rod_cladding → fuel_rod
+        if (total == 9
+                && containsItem(in, "firearms:uranium_dioxide_pellet", 8)
+                && containsItem(in, "firearms:fuel_rod_cladding", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.FUEL_ROD.get()),
+                    Map.of("firearms:uranium_dioxide_pellet", 8, "firearms:fuel_rod_cladding", 1));
+        }
+
+        // Fuel Rod Assembly: 4x fuel_rod → fuel_rod_assembly
+        if (in.size() == 1 && containsItem(in, "firearms:fuel_rod", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.FUEL_ROD_ASSEMBLY.get()),
+                    Map.of("firearms:fuel_rod", 4));
+        }
+
+        // Control Rod: boron_carbide + zirconium_ingot + steel_rod → control_rod
+        if (total == 3
+                && containsItem(in, "firearms:boron_carbide", 1)
+                && containsItem(in, "firearms:zirconium_ingot", 1)
+                && containsItem(in, "firearms:steel_rod", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.CONTROL_ROD.get()),
+                    Map.of("firearms:boron_carbide", 1, "firearms:zirconium_ingot", 1, "firearms:steel_rod", 1));
+        }
+
         return null;
     }
 

@@ -51,7 +51,16 @@ public class MetalPressJeiRecipe {
                 new MetalPressJeiRecipe(
                         new ItemStack(Items.DIAMOND),
                         ItemStack.EMPTY,
-                        new ItemStack(ModItems.DIAMOND_SAW_BLADE.get(), 2))
+                        new ItemStack(ModItems.DIAMOND_SAW_BLADE.get(), 2)),
+                // ── Nuclear Reactor Stage 1 ───────────────────────────────────
+                new MetalPressJeiRecipe(
+                        new ItemStack(ModItems.URANIUM_DIOXIDE_POWDER.get()),
+                        ItemStack.EMPTY,
+                        new ItemStack(ModItems.URANIUM_DIOXIDE_PELLET.get())),
+                new MetalPressJeiRecipe(
+                        new ItemStack(ModItems.ZIRCONIUM_INGOT.get()),
+                        ItemStack.EMPTY,
+                        new ItemStack(ModItems.FUEL_ROD_CLADDING.get(), 2))
         );
     }
 }
