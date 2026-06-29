@@ -40,6 +40,8 @@ import com.sio.firearms.block.HeatTreatmentFurnaceBlock;
 import com.sio.firearms.block.LatheBlock;
 import com.sio.firearms.block.GunModificationTableBlock;
 import com.sio.firearms.block.MetalPressBlock;
+import com.sio.firearms.block.GarageDoorBlock;
+import com.sio.firearms.block.VehicleGarageControllerBlock;
 import com.sio.firearms.block.WireBlock;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
@@ -643,6 +645,34 @@ public class ModBlocks {
     public static final DeferredBlock<Block> COOLING_TOWER_CONTROLLER =
             BLOCKS.register("cooling_tower_controller",
                     () -> new CoolingTowerControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(6.0f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── Vehicle Garage ───────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> GARAGE_FLOOR =
+            BLOCKS.register("garage_floor",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> GARAGE_WALL =
+            BLOCKS.register("garage_wall",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> GARAGE_ROOF =
+            BLOCKS.register("garage_roof",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> GARAGE_DOOR =
+            BLOCKS.register("garage_door",
+                    () -> new GarageDoorBlock(BlockBehaviour.Properties.of()
+                            .strength(6.0f)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> GARAGE_CONTROLLER =
+            BLOCKS.register("garage_controller",
+                    () -> new VehicleGarageControllerBlock(BlockBehaviour.Properties.of()
                             .strength(6.0f)
                             .requiresCorrectToolForDrops()));
 

@@ -1,5 +1,6 @@
 package com.sio.firearms;
 
+import com.sio.firearms.config.FirearmsConfig;
 import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModBlocks;
 import com.sio.firearms.registry.ModCreativeTabs;
@@ -13,14 +14,17 @@ import com.sio.firearms.registry.ModEffects;
 import com.sio.firearms.registry.ModMenuTypes;
 import com.sio.firearms.registry.ModSounds;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 
 @Mod(Firearms.MOD_ID)
 public class Firearms {
 
     public static final String MOD_ID = "firearms";
 
-    public Firearms(IEventBus modEventBus) {
+    public Firearms(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, FirearmsConfig.SPEC, "firearms-common.toml");
         ModFluids.FLUID_TYPES.register(modEventBus);
         ModFluids.FLUIDS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);

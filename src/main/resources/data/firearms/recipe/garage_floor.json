@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SSS", "SSS", "nnn"],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "n": {"item": "minecraft:stone"}
+  },
+  "result": {"id": "firearms:garage_floor", "count": 4}
+}

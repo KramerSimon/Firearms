@@ -1,5 +1,6 @@
 package com.sio.firearms.item;
 
+import com.sio.firearms.config.FirearmsConfig;
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.registry.ModDataComponents;
 import net.minecraft.ChatFormatting;
@@ -78,7 +79,7 @@ public class GunItem extends Item {
 
         boolean ap = Boolean.TRUE.equals(stack.get(ModDataComponents.ARMOR_PIERCING.get()));
         boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
-        int actualDamage = ap ? 20 : (refined ? 10 : damage);
+        int actualDamage = (int) ((ap ? 20 : (refined ? 10 : damage)) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get());
         BulletEntity bullet = new BulletEntity(level, player, actualDamage);
         bullet.setArmorPiercing(ap);
         bullet.setShooterGun(stack);

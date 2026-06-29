@@ -34,6 +34,31 @@ public class ClientSetup {
         // SeaMineEntity extends Entity (not ThrowableItemProjectile) but implements ItemSupplier,
         // so raw-type cast is required to use ThrownItemRenderer here.
         event.registerEntityRenderer((EntityType) ModEntities.SEA_MINE.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.TANK.get(), TankRenderer::new);
+        event.registerEntityRenderer(ModEntities.MOLOTOV.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.NITROGLYCERIN.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer((EntityType) ModEntities.FLAME.get(),
+                ctx -> new net.minecraft.client.renderer.entity.EntityRenderer<>(ctx) {
+                    @Override public net.minecraft.resources.ResourceLocation getTextureLocation(
+                            net.minecraft.world.entity.Entity e) {
+                        return net.minecraft.resources.ResourceLocation.withDefaultNamespace("textures/misc/unknown_pack.png");
+                    }
+                });
+        event.registerEntityRenderer((EntityType) ModEntities.FIRE_PATCH.get(),
+                ctx -> new net.minecraft.client.renderer.entity.EntityRenderer<>(ctx) {
+                    @Override public net.minecraft.resources.ResourceLocation getTextureLocation(
+                            net.minecraft.world.entity.Entity e) {
+                        return net.minecraft.resources.ResourceLocation.withDefaultNamespace("textures/misc/unknown_pack.png");
+                    }
+                });
+        // Shell moves at 3 b/t — renders as invisible (no model); NoopRenderer equivalent via empty EntityRenderer
+        event.registerEntityRenderer((EntityType) ModEntities.TANK_CANNON_SHELL.get(),
+                ctx -> new net.minecraft.client.renderer.entity.EntityRenderer<>(ctx) {
+                    @Override public net.minecraft.resources.ResourceLocation getTextureLocation(
+                            net.minecraft.world.entity.Entity e) {
+                        return net.minecraft.resources.ResourceLocation.withDefaultNamespace("textures/misc/unknown_pack.png");
+                    }
+                });
     }
 
     @SubscribeEvent

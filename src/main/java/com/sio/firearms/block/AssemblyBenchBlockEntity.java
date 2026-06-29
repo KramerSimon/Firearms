@@ -48,6 +48,7 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
     };
 
     private int progress = 0;
+    private int logCooldown = 0;
 
     private final ContainerData data = new ContainerData() {
         @Override
@@ -103,175 +104,274 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         return map;
     }
 
-    private boolean containsItem(Map<String, Integer> inputs, String id, int count) {
-        return inputs.getOrDefault(id, 0) >= count;
+    // Returns true when inputs contains at least `amount` of `item`.
+    private boolean hasAtLeast(Map<String, Integer> inputs, String item, int amount) {
+        return inputs.getOrDefault(item, 0) >= amount;
     }
 
     private record RecipeMatch(ItemStack result, Map<String, Integer> consume) {}
 
     private RecipeMatch findRecipe() {
         Map<String, Integer> in = getInputMap();
-        int total = in.values().stream().mapToInt(Integer::intValue).sum();
 
-        if (LOGGER.isDebugEnabled() && !in.isEmpty()) {
-            LOGGER.debug("[AssemblyBench] findRecipe input={} total={}", in, total);
+        if (!in.isEmpty()) {
+            if (++logCooldown >= 100) {
+                logCooldown = 0;
+                LOGGER.info("[AssemblyBench]@{} inputs: {}", worldPosition.toShortString(), in);
+            }
+        } else {
+            logCooldown = 0;
         }
 
-        // Gun Barrel: gun_barrel_blank + steel_rod x2
-        if (total == 3
-                && containsItem(in, "firearms:gun_barrel_blank", 1)
-                && containsItem(in, "firearms:steel_rod", 2)) {
-            return new RecipeMatch(new ItemStack(ModItems.GUN_BARREL.get()),
-                    Map.of("firearms:gun_barrel_blank", 1, "firearms:steel_rod", 2));
-        }
+        // ── Weapons ──────────────────────────────────────────────────────────
+        // Checked most-specific first to prevent partial-overlap false matches.
 
-        // Trigger Assembly: firing_mechanism + firing_pin + spring
-        if (total == 3
-                && containsItem(in, "firearms:firing_mechanism", 1)
-                && containsItem(in, "firearms:firing_pin", 1)
-                && containsItem(in, "firearms:spring", 1)) {
-            return new RecipeMatch(new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()),
-                    Map.of("firearms:firing_mechanism", 1, "firearms:firing_pin", 1, "firearms:spring", 1));
-        }
-
-        // Pistol: gun_barrel + trigger_assembly + gun_grip + magazine + spring
-        if (total == 5
-                && containsItem(in, "firearms:gun_barrel", 1)
-                && containsItem(in, "firearms:trigger_assembly", 1)
-                && containsItem(in, "firearms:gun_grip", 1)
-                && containsItem(in, "firearms:magazine", 1)
-                && containsItem(in, "firearms:spring", 1)) {
-            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()),
-                    Map.of("firearms:gun_barrel", 1, "firearms:trigger_assembly", 1,
-                            "firearms:gun_grip", 1, "firearms:magazine", 1, "firearms:spring", 1));
-        }
-
-        // Shotgun: gun_barrel x2 + trigger_assembly + gun_grip + magazine
-        if (total == 5
-                && containsItem(in, "firearms:gun_barrel", 2)
-                && containsItem(in, "firearms:trigger_assembly", 1)
-                && containsItem(in, "firearms:gun_grip", 1)
-                && containsItem(in, "firearms:magazine", 1)) {
-            return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()),
-                    Map.of("firearms:gun_barrel", 2, "firearms:trigger_assembly", 1,
-                            "firearms:gun_grip", 1, "firearms:magazine", 1));
-        }
-
-        // Rifle: gun_barrel + trigger_assembly + gun_grip + magazine + bolt + buffer_tube
-        if (total == 6
-                && containsItem(in, "firearms:gun_barrel", 1)
-                && containsItem(in, "firearms:trigger_assembly", 1)
-                && containsItem(in, "firearms:gun_grip", 1)
-                && containsItem(in, "firearms:magazine", 1)
-                && containsItem(in, "firearms:bolt", 1)
-                && containsItem(in, "firearms:buffer_tube", 1)) {
+        // Rifle: steel×6 + hardened×2 + copper×3 + circuit×1 + bullet_casing×16
+        // Must come before Pistol — if the bench also has propellant, Pistol would fire first otherwise.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 16)) {
             return new RecipeMatch(new ItemStack(ModItems.RIFLE.get()),
-                    Map.of("firearms:gun_barrel", 1, "firearms:trigger_assembly", 1,
-                            "firearms:gun_grip", 1, "firearms:magazine", 1,
-                            "firearms:bolt", 1, "firearms:buffer_tube", 1));
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 3, "firearms:circuit_board", 1,
+                            "firearms:bullet_casing", 16));
         }
 
-        // SMG: gun_barrel + electronic_trigger + gun_grip + magazine + circuit_board + buffer_tube
-        if (total == 6
-                && containsItem(in, "firearms:gun_barrel", 1)
-                && containsItem(in, "firearms:electronic_trigger", 1)
-                && containsItem(in, "firearms:gun_grip", 1)
-                && containsItem(in, "firearms:magazine", 1)
-                && containsItem(in, "firearms:circuit_board", 1)
-                && containsItem(in, "firearms:buffer_tube", 1)) {
-            return new RecipeMatch(new ItemStack(ModItems.SMG.get()),
-                    Map.of("firearms:gun_barrel", 1, "firearms:electronic_trigger", 1,
-                            "firearms:gun_grip", 1, "firearms:magazine", 1,
-                            "firearms:circuit_board", 1, "firearms:buffer_tube", 1));
+        // Pistol: steel×4 + copper×2 + circuit×1 + bullet_casing×8 + propellant×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 8)
+                && hasAtLeast(in, "firearms:propellant_powder", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()),
+                    Map.of("firearms:steel_ingot", 4, "firearms:copper_wire", 2,
+                            "firearms:circuit_board", 1, "firearms:bullet_casing", 8,
+                            "firearms:propellant_powder", 4));
         }
 
-        // Sniper Rifle: gun_barrel + trigger_assembly + gun_grip + magazine + steel_rod x2 + firing_pin
-        if (total == 7
-                && containsItem(in, "firearms:gun_barrel", 1)
-                && containsItem(in, "firearms:trigger_assembly", 1)
-                && containsItem(in, "firearms:gun_grip", 1)
-                && containsItem(in, "firearms:magazine", 1)
-                && containsItem(in, "firearms:steel_rod", 2)
-                && containsItem(in, "firearms:firing_pin", 1)) {
+        // Sniper Rifle: steel×6 + hardened×4 + copper×3 + advanced_microchip×1
+        // advanced_microchip is a unique ingredient — no overlap risk with other weapons.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.SNIPER_RIFLE.get()),
-                    Map.of("firearms:gun_barrel", 1, "firearms:trigger_assembly", 1,
-                            "firearms:gun_grip", 1, "firearms:magazine", 1,
-                            "firearms:steel_rod", 2, "firearms:firing_pin", 1));
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
+                            "firearms:copper_wire", 3, "firearms:advanced_microchip", 1));
         }
 
-        // Refined Bullet: bullet_casing + refined_gunpowder → 8x refined_bullet
-        // Uses in.size()==2 (exactly 2 distinct item types) instead of total==2 so that stacks
-        // larger than 1 (e.g. 4x refined_gunpowder from the Chemical Mixer) still match.
-        // Item IDs: "firearms:bullet_casing", "firearms:refined_gunpowder" — must match exactly.
-        if (in.size() == 2
-                && containsItem(in, "firearms:bullet_casing", 1)
-                && containsItem(in, "firearms:refined_gunpowder", 1)) {
-            LOGGER.debug("[AssemblyBench] refined_bullet recipe matched: input={}", in);
+        // Shotgun: steel×5 + hardened×2 + copper×2 + circuit×1
+        // Must come before SMG — SMG needs only steel×4, so 5 steel would also satisfy SMG.
+        if (hasAtLeast(in, "firearms:steel_ingot", 5)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()),
+                    Map.of("firearms:steel_ingot", 5, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 2, "firearms:circuit_board", 1));
+        }
+
+        // SMG: steel×4 + hardened×2 + copper×2 + circuit×1
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.SMG.get()),
+                    Map.of("firearms:steel_ingot", 4, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 2, "firearms:circuit_board", 1));
+        }
+
+        // ── Machines ─────────────────────────────────────────────────────────
+        // Ordered from highest material requirements to lowest to prevent superset matches.
+
+        // Refinery Wall ×4: hardened×12 + circuit×4 + copper×6 + steel×8
+        // Must come before Assembly Bench machine (steel×8 + hardened≥4 would also match Wall materials).
+        if (hasAtLeast(in, "firearms:hardened_steel_ingot", 12)
+                && hasAtLeast(in, "firearms:circuit_board", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 6)
+                && hasAtLeast(in, "firearms:steel_ingot", 8)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.REFINERY_WALL.get().asItem(), 4),
+                    Map.of("firearms:hardened_steel_ingot", 12, "firearms:circuit_board", 4,
+                            "firearms:copper_wire", 6, "firearms:steel_ingot", 8));
+        }
+
+        // Refinery Controller: hardened×8 + advanced_microchip×2 + circuit×4 + copper×4
+        // advanced_microchip uniquely identifies this; hardened×8 gates it from EBF confusion.
+        if (hasAtLeast(in, "firearms:hardened_steel_ingot", 8)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.REFINERY_CONTROLLER.get().asItem()),
+                    Map.of("firearms:hardened_steel_ingot", 8, "firearms:advanced_microchip", 2,
+                            "firearms:circuit_board", 4, "firearms:copper_wire", 4));
+        }
+
+        // EBF Controller: hardened×8 + circuit×2 + copper×4 + kanthal_coil×4
+        // kanthal_coil uniquely identifies this recipe.
+        if (hasAtLeast(in, "firearms:hardened_steel_ingot", 8)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 4)
+                && hasAtLeast(in, "firearms:kanthal_coil", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.EBF_CONTROLLER.get().asItem()),
+                    Map.of("firearms:hardened_steel_ingot", 8, "firearms:circuit_board", 2,
+                            "firearms:copper_wire", 4, "firearms:kanthal_coil", 4));
+        }
+
+        // Assembly Bench (machine): steel×8 + hardened×4 + circuit×2 + copper×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 8)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.ASSEMBLY_BENCH.get().asItem()),
+                    Map.of("firearms:steel_ingot", 8, "firearms:hardened_steel_ingot", 4,
+                            "firearms:circuit_board", 2, "firearms:copper_wire", 4));
+        }
+
+        // Fuel Generator: steel×6 + hardened×2 + copper×4 + circuit×2
+        // Must come before Lathe — Lathe needs only copper×3, so copper×4 satisfies Lathe too.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 4)
+                && hasAtLeast(in, "firearms:circuit_board", 2)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.FUEL_GENERATOR.get().asItem()),
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 4, "firearms:circuit_board", 2));
+        }
+
+        // Coal Generator: steel×6 + copper×4 + furnace×1 + circuit×1
+        // furnace uniquely identifies this recipe; no overlap risk with Lathe.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:copper_wire", 4)
+                && hasAtLeast(in, "minecraft:furnace", 1)
+                && hasAtLeast(in, "firearms:circuit_board", 1)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.COAL_GENERATOR.get().asItem()),
+                    Map.of("firearms:steel_ingot", 6, "firearms:copper_wire", 4,
+                            "minecraft:furnace", 1, "firearms:circuit_board", 1));
+        }
+
+        // Lathe: steel×6 + hardened×2 + circuit×2 + copper×3
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 3)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.LATHE.get().asItem()),
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 2,
+                            "firearms:circuit_board", 2, "firearms:copper_wire", 3));
+        }
+
+        // Chemical Mixer (machine): steel×4 + hardened×2 + circuit×2 + copper×3 + glass×2
+        // glass uniquely distinguishes this from Lathe even at the same minimum counts.
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "minecraft:glass", 2)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.CHEMICAL_MIXER.get().asItem()),
+                    Map.of("firearms:steel_ingot", 4, "firearms:hardened_steel_ingot", 2,
+                            "firearms:circuit_board", 2, "firearms:copper_wire", 3,
+                            "minecraft:glass", 2));
+        }
+
+        // ── Intermediate parts ────────────────────────────────────────────────
+
+        // Circuit Board: copper×4 + gold_ingot×1 + redstone×4 + silicon_die×2
+        if (hasAtLeast(in, "firearms:copper_wire", 4)
+                && hasAtLeast(in, "minecraft:gold_ingot", 1)
+                && hasAtLeast(in, "minecraft:redstone", 4)
+                && hasAtLeast(in, "firearms:silicon_die", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                    Map.of("firearms:copper_wire", 4, "minecraft:gold_ingot", 1,
+                            "minecraft:redstone", 4, "firearms:silicon_die", 2));
+        }
+
+        // Refined Bullet: bullet_casing×1 + refined_gunpowder×1 → 8x refined_bullet
+        // Consumes exactly 1 of each per craft; extra stacks stay in the bench.
+        if (hasAtLeast(in, "firearms:bullet_casing", 1)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.REFINED_BULLET.get(), 8),
                     Map.of("firearms:bullet_casing", 1, "firearms:refined_gunpowder", 1));
         }
 
-        // AP Bullet: tungsten_rod + bullet_casing + propellant_powder → 4x armor_piercing_bullet
-        if (total == 3
-                && containsItem(in, "firearms:tungsten_rod", 1)
-                && containsItem(in, "firearms:bullet_casing", 1)
-                && containsItem(in, "firearms:propellant_powder", 1)) {
+        // AP Bullet: tungsten_rod×1 + bullet_casing×1 + propellant_powder×1 → 4x armor_piercing_bullet
+        // tungsten_rod distinguishes this from Refined Bullet (no overlap).
+        if (hasAtLeast(in, "firearms:tungsten_rod", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 1)
+                && hasAtLeast(in, "firearms:propellant_powder", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.ARMOR_PIERCING_BULLET.get(), 4),
                     Map.of("firearms:tungsten_rod", 1, "firearms:bullet_casing", 1,
                             "firearms:propellant_powder", 1));
         }
 
-        // Kanthal Alloy: chromium_ingot + iron_ingot + aluminum_ingot → 4x kanthal_alloy
-        if (total == 3 && in.size() == 3
-                && containsItem(in, "firearms:chromium_ingot", 1)
-                && containsItem(in, "minecraft:iron_ingot", 1)
-                && containsItem(in, "firearms:aluminum_ingot", 1)) {
+        // Kanthal Alloy: chromium×1 + iron_ingot×1 + aluminum×1 → 4x kanthal_alloy
+        if (hasAtLeast(in, "firearms:chromium_ingot", 1)
+                && hasAtLeast(in, "minecraft:iron_ingot", 1)
+                && hasAtLeast(in, "firearms:aluminum_ingot", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.KANTHAL_ALLOY.get(), 4),
                     Map.of("firearms:chromium_ingot", 1, "minecraft:iron_ingot", 1,
                             "firearms:aluminum_ingot", 1));
         }
 
-        // Kanthal Coil: 4x kanthal_wire → kanthal_coil x1
-        if (in.size() == 1 && containsItem(in, "firearms:kanthal_wire", 4)) {
-            return new RecipeMatch(new ItemStack(ModBlocks.KANTHAL_COIL.get().asItem()),
-                    Map.of("firearms:kanthal_wire", 4));
-        }
+        // ── Nuclear Reactor Stage 1 ───────────────────────────────────────────
 
-        // Nichrome Coil: 4x nichrome_wire → nichrome_coil x1
-        if (in.size() == 1 && containsItem(in, "firearms:nichrome_wire", 4)) {
-            return new RecipeMatch(new ItemStack(ModBlocks.NICHROME_COIL.get().asItem()),
-                    Map.of("firearms:nichrome_wire", 4));
-        }
-
-        // Tungsten Coil: 4x tungsten_wire → tungsten_coil x1
-        if (in.size() == 1 && containsItem(in, "firearms:tungsten_wire", 4)) {
-            return new RecipeMatch(new ItemStack(ModBlocks.TUNGSTEN_COIL.get().asItem()),
-                    Map.of("firearms:tungsten_wire", 4));
-        }
-
-        // ── Nuclear Reactor Stage 1 recipes ───────────────────────────────────
-
-        // Fuel Rod: 8x uranium_dioxide_pellet + fuel_rod_cladding → fuel_rod
-        if (total == 9
-                && containsItem(in, "firearms:uranium_dioxide_pellet", 8)
-                && containsItem(in, "firearms:fuel_rod_cladding", 1)) {
+        // Fuel Rod: uranium_dioxide_pellet×8 + fuel_rod_cladding×1
+        if (hasAtLeast(in, "firearms:uranium_dioxide_pellet", 8)
+                && hasAtLeast(in, "firearms:fuel_rod_cladding", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.FUEL_ROD.get()),
                     Map.of("firearms:uranium_dioxide_pellet", 8, "firearms:fuel_rod_cladding", 1));
         }
 
-        // Fuel Rod Assembly: 4x fuel_rod → fuel_rod_assembly
-        if (in.size() == 1 && containsItem(in, "firearms:fuel_rod", 4)) {
-            return new RecipeMatch(new ItemStack(ModItems.FUEL_ROD_ASSEMBLY.get()),
-                    Map.of("firearms:fuel_rod", 4));
+        // Control Rod: boron_carbide×1 + zirconium_ingot×1 + steel_rod×1
+        if (hasAtLeast(in, "firearms:boron_carbide", 1)
+                && hasAtLeast(in, "firearms:zirconium_ingot", 1)
+                && hasAtLeast(in, "firearms:steel_rod", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.CONTROL_ROD.get()),
+                    Map.of("firearms:boron_carbide", 1, "firearms:zirconium_ingot", 1,
+                            "firearms:steel_rod", 1));
         }
 
-        // Control Rod: boron_carbide + zirconium_ingot + steel_rod → control_rod
-        if (total == 3
-                && containsItem(in, "firearms:boron_carbide", 1)
-                && containsItem(in, "firearms:zirconium_ingot", 1)
-                && containsItem(in, "firearms:steel_rod", 1)) {
-            return new RecipeMatch(new ItemStack(ModItems.CONTROL_ROD.get()),
-                    Map.of("firearms:boron_carbide", 1, "firearms:zirconium_ingot", 1, "firearms:steel_rod", 1));
+        // ── Component crafting ────────────────────────────────────────────────
+        // Single or dual-ingredient recipes checked last — unique ingredients mean no conflicts above.
+
+        // Gun Barrel: gun_barrel_blank×1 + steel_rod×2
+        if (hasAtLeast(in, "firearms:gun_barrel_blank", 1)
+                && hasAtLeast(in, "firearms:steel_rod", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.GUN_BARREL.get()),
+                    Map.of("firearms:gun_barrel_blank", 1, "firearms:steel_rod", 2));
+        }
+
+        // Trigger Assembly: firing_mechanism×1 + firing_pin×1 + spring×1
+        if (hasAtLeast(in, "firearms:firing_mechanism", 1)
+                && hasAtLeast(in, "firearms:firing_pin", 1)
+                && hasAtLeast(in, "firearms:spring", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()),
+                    Map.of("firearms:firing_mechanism", 1, "firearms:firing_pin", 1,
+                            "firearms:spring", 1));
+        }
+
+        // Kanthal Coil: kanthal_wire×4 → kanthal_coil×1
+        if (hasAtLeast(in, "firearms:kanthal_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.KANTHAL_COIL.get().asItem()),
+                    Map.of("firearms:kanthal_wire", 4));
+        }
+
+        // Nichrome Coil: nichrome_wire×4 → nichrome_coil×1
+        if (hasAtLeast(in, "firearms:nichrome_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.NICHROME_COIL.get().asItem()),
+                    Map.of("firearms:nichrome_wire", 4));
+        }
+
+        // Tungsten Coil: tungsten_wire×4 → tungsten_coil×1
+        if (hasAtLeast(in, "firearms:tungsten_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.TUNGSTEN_COIL.get().asItem()),
+                    Map.of("firearms:tungsten_wire", 4));
+        }
+
+        // Fuel Rod Assembly: fuel_rod×4 → fuel_rod_assembly×1
+        if (hasAtLeast(in, "firearms:fuel_rod", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.FUEL_ROD_ASSEMBLY.get()),
+                    Map.of("firearms:fuel_rod", 4));
         }
 
         return null;
@@ -305,6 +405,10 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         RecipeMatch recipe = findRecipe();
 
         if (recipe != null && energy.getEnergyStored() >= FE_PER_TICK && canOutput(output, recipe.result())) {
+            if (progress == 0) {
+                LOGGER.info("[AssemblyBench]@{} matched: {}", worldPosition.toShortString(),
+                        BuiltInRegistries.ITEM.getKey(recipe.result().getItem()));
+            }
             energy.extractEnergy(FE_PER_TICK, false);
             progress++;
             changed = true;

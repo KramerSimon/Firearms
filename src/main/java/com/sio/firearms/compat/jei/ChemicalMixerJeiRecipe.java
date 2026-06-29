@@ -49,6 +49,22 @@ public class ChemicalMixerJeiRecipe {
 
     public static List<ChemicalMixerJeiRecipe> getAllRecipes() {
         return List.of(
+            // sugar + nitric_acid 500mB + sulfuric_acid 250mB → 2x nitroglycerin
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(net.minecraft.world.item.Items.SUGAR), ItemStack.EMPTY,
+                new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 500),
+                new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 250),
+                new ItemStack(ModItems.NITROGLYCERIN.get(), 2),
+                FluidStack.EMPTY),
+
+            // sulfur + saltpeter + water 100mB → 8x propellant_powder
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.SULFUR.get()),
+                new ItemStack(ModItems.SALTPETER.get()),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 100),
+                new ItemStack(ModItems.PROPELLANT_POWDER.get(), 8),
+                FluidStack.EMPTY),
+
             // sulfur + water → sulfuric acid
             new ChemicalMixerJeiRecipe(
                 new ItemStack(ModItems.SULFUR.get()),

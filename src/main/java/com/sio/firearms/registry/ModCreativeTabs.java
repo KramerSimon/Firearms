@@ -90,6 +90,10 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SMOKE_GRENADE.get());
                         output.accept(ModItems.LAND_MINE.get());
                         output.accept(ModItems.SEA_MINE.get());
+                        output.accept(ModItems.NITROGLYCERIN.get());
+                        output.accept(ModItems.FLAMETHROWER.get());
+                        output.accept(ModItems.MOLOTOV_COCKTAIL.get());
+                        output.accept(ModItems.GAS_MASK.get());
                         output.accept(ModItems.WRENCH.get());
                         output.accept(ModItems.GOLD_FOIL.get());
                         output.accept(ModItems.DIAMOND_SAW_BLADE.get());
@@ -235,6 +239,20 @@ public class ModCreativeTabs {
                         output.accept(ModItems.HAZMAT_LEGGINGS.get());
                         output.accept(ModItems.HAZMAT_BOOTS.get());
                         output.accept(ModItems.GEIGER_COUNTER.get());
+                        // ── Vehicle Garage ────────────────────────────────────
+                        output.accept(ModItems.GARAGE_FLOOR.get());
+                        output.accept(ModItems.GARAGE_WALL.get());
+                        output.accept(ModItems.GARAGE_ROOF.get());
+                        output.accept(ModItems.GARAGE_DOOR.get());
+                        output.accept(ModItems.GARAGE_CONTROLLER.get());
+                        output.accept(ModItems.TANK_SCHEMATIC.get());
+                        // ── Tank Production Chain ─────────────────────────────
+                        output.accept(ModItems.STEEL_PLATE.get());
+                        output.accept(ModItems.TANK_HULL.get());
+                        output.accept(ModItems.TANK_TRACKS.get());
+                        output.accept(ModItems.TANK_TURRET.get());
+                        output.accept(ModItems.DIESEL_ENGINE.get());
+                        output.accept(ModItems.TANK_CANNON.get());
                         output.accept(ModItems.TRASH_CAN.get());
                     })
                     .build());

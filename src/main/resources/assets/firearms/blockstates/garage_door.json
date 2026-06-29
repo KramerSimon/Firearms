@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,open=false": { "model": "firearms:block/garage_door" },
+    "facing=south,open=false": { "model": "firearms:block/garage_door", "y": 180 },
+    "facing=east,open=false":  { "model": "firearms:block/garage_door", "y": 90 },
+    "facing=west,open=false":  { "model": "firearms:block/garage_door", "y": 270 },
+    "facing=north,open=true":  { "model": "firearms:block/garage_door" },
+    "facing=south,open=true":  { "model": "firearms:block/garage_door", "y": 180 },
+    "facing=east,open=true":   { "model": "firearms:block/garage_door", "y": 90 },
+    "facing=west,open=true":   { "model": "firearms:block/garage_door", "y": 270 }
+  }
+}

@@ -14,5 +14,7 @@ public class ModNetwork {
         PayloadRegistrar registrar = event.registrar(Firearms.MOD_ID);
         registrar.playToServer(ReloadGunPayload.TYPE, ReloadGunPayload.STREAM_CODEC, ReloadGunPayload::handle);
         registrar.playToServer(ShootGunPayload.TYPE, ShootGunPayload.STREAM_CODEC, ShootGunPayload::handle);
+        registrar.playToServer(TankInputPayload.TYPE, TankInputPayload.STREAM_CODEC, TankInputPayload::handle);
+        registrar.playToServer(TankTurretPayload.TYPE, TankTurretPayload.STREAM_CODEC, TankTurretPayload::handle);
     }
 }

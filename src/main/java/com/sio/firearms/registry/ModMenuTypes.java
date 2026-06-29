@@ -31,6 +31,7 @@ import com.sio.firearms.menu.RefineryMenu;
 import com.sio.firearms.menu.HeatTreatmentFurnaceMenu;
 import com.sio.firearms.menu.LatheMenu;
 import com.sio.firearms.menu.GunModificationTableMenu;
+import com.sio.firearms.menu.VehicleGarageMenu;
 import com.sio.firearms.menu.MetalPressMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
@@ -163,6 +164,11 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<CoolingTowerMenu>> COOLING_TOWER_MENU =
             MENU_TYPES.register("cooling_tower_controller",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new CoolingTowerMenu(windowId, inv)));
+
+    // ── Vehicle Garage ────────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<VehicleGarageMenu>> VEHICLE_GARAGE_MENU =
+            MENU_TYPES.register("vehicle_garage_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new VehicleGarageMenu(windowId, inv)));
 
     // ── Utility ───────────────────────────────────────────────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.TrashCanMenu>> TRASH_CAN_MENU =

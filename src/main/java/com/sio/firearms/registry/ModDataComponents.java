@@ -60,4 +60,10 @@ public class ModDataComponents {
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FLAMETHROWER_FUEL =
+            DATA_COMPONENTS.register("flamethrower_fuel", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
 }

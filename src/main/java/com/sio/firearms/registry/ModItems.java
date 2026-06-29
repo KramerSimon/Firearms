@@ -18,6 +18,10 @@ import com.sio.firearms.item.SMGItem;
 import com.sio.firearms.item.SniperRifleItem;
 import com.sio.firearms.item.GeigerCounterItem;
 import com.sio.firearms.item.HazmatSuitItem;
+import com.sio.firearms.item.FlamethrowerItem;
+import com.sio.firearms.item.GasMaskItem;
+import com.sio.firearms.item.MolotovCocktailItem;
+import com.sio.firearms.item.NitroglycerinItem;
 import com.sio.firearms.item.WrenchItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
@@ -405,4 +409,33 @@ public class ModItems {
             ITEMS.register("geiger_counter", GeigerCounterItem::new);
 
     public static final DeferredItem<BlockItem> TRASH_CAN = ITEMS.registerSimpleBlockItem(ModBlocks.TRASH_CAN);
+
+    // ── Vehicle Garage ────────────────────────────────────────────────────────
+    public static final DeferredItem<BlockItem> GARAGE_FLOOR      = ITEMS.registerSimpleBlockItem(ModBlocks.GARAGE_FLOOR);
+    public static final DeferredItem<BlockItem> GARAGE_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.GARAGE_WALL);
+    public static final DeferredItem<BlockItem> GARAGE_ROOF       = ITEMS.registerSimpleBlockItem(ModBlocks.GARAGE_ROOF);
+    public static final DeferredItem<BlockItem> GARAGE_DOOR       = ITEMS.registerSimpleBlockItem(ModBlocks.GARAGE_DOOR);
+    public static final DeferredItem<BlockItem> GARAGE_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.GARAGE_CONTROLLER);
+    public static final DeferredItem<Item>      TANK_SCHEMATIC    = ITEMS.registerSimpleItem("tank_schematic");
+
+    // ── Incendiary / NBC / Explosives ────────────────────────────────────────
+    public static final DeferredItem<Item> NITROGLYCERIN =
+            ITEMS.register("nitroglycerin", () -> new NitroglycerinItem(new Item.Properties().stacksTo(8)));
+
+    // ── Incendiary / NBC weapons ──────────────────────────────────────────────
+    public static final DeferredItem<Item> FLAMETHROWER =
+            ITEMS.register("flamethrower", () -> new FlamethrowerItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> MOLOTOV_COCKTAIL =
+            ITEMS.register("molotov_cocktail", () -> new MolotovCocktailItem(new Item.Properties().stacksTo(16)));
+    public static final DeferredItem<Item> GAS_MASK =
+            ITEMS.register("gas_mask", () -> new GasMaskItem(ModArmorMaterials.GAS_MASK,
+                    new Item.Properties().stacksTo(1).durability(500)));
+
+    // ── Tank Production Chain ─────────────────────────────────────────────────
+    public static final DeferredItem<Item> STEEL_PLATE   = ITEMS.registerSimpleItem("steel_plate");
+    public static final DeferredItem<Item> TANK_HULL     = ITEMS.registerSimpleItem("tank_hull");
+    public static final DeferredItem<Item> TANK_TRACKS   = ITEMS.registerSimpleItem("tank_tracks");
+    public static final DeferredItem<Item> TANK_TURRET   = ITEMS.registerSimpleItem("tank_turret");
+    public static final DeferredItem<Item> DIESEL_ENGINE = ITEMS.registerSimpleItem("diesel_engine");
+    public static final DeferredItem<Item> TANK_CANNON   = ITEMS.registerSimpleItem("tank_cannon");
 }

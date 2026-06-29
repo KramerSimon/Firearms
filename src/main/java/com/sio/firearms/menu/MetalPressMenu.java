@@ -101,6 +101,18 @@ public class MetalPressMenu extends AbstractContainerMenu {
             return;
         }
 
+        // steel_ingot + steel_ingot → steel_plate (2 ingots consumed, 1 plate per click)
+        if (slotIs(0, "firearms:steel_ingot") && slotIs(1, "firearms:steel_ingot")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.STEEL_PLATE.get()));
+            return;
+        }
+
+        // copper_ingot + copper_ingot → 4x bullet_casing (2 ingots consumed per click)
+        if (slotIs(0, "minecraft:copper_ingot") && slotIs(1, "minecraft:copper_ingot")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.BULLET_CASING.get(), 4));
+            return;
+        }
+
         handler.setStackInSlot(2, ItemStack.EMPTY);
     }
 

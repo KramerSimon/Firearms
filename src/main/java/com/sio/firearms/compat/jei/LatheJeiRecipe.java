@@ -66,7 +66,12 @@ public class LatheJeiRecipe {
             new LatheJeiRecipe(
                 new ItemStack(ModItems.TUNGSTEN_CARBIDE.get()),
                 ItemStack.EMPTY,
-                new ItemStack(ModItems.TUNGSTEN_WIRE.get(), 4))
+                new ItemStack(ModItems.TUNGSTEN_WIRE.get(), 4)),
+            // ── Tank Production Chain ─────────────────────────────────────────
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.TUNGSTEN_CARBIDE.get()),
+                new ItemStack(ModItems.STEEL_ROD.get()),
+                new ItemStack(ModItems.TANK_CANNON.get()))
         );
     }
 }

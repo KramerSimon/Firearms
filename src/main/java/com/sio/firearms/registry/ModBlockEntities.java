@@ -37,6 +37,7 @@ import com.sio.firearms.block.FluidTankBlockEntity;
 import com.sio.firearms.block.ReactorControllerBlockEntity;
 import com.sio.firearms.block.CoolingTowerControllerBlockEntity;
 import com.sio.firearms.block.SteamTurbineBlockEntity;
+import com.sio.firearms.block.VehicleGarageControllerBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -229,6 +230,12 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("cooling_tower_controller",
                     () -> BlockEntityType.Builder.of(CoolingTowerControllerBlockEntity::new,
                             ModBlocks.COOLING_TOWER_CONTROLLER.get()).build(null));
+
+    // ── Vehicle Garage ────────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VehicleGarageControllerBlockEntity>> VEHICLE_GARAGE_CONTROLLER =
+            BLOCK_ENTITIES.register("vehicle_garage_controller",
+                    () -> BlockEntityType.Builder.of(VehicleGarageControllerBlockEntity::new,
+                            ModBlocks.GARAGE_CONTROLLER.get()).build(null));
 
     // ── Utility ───────────────────────────────────────────────────────────────
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.TrashCanBlockEntity>> TRASH_CAN =
