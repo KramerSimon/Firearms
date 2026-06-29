@@ -254,6 +254,21 @@ public class ModCreativeTabs {
                         output.accept(ModItems.DIESEL_ENGINE.get());
                         output.accept(ModItems.TANK_CANNON.get());
                         output.accept(ModItems.TRASH_CAN.get());
+                        output.accept(ModItems.CHAINSAW.get());
+                        output.accept(ModItems.MINIGUN.get());
+                        output.accept(ModItems.AMMO_BOX.get());
+                        output.accept(ModItems.GUN_CASE.get());
+                        // ── Rubber Boots & Riot Shield ────────────────────────
+                        output.accept(ModItems.RUBBER_BOOTS.get());
+                        output.accept(ModItems.RIOT_SHIELD.get());
+                        // ── Cordite & Military Grade Ammo ─────────────────────
+                        output.accept(ModItems.CORDITE.get());
+                        output.accept(ModItems.CORDITE_BULLET.get());
+                        output.accept(ModItems.EXPLOSIVE_BULLET.get());
+                        // ── Spent Fuel Storage ────────────────────────────────
+                        output.accept(ModItems.SPENT_FUEL_STORAGE_BASE.get());
+                        output.accept(ModItems.SPENT_FUEL_STORAGE_WALL.get());
+                        output.accept(ModItems.SPENT_FUEL_STORAGE_CONTROLLER.get());
                     })
                     .build());
 }

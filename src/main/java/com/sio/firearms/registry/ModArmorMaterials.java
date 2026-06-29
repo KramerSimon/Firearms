@@ -66,4 +66,15 @@ public class ModArmorMaterials {
                     1.0f,
                     0.0f
             ));
+
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> RUBBER_BOOTS =
+            ARMOR_MATERIALS.register("rubber_boots", () -> new ArmorMaterial(
+                    Map.of(ArmorItem.Type.BOOTS, 3),
+                    5,
+                    SoundEvents.ARMOR_EQUIP_LEATHER,
+                    () -> Ingredient.of(ModItems.RUBBER_SHEET.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "rubber_boots"))),
+                    0.0f,
+                    0.0f
+            ));
 }

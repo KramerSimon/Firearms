@@ -79,9 +79,13 @@ public class GunItem extends Item {
 
         boolean ap = Boolean.TRUE.equals(stack.get(ModDataComponents.ARMOR_PIERCING.get()));
         boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
-        int actualDamage = (int) ((ap ? 20 : (refined ? 10 : damage)) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get());
+        boolean cordite = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_CORDITE_AMMO.get()));
+        boolean explosive = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_EXPLOSIVE_AMMO.get()));
+        int actualDamage = (int) ((ap ? 20 : (cordite ? 14 : (refined ? 10 : damage))) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get());
         BulletEntity bullet = new BulletEntity(level, player, actualDamage);
         bullet.setArmorPiercing(ap);
+        bullet.setPartialArmorPiercing(cordite);
+        bullet.setExplosive(explosive);
         bullet.setShooterGun(stack);
         bullet.setPos(player.getEyePosition());
         bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 0.0F);

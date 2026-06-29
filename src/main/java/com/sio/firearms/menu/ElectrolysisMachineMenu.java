@@ -17,7 +17,7 @@ public class ElectrolysisMachineMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public ElectrolysisMachineMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new ItemStackHandler(1), new SimpleContainerData(10));
+        this(containerId, playerInventory, new ItemStackHandler(1), new SimpleContainerData(13));
     }
 
     public ElectrolysisMachineMenu(int containerId, Inventory playerInventory,
@@ -48,6 +48,9 @@ public class ElectrolysisMachineMenu extends AbstractContainerMenu {
     public int getFluidOut1Max()  { return data.get(7); }
     public int getFluidOut2()     { return data.get(8); }
     public int getFluidOut2Max()  { return data.get(9); }
+    public int getFluidInTypeId()   { return data.get(10); }
+    public int getFluidOut1TypeId() { return data.get(11); }
+    public int getFluidOut2TypeId() { return data.get(12); }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {

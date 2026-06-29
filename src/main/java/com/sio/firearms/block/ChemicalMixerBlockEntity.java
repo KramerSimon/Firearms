@@ -96,13 +96,16 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 case 7 -> TANK_SIZE;
                 case 8 -> fluidInputTank2.getFluidAmount();
                 case 9 -> TANK_SIZE;
+                case 10 -> fluidInputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
+                case 11 -> fluidOutputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank.getFluid().getFluid());
+                case 12 -> fluidInputTank2.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank2.getFluid().getFluid());
                 default -> 0;
             };
         }
         @Override
         public void set(int i, int v) { if (i == 2) progress = v; }
         @Override
-        public int getCount() { return 10; }
+        public int getCount() { return 13; }
     };
 
     public ChemicalMixerBlockEntity(BlockPos pos, BlockState state) {
@@ -419,6 +422,14 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 && slotA.isEmpty() && slotB.isEmpty()) {
             return new RecipeResult(null, 0, null, 0, 1000, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.HEAVY_WATER_STILL.get(), 500), 400);
+        }
+
+        // 15. nitrocellulose + nitroglycerin + water 250mB → cordite×4
+        if (itemIs(slotA, "firearms:nitrocellulose", 1) && itemIs(slotB, "firearms:nitroglycerin", 1)
+                && fluidIs(Fluids.WATER, 250)
+                && canOutputItem(outSlot, new ItemStack(ModItems.CORDITE.get(), 4))) {
+            return new RecipeResult("firearms:nitrocellulose", 1, "firearms:nitroglycerin", 1, 250, 0,
+                new ItemStack(ModItems.CORDITE.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         return null;

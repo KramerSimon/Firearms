@@ -3,9 +3,12 @@ package com.sio.firearms.screen;
 import com.sio.firearms.menu.ChemicalMixerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMenu> {
 
@@ -16,6 +19,13 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
         super(menu, playerInventory, title);
         this.imageWidth  = 176;
         this.imageHeight = 166;
+    }
+
+    private static String fluidName(int fluidId) {
+        if (fluidId <= 0) return null;
+        var fluid = BuiltInRegistries.FLUID.byId(fluidId);
+        if (fluid == null || fluid == Fluids.EMPTY) return null;
+        return new FluidStack(fluid, 1).getHoverName().getString();
     }
 
     @Override
@@ -76,25 +86,43 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
                     mx, my);
             return;
         }
-        // Fluid input bar (27–39, top 14, bottom 66)
+        // Fluid input 1 bar (27–39, top 14, bottom 66)
         if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Fluid Input: " + menu.getFluidInAmount() + " / " + menu.getFluidInMax() + " mB"),
-                    mx, my);
+            String text;
+            int amt = menu.getFluidInAmount();
+            if (amt == 0) {
+                text = "Input 1: Empty";
+            } else {
+                String name = fluidName(menu.getFluidInTypeId());
+                text = "Input 1: " + (name != null ? name + " " : "") + amt + "/" + menu.getFluidInMax() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         // Fluid output bar (141–153, top 14, bottom 66)
         if (mx >= leftPos + 141 && mx < leftPos + 153 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Fluid Output: " + menu.getFluidOutAmount() + " / " + menu.getFluidOutMax() + " mB"),
-                    mx, my);
+            String text;
+            int amt = menu.getFluidOutAmount();
+            if (amt == 0) {
+                text = "Output: Empty";
+            } else {
+                String name = fluidName(menu.getFluidOutTypeId());
+                text = "Output: " + (name != null ? name + " " : "") + amt + "/" + menu.getFluidOutMax() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         // Fluid input 2 bar (154–166, top 14, bottom 66)
         if (mx >= leftPos + 154 && mx < leftPos + 166 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Fluid Input 2: " + menu.getFluidIn2Amount() + " / " + menu.getFluidIn2Max() + " mB"),
-                    mx, my);
+            String text;
+            int amt = menu.getFluidIn2Amount();
+            if (amt == 0) {
+                text = "Input 2: Empty";
+            } else {
+                String name = fluidName(menu.getFluidIn2TypeId());
+                text = "Input 2: " + (name != null ? name + " " : "") + amt + "/" + menu.getFluidIn2Max() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);

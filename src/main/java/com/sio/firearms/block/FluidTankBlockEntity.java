@@ -45,11 +45,12 @@ public class FluidTankBlockEntity extends BlockEntity implements MenuProvider {
             return switch (i) {
                 case 0 -> fluidTank.getFluidAmount();
                 case 1 -> CAPACITY;
+                case 2 -> fluidTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidTank.getFluid().getFluid());
                 default -> 0;
             };
         }
         @Override public void set(int i, int v) {}
-        @Override public int getCount() { return 2; }
+        @Override public int getCount() { return 3; }
     };
 
     public FluidTankBlockEntity(BlockPos pos, BlockState state) {

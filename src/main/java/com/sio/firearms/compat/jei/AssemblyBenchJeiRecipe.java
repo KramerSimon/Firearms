@@ -36,6 +36,10 @@ public class AssemblyBenchJeiRecipe {
                 createRifleRecipe(),
                 createSMGRecipe(),
                 createSniperRifleRecipe(),
+                createChainsawRecipe(),
+                createMinigunRecipe(),
+                createAmmoBoxRecipe(),
+                createGunCaseRecipe(),
                 createAPBulletRecipe(),
                 createRefinedBulletRecipe(),
                 // ── Intermediate parts ────────────────────────────────────────
@@ -65,7 +69,15 @@ public class AssemblyBenchJeiRecipe {
                 createDieselEngineRecipe(),
                 // ── Incendiary / NBC ──────────────────────────────────────────
                 createFlamethrowerRecipe(),
-                createGasMaskRecipe()
+                createGasMaskRecipe(),
+                // ── Equipment ─────────────────────────────────────────────────
+                createRubberBootsRecipe(),
+                createRiotShieldRecipe(),
+                // ── Military Ammo ─────────────────────────────────────────────
+                createCorditeBulletRecipe(),
+                createExplosiveBulletRecipe(),
+                // ── Spent Fuel Storage ────────────────────────────────────────
+                createSpentFuelStorageBaseRecipe()
         );
     }
 
@@ -364,5 +376,79 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(ModItems.CIRCUIT_BOARD.get()),
                 new ItemStack(ModItems.COPPER_WIRE.get(), 2)
         }, new ItemStack(ModItems.GAS_MASK.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createChainsawRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(net.minecraft.world.item.Items.CHAIN, 2)
+        }, new ItemStack(ModItems.CHAINSAW.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createMinigunRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 4)
+        }, new ItemStack(ModItems.MINIGUN.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createAmmoBoxRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 2),
+                new ItemStack(net.minecraft.world.item.Items.IRON_INGOT, 2),
+                new ItemStack(net.minecraft.world.item.Items.CHEST)
+        }, new ItemStack(ModItems.AMMO_BOX.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createGunCaseRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
+                new ItemStack(net.minecraft.world.item.Items.LEATHER, 2),
+                new ItemStack(net.minecraft.world.item.Items.IRON_INGOT, 2)
+        }, new ItemStack(ModItems.GUN_CASE.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createRubberBootsRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.RUBBER_SHEET.get(), 4),
+                new ItemStack(ModItems.STEEL_INGOT.get(), 2)
+        }, new ItemStack(ModItems.RUBBER_BOOTS.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createRiotShieldRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_PLATE.get(), 4),
+                new ItemStack(ModItems.RUBBER_SHEET.get(), 2),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2)
+        }, new ItemStack(ModItems.RIOT_SHIELD.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createCorditeBulletRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.BULLET_CASING.get(), 4),
+                new ItemStack(ModItems.CORDITE.get(), 4)
+        }, new ItemStack(ModItems.CORDITE_BULLET.get(), 8));
+    }
+
+    private static AssemblyBenchJeiRecipe createExplosiveBulletRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.BULLET_CASING.get(), 4),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 2),
+                new ItemStack(Items.TNT)
+        }, new ItemStack(ModItems.EXPLOSIVE_BULLET.get(), 4));
+    }
+
+    private static AssemblyBenchJeiRecipe createSpentFuelStorageBaseRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.LEAD_INGOT.get(), 4),
+                new ItemStack(Items.STONE, 4),
+                new ItemStack(Items.IRON_BARS)
+        }, new ItemStack(ModItems.SPENT_FUEL_STORAGE_BASE.get(), 4));
     }
 }

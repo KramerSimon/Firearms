@@ -53,9 +53,10 @@ public class WaterPumpScreen extends AbstractContainerScreen<WaterPumpMenu> {
         }
         // Water bar (27–39, top 14, bottom 66)
         if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Water: " + menu.getWaterAmount() + " / " + menu.getWaterMax() + " mB"),
-                    mx, my);
+            int amt = menu.getWaterAmount();
+            String text = amt == 0 ? "Water: Empty"
+                    : "Water: " + amt + "/" + menu.getWaterMax() + " mB";
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);

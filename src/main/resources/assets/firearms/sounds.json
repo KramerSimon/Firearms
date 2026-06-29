@@ -46,5 +46,29 @@
     "sounds": [
       "firearms:grenade_pin"
     ]
+  },
+  "chainsaw_start": {
+    "subtitle": "subtitles.firearms.chainsaw_start",
+    "sounds": [
+      { "name": "minecraft:entity.iron_golem.attack", "type": "event" }
+    ]
+  },
+  "chainsaw_running": {
+    "subtitle": "subtitles.firearms.chainsaw_running",
+    "sounds": [
+      { "name": "minecraft:block.grindstone.use", "type": "event" }
+    ]
+  },
+  "chainsaw_stop": {
+    "subtitle": "subtitles.firearms.chainsaw_stop",
+    "sounds": [
+      { "name": "minecraft:entity.iron_golem.hurt", "type": "event" }
+    ]
+  },
+  "chainsaw_empty": {
+    "subtitle": "subtitles.firearms.chainsaw_empty",
+    "sounds": [
+      { "name": "minecraft:block.dispenser.fail", "type": "event" }
+    ]
   }
 }

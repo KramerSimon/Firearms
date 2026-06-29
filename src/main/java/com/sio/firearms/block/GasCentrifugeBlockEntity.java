@@ -6,6 +6,7 @@ import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -130,11 +131,14 @@ public class GasCentrifugeBlockEntity extends EnergyStorageBlock implements Menu
                 case 7 -> TANK_SIZE;
                 case 8 -> fluidOutputTank2.getFluidAmount();
                 case 9 -> TANK_SIZE;
+                case 10 -> fluidInputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
+                case 11 -> fluidOutputTank1.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank1.getFluid().getFluid());
+                case 12 -> fluidOutputTank2.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank2.getFluid().getFluid());
                 default -> 0;
             };
         }
         @Override public void set(int i, int v) { if (i == 2) progress = v; }
-        @Override public int getCount() { return 10; }
+        @Override public int getCount() { return 13; }
     };
 
     public GasCentrifugeBlockEntity(BlockPos pos, BlockState state) {

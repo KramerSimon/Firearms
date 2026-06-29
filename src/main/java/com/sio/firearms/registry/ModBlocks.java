@@ -682,4 +682,21 @@ public class ModBlocks {
                     () -> new com.sio.firearms.block.TrashCanBlock(BlockBehaviour.Properties.of()
                             .strength(2.0f)
                             .requiresCorrectToolForDrops()));
+
+    // ── Spent Fuel Storage ────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> SPENT_FUEL_STORAGE_BASE =
+            BLOCKS.register("spent_fuel_storage_base",
+                    () -> new com.sio.firearms.block.SpentFuelStorageBaseBlock(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> SPENT_FUEL_STORAGE_WALL =
+            BLOCKS.register("spent_fuel_storage_wall",
+                    () -> new com.sio.firearms.block.SpentFuelStorageWallBlock(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> SPENT_FUEL_STORAGE_CONTROLLER =
+            BLOCKS.register("spent_fuel_storage_controller",
+                    () -> new com.sio.firearms.block.SpentFuelStorageControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
 }

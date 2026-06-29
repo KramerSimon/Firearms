@@ -14,7 +14,7 @@ public class FluidTankMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public FluidTankMenu(int id, Inventory inv) {
-        this(id, inv, new SimpleContainerData(2));
+        this(id, inv, new SimpleContainerData(3));
     }
 
     public FluidTankMenu(int id, Inventory inv, ContainerData data) {
@@ -31,8 +31,9 @@ public class FluidTankMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
-    public int getFluidAmount() { return data.get(0); }
-    public int getCapacity()    { return data.get(1); }
+    public int getFluidAmount()  { return data.get(0); }
+    public int getCapacity()     { return data.get(1); }
+    public int getFluidTypeId()  { return data.get(2); }
 
     @Override
     public ItemStack quickMoveStack(Player p, int i) { return ItemStack.EMPTY; }

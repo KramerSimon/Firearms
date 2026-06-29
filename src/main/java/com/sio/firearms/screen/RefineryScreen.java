@@ -114,9 +114,9 @@ public class RefineryScreen extends AbstractContainerScreen<RefineryMenu> {
         // Oil tooltip
         if (mx >= leftPos + OIL_X - 1 && mx <= leftPos + OIL_X + TANK_W + 1
                 && my >= top && my <= bottom) {
-            gui.renderTooltip(font,
-                    Component.literal("Oil: " + menu.getOilAmount() + " / " + OIL_CAP + " mB"),
-                    mx, my);
+            int oilAmt = menu.getOilAmount();
+            String oilText = oilAmt == 0 ? "Oil: Empty" : "Oil: " + oilAmt + "/" + OIL_CAP + " mB";
+            gui.renderTooltip(font, Component.literal(oilText), mx, my);
             return;
         }
 
@@ -124,9 +124,10 @@ public class RefineryScreen extends AbstractContainerScreen<RefineryMenu> {
         for (int i = 0; i < 7; i++) {
             int tx = leftPos + OUT_TANK_X[i];
             if (mx >= tx - 1 && mx <= tx + TANK_W + 1 && my >= top && my <= bottom) {
-                gui.renderTooltip(font,
-                        Component.literal(OUT_NAMES[i] + ": " + menu.getOutputAmount(i) + " / " + OUT_TANK_CAP + " mB"),
-                        mx, my);
+                int outAmt = menu.getOutputAmount(i);
+                String outText = outAmt == 0 ? OUT_NAMES[i] + ": Empty"
+                        : OUT_NAMES[i] + ": " + outAmt + "/" + OUT_TANK_CAP + " mB";
+                gui.renderTooltip(font, Component.literal(outText), mx, my);
                 return;
             }
         }

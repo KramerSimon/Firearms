@@ -3,9 +3,12 @@ package com.sio.firearms.screen;
 import com.sio.firearms.menu.ElectrolysisMachineMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ElectrolysisMachineScreen extends AbstractContainerScreen<ElectrolysisMachineMenu> {
 
@@ -16,6 +19,13 @@ public class ElectrolysisMachineScreen extends AbstractContainerScreen<Electroly
         super(menu, playerInventory, title);
         this.imageWidth  = 176;
         this.imageHeight = 166;
+    }
+
+    private static String fluidName(int fluidId) {
+        if (fluidId <= 0) return null;
+        var fluid = BuiltInRegistries.FLUID.byId(fluidId);
+        if (fluid == null || fluid == Fluids.EMPTY) return null;
+        return new FluidStack(fluid, 1).getHoverName().getString();
     }
 
     @Override
@@ -71,9 +81,15 @@ public class ElectrolysisMachineScreen extends AbstractContainerScreen<Electroly
         }
         // Water input bar (25–37, top 14, bottom 66)
         if (mx >= leftPos + 25 && mx < leftPos + 37 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Water: " + menu.getFluidIn() + " / " + menu.getFluidInMax() + " mB"),
-                    mx, my);
+            String text;
+            int amt = menu.getFluidIn();
+            if (amt == 0) {
+                text = "Input: Empty";
+            } else {
+                String name = fluidName(menu.getFluidInTypeId());
+                text = "Input: " + (name != null ? name + " " : "") + amt + "/" + menu.getFluidInMax() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         // Progress arrow (102–124, 35–50)
@@ -85,16 +101,28 @@ public class ElectrolysisMachineScreen extends AbstractContainerScreen<Electroly
         }
         // Output tank 1 (130–142, top 14, bottom 66)
         if (mx >= leftPos + 130 && mx < leftPos + 142 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Output 1: " + menu.getFluidOut1() + " / " + menu.getFluidOut1Max() + " mB"),
-                    mx, my);
+            String text;
+            int amt = menu.getFluidOut1();
+            if (amt == 0) {
+                text = "Output 1: Empty";
+            } else {
+                String name = fluidName(menu.getFluidOut1TypeId());
+                text = "Output 1: " + (name != null ? name + " " : "") + amt + "/" + menu.getFluidOut1Max() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         // Output tank 2 (148–160, top 14, bottom 66)
         if (mx >= leftPos + 148 && mx < leftPos + 160 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Output 2: " + menu.getFluidOut2() + " / " + menu.getFluidOut2Max() + " mB"),
-                    mx, my);
+            String text;
+            int amt = menu.getFluidOut2();
+            if (amt == 0) {
+                text = "Output 2: Empty";
+            } else {
+                String name = fluidName(menu.getFluidOut2TypeId());
+                text = "Output 2: " + (name != null ? name + " " : "") + amt + "/" + menu.getFluidOut2Max() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);

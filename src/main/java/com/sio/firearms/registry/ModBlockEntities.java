@@ -242,4 +242,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("trash_can",
                     () -> BlockEntityType.Builder.of(com.sio.firearms.block.TrashCanBlockEntity::new,
                             ModBlocks.TRASH_CAN.get()).build(null));
+
+    // ── Spent Fuel Storage ────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.SpentFuelStorageBlockEntity>> SPENT_FUEL_STORAGE =
+            BLOCK_ENTITIES.register("spent_fuel_storage",
+                    () -> BlockEntityType.Builder.of(com.sio.firearms.block.SpentFuelStorageBlockEntity::new,
+                            ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER.get()).build(null));
 }

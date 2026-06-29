@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -65,5 +66,70 @@ public class ModDataComponents {
             DATA_COMPONENTS.register("flamethrower_fuel", () -> DataComponentType.<Integer>builder()
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+
+    // ── Chainsaw ──────────────────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CHAINSAW_FUEL =
+            DATA_COMPONENTS.register("chainsaw_fuel", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> CHAINSAW_RUNNING =
+            DATA_COMPONENTS.register("chainsaw_running", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
+
+    // ── Minigun ───────────────────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINIGUN_ENERGY =
+            DATA_COMPONENTS.register("minigun_energy", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINIGUN_BULLETS =
+            DATA_COMPONENTS.register("minigun_bullets", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINIGUN_SPIN =
+            DATA_COMPONENTS.register("minigun_spin", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+
+    // ── Riot Shield ───────────────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SHIELD_BLOCKING =
+            DATA_COMPONENTS.register("shield_blocking", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
+
+    // ── Ammo types ────────────────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> USING_CORDITE_AMMO =
+            DATA_COMPONENTS.register("using_cordite_ammo", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> USING_EXPLOSIVE_AMMO =
+            DATA_COMPONENTS.register("using_explosive_ammo", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
+
+    // ── Containers ────────────────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> AMMO_BOX_ITEMS =
+            DATA_COMPONENTS.register("ammo_box_items", () -> DataComponentType.<ItemContainerContents>builder()
+                    .persistent(ItemContainerContents.CODEC)
+                    .networkSynchronized(ItemContainerContents.STREAM_CODEC)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> GUN_CASE_ITEMS =
+            DATA_COMPONENTS.register("gun_case_items", () -> DataComponentType.<ItemContainerContents>builder()
+                    .persistent(ItemContainerContents.CODEC)
+                    .networkSynchronized(ItemContainerContents.STREAM_CODEC)
                     .build());
 }

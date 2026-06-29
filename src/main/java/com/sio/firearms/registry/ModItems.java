@@ -23,6 +23,12 @@ import com.sio.firearms.item.GasMaskItem;
 import com.sio.firearms.item.MolotovCocktailItem;
 import com.sio.firearms.item.NitroglycerinItem;
 import com.sio.firearms.item.WrenchItem;
+import com.sio.firearms.item.ChainsawItem;
+import com.sio.firearms.item.MingunItem;
+import com.sio.firearms.item.AmmoBoxItem;
+import com.sio.firearms.item.GunCaseItem;
+import com.sio.firearms.item.RubberBootsItem;
+import com.sio.firearms.item.RiotShieldItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -431,6 +437,20 @@ public class ModItems {
             ITEMS.register("gas_mask", () -> new GasMaskItem(ModArmorMaterials.GAS_MASK,
                     new Item.Properties().stacksTo(1).durability(500)));
 
+    // ── Special weapons & containers ─────────────────────────────────────────
+    public static final DeferredItem<Item> CHAINSAW = ITEMS.register("chainsaw", () ->
+            new ChainsawItem(new Item.Properties().stacksTo(1).durability(500)
+                    .attributes(ChainsawItem.createAttributes())));
+
+    public static final DeferredItem<Item> MINIGUN =
+            ITEMS.register("minigun", () -> new MingunItem(new Item.Properties().stacksTo(1).durability(800)));
+
+    public static final DeferredItem<Item> AMMO_BOX =
+            ITEMS.register("ammo_box", () -> new AmmoBoxItem(new Item.Properties().stacksTo(1)));
+
+    public static final DeferredItem<Item> GUN_CASE =
+            ITEMS.register("gun_case", () -> new GunCaseItem(new Item.Properties().stacksTo(1)));
+
     // ── Tank Production Chain ─────────────────────────────────────────────────
     public static final DeferredItem<Item> STEEL_PLATE   = ITEMS.registerSimpleItem("steel_plate");
     public static final DeferredItem<Item> TANK_HULL     = ITEMS.registerSimpleItem("tank_hull");
@@ -438,4 +458,23 @@ public class ModItems {
     public static final DeferredItem<Item> TANK_TURRET   = ITEMS.registerSimpleItem("tank_turret");
     public static final DeferredItem<Item> DIESEL_ENGINE = ITEMS.registerSimpleItem("diesel_engine");
     public static final DeferredItem<Item> TANK_CANNON   = ITEMS.registerSimpleItem("tank_cannon");
+
+    // ── Rubber Boots ──────────────────────────────────────────────────────────
+    public static final DeferredItem<Item> RUBBER_BOOTS =
+            ITEMS.register("rubber_boots", () -> new RubberBootsItem(ModArmorMaterials.RUBBER_BOOTS,
+                    new Item.Properties()));
+
+    // ── Riot Shield ───────────────────────────────────────────────────────────
+    public static final DeferredItem<Item> RIOT_SHIELD =
+            ITEMS.register("riot_shield", () -> new RiotShieldItem(new Item.Properties().stacksTo(1).durability(500)));
+
+    // ── Cordite & military ammo ───────────────────────────────────────────────
+    public static final DeferredItem<Item> CORDITE          = ITEMS.registerSimpleItem("cordite");
+    public static final DeferredItem<Item> CORDITE_BULLET   = ITEMS.registerSimpleItem("cordite_bullet");
+    public static final DeferredItem<Item> EXPLOSIVE_BULLET = ITEMS.registerSimpleItem("explosive_bullet");
+
+    // ── Spent Fuel Storage block items ────────────────────────────────────────
+    public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_BASE);
+    public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_WALL);
+    public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER);
 }

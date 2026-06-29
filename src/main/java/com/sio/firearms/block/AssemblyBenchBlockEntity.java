@@ -151,6 +151,20 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:propellant_powder", 4));
         }
 
+        // Minigun: steel×6 + hardened×4 + advanced_microchip×2 + circuit×2 + copper×4
+        // Must come before Sniper Rifle — Sniper satisfies steel≥6, hardened≥4, copper≥3, adv≥1,
+        // which would all match when the bench holds minigun ingredients.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.MINIGUN.get()),
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
+                            "firearms:advanced_microchip", 2, "firearms:circuit_board", 2,
+                            "firearms:copper_wire", 4));
+        }
+
         // Sniper Rifle: steel×6 + hardened×4 + copper×3 + advanced_microchip×1
         // advanced_microchip is a unique ingredient — no overlap risk with other weapons.
         if (hasAtLeast(in, "firearms:steel_ingot", 6)
@@ -171,6 +185,20 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
             return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()),
                     Map.of("firearms:steel_ingot", 5, "firearms:hardened_steel_ingot", 2,
                             "firearms:copper_wire", 2, "firearms:circuit_board", 1));
+        }
+
+        // Chainsaw: steel×4 + hardened×2 + circuit×1 + copper×2 + chain×2
+        // Must come before SMG — SMG matches steel≥4, hardened≥2, copper≥2, circuit≥1 (no chain check),
+        // so chainsaw ingredients would false-match SMG without the chain gate.
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "minecraft:chain", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.CHAINSAW.get()),
+                    Map.of("firearms:steel_ingot", 4, "firearms:hardened_steel_ingot", 2,
+                            "firearms:circuit_board", 1, "firearms:copper_wire", 2,
+                            "minecraft:chain", 2));
         }
 
         // SMG: steel×4 + hardened×2 + copper×2 + circuit×1
@@ -286,6 +314,16 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "minecraft:redstone", 4, "firearms:silicon_die", 2));
         }
 
+        // Explosive Bullet: bullet_casing×4 + refined_gunpowder×2 + tnt×1 → 4x explosive_bullet
+        // Must come before Refined Bullet — that recipe also needs bullet_casing + refined_gunpowder.
+        if (hasAtLeast(in, "firearms:bullet_casing", 4)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 2)
+                && hasAtLeast(in, "minecraft:tnt", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.EXPLOSIVE_BULLET.get(), 4),
+                    Map.of("firearms:bullet_casing", 4, "firearms:refined_gunpowder", 2,
+                            "minecraft:tnt", 1));
+        }
+
         // Refined Bullet: bullet_casing×1 + refined_gunpowder×1 → 8x refined_bullet
         // Consumes exactly 1 of each per craft; extra stacks stay in the bench.
         if (hasAtLeast(in, "firearms:bullet_casing", 1)
@@ -372,6 +410,62 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         if (hasAtLeast(in, "firearms:fuel_rod", 4)) {
             return new RecipeMatch(new ItemStack(ModItems.FUEL_ROD_ASSEMBLY.get()),
                     Map.of("firearms:fuel_rod", 4));
+        }
+
+        // ── Containers & utility ──────────────────────────────────────────────
+        // AmmoBox: steel×2 + iron×2 + chest×1
+        if (hasAtLeast(in, "firearms:steel_ingot", 2)
+                && hasAtLeast(in, "minecraft:iron_ingot", 2)
+                && hasAtLeast(in, "minecraft:chest", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.AMMO_BOX.get()),
+                    Map.of("firearms:steel_ingot", 2, "minecraft:iron_ingot", 2,
+                            "minecraft:chest", 1));
+        }
+
+        // GunCase: steel×4 + leather×2 + iron×2
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "minecraft:leather", 2)
+                && hasAtLeast(in, "minecraft:iron_ingot", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.GUN_CASE.get()),
+                    Map.of("firearms:steel_ingot", 4, "minecraft:leather", 2,
+                            "minecraft:iron_ingot", 2));
+        }
+
+        // ── Equipment ─────────────────────────────────────────────────────────
+
+        // Riot Shield: steel_plate×4 + rubber_sheet×2 + hardened_steel_ingot×2 → riot_shield
+        // steel_plate is a unique ingredient in Assembly Bench; no conflict risk.
+        if (hasAtLeast(in, "firearms:steel_plate", 4)
+                && hasAtLeast(in, "firearms:rubber_sheet", 2)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.RIOT_SHIELD.get()),
+                    Map.of("firearms:steel_plate", 4, "firearms:rubber_sheet", 2,
+                            "firearms:hardened_steel_ingot", 2));
+        }
+
+        // Rubber Boots: rubber_sheet×4 + steel_ingot×2 → rubber_boots
+        // rubber_sheet uniquely identifies this recipe; no overlap with existing ammo/machines.
+        if (hasAtLeast(in, "firearms:rubber_sheet", 4)
+                && hasAtLeast(in, "firearms:steel_ingot", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.RUBBER_BOOTS.get()),
+                    Map.of("firearms:rubber_sheet", 4, "firearms:steel_ingot", 2));
+        }
+
+        // Cordite Bullet: bullet_casing×4 + cordite×4 → 8x cordite_bullet
+        // cordite is unique in Assembly Bench; no conflict.
+        if (hasAtLeast(in, "firearms:bullet_casing", 4)
+                && hasAtLeast(in, "firearms:cordite", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.CORDITE_BULLET.get(), 8),
+                    Map.of("firearms:bullet_casing", 4, "firearms:cordite", 4));
+        }
+
+        // Spent Fuel Storage Base: lead_ingot×4 + stone×4 + iron_bars×1 → 4x base
+        if (hasAtLeast(in, "firearms:lead_ingot", 4)
+                && hasAtLeast(in, "minecraft:stone", 4)
+                && hasAtLeast(in, "minecraft:iron_bars", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.SPENT_FUEL_STORAGE_BASE.get(), 4),
+                    Map.of("firearms:lead_ingot", 4, "minecraft:stone", 4,
+                            "minecraft:iron_bars", 1));
         }
 
         return null;
