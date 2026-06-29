@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -33,14 +34,26 @@ public class FluidPortBlockEntity extends BlockEntity {
     public enum Mode { INPUT, OUTPUT }
 
     private static final String[] FLUID_CYCLE = {
-        "any", "butane", "gasoline", "naphtha", "kerosene",
-        "diesel", "heavy_gas_oil", "residual_fuel_oil", "oil", "photoresist",
-        "uranium_hexafluoride", "enriched_uf6", "depleted_uf6", "heavy_water"
+        "any", "oil", "fuel",
+        "butane", "gasoline", "naphtha", "kerosene", "diesel", "heavy_gas_oil", "residual_fuel_oil",
+        "creosote_oil", "synthetic_rubber", "pvc_resin",
+        "sulfuric_acid", "nitric_acid",
+        "chlorine_gas", "hydrogen_gas", "oxygen_gas", "fluorine_gas", "nitrate_solution",
+        "photoresist",
+        "uranium_hexafluoride", "enriched_uf6", "depleted_uf6",
+        "heavy_water", "steam",
+        "water"
     };
     private static final String[] FLUID_DISPLAY = {
-        "Any", "Butane", "Gasoline", "Naphtha", "Kerosene",
-        "Diesel", "Heavy Gas Oil", "Residual Fuel Oil", "Oil", "Photoresist",
-        "Uranium Hexafluoride", "Enriched UF6", "Depleted UF6", "Heavy Water"
+        "Any", "Oil", "Fuel",
+        "Butane", "Gasoline", "Naphtha", "Kerosene", "Diesel", "Heavy Gas Oil", "Residual Fuel Oil",
+        "Creosote Oil", "Synthetic Rubber", "PVC Resin",
+        "Sulfuric Acid", "Nitric Acid",
+        "Chlorine Gas", "Hydrogen Gas", "Oxygen Gas", "Fluorine Gas", "Nitrate Solution",
+        "Photoresist",
+        "Uranium Hexafluoride", "Enriched UF6", "Depleted UF6",
+        "Heavy Water", "Steam",
+        "Water"
     };
 
     private final FluidTank tank = new FluidTank(CAPACITY);
@@ -124,6 +137,8 @@ public class FluidPortBlockEntity extends BlockEntity {
 
     private Fluid getFluidByName(String name) {
         return switch (name) {
+            case "oil"               -> ModFluids.OIL_STILL.get();
+            case "fuel"              -> ModFluids.FUEL_STILL.get();
             case "butane"            -> ModFluids.BUTANE_STILL.get();
             case "gasoline"          -> ModFluids.GASOLINE_STILL.get();
             case "naphtha"           -> ModFluids.NAPHTHA_STILL.get();
@@ -131,12 +146,23 @@ public class FluidPortBlockEntity extends BlockEntity {
             case "diesel"            -> ModFluids.DIESEL_STILL.get();
             case "heavy_gas_oil"     -> ModFluids.HEAVY_GAS_OIL_STILL.get();
             case "residual_fuel_oil" -> ModFluids.RESIDUAL_FUEL_OIL_STILL.get();
-            case "oil"               -> ModFluids.OIL_STILL.get();
+            case "creosote_oil"      -> ModFluids.CREOSOTE_OIL_STILL.get();
+            case "synthetic_rubber"  -> ModFluids.SYNTHETIC_RUBBER_STILL.get();
+            case "pvc_resin"         -> ModFluids.PVC_RESIN_STILL.get();
+            case "sulfuric_acid"     -> ModFluids.SULFURIC_ACID_STILL.get();
+            case "nitric_acid"       -> ModFluids.NITRIC_ACID_STILL.get();
+            case "chlorine_gas"      -> ModFluids.CHLORINE_GAS_STILL.get();
+            case "hydrogen_gas"      -> ModFluids.HYDROGEN_GAS_STILL.get();
+            case "oxygen_gas"        -> ModFluids.OXYGEN_GAS_STILL.get();
+            case "fluorine_gas"      -> ModFluids.FLUORINE_GAS_STILL.get();
+            case "nitrate_solution"  -> ModFluids.NITRATE_SOLUTION_STILL.get();
             case "photoresist"           -> ModFluids.PHOTORESIST_STILL.get();
             case "uranium_hexafluoride"  -> ModFluids.URANIUM_HEXAFLUORIDE_STILL.get();
             case "enriched_uf6"          -> ModFluids.ENRICHED_UF6_STILL.get();
             case "depleted_uf6"          -> ModFluids.DEPLETED_UF6_STILL.get();
             case "heavy_water"           -> ModFluids.HEAVY_WATER_STILL.get();
+            case "steam"                 -> ModFluids.STEAM_STILL.get();
+            case "water"                 -> Fluids.WATER;
             default                      -> null;
         };
     }
@@ -152,7 +178,7 @@ public class FluidPortBlockEntity extends BlockEntity {
             ticksSinceSearch = 0;
             cachedControllerPos = findControllerBFS(shouldLog);
             if (shouldLog) {
-                LOGGER.info("FluidPort@{} [{}] target={}: BFS rescan → controller={}",
+                LOGGER.debug("FluidPort@{} [{}] target={}: BFS rescan → controller={}",
                         worldPosition.toShortString(), mode, targetFluid,
                         cachedControllerPos != null ? cachedControllerPos.toShortString() : "none");
             }
@@ -160,7 +186,7 @@ public class FluidPortBlockEntity extends BlockEntity {
 
         if (cachedControllerPos == null) {
             if (shouldLog && mode == Mode.OUTPUT) {
-                LOGGER.info("[FluidPort OUTPUT]@{} target={} — 0 controllers found (BFS cache empty)",
+                LOGGER.debug("[FluidPort OUTPUT]@{} target={} — 0 controllers found (BFS cache empty)",
                         worldPosition.toShortString(), targetFluid);
             }
             return;
@@ -187,6 +213,20 @@ public class FluidPortBlockEntity extends BlockEntity {
                     target = euv.getPhotoresistInputHandler();
                 } else if (be instanceof GasCentrifugeBlockEntity gc) {
                     target = gc.fluidInputHandler;
+                } else if (be instanceof ElectrolysisMachineBlockEntity em) {
+                    target = em.fluidInputHandler;
+                } else if (be instanceof AcidBathBlockEntity ab) {
+                    target = ab.fillOnlyHandler;
+                } else if (be instanceof PlasmaEtcherBlockEntity pe) {
+                    target = pe.fillOnlyHandler;
+                } else if (be instanceof FluidTankBlockEntity ft) {
+                    target = ft.fullAccessHandler;
+                } else if (be instanceof ReactorControllerBlockEntity reactor) {
+                    target = reactor.waterInputHandler;
+                } else if (be instanceof SteamTurbineBlockEntity turbine) {
+                    target = turbine.getSteamInputHandler();
+                } else if (be instanceof CoolingTowerControllerBlockEntity ct) {
+                    target = ct.steamInputHandler;
                 }
                 if (target != null) {
                     FluidStack toOffer = tank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
@@ -209,7 +249,7 @@ public class FluidPortBlockEntity extends BlockEntity {
                     : be.getClass().getSimpleName();
 
             if (shouldLog) {
-                LOGGER.info("[FluidPort OUTPUT]@{} target={} buffer={}/{}mB — pulling from {} at {}",
+                LOGGER.debug("[FluidPort OUTPUT]@{} target={} buffer={}/{}mB — pulling from {} at {}",
                         worldPosition.toShortString(), targetFluid,
                         tank.getFluidAmount(), tank.getCapacity(),
                         controllerType, cachedControllerPos.toShortString());
@@ -218,7 +258,7 @@ public class FluidPortBlockEntity extends BlockEntity {
             if (be instanceof OilDerrickControllerBlockEntity derrick) {
                 FluidTank source = derrick.getFluidTank();
                 if (shouldLog) {
-                    LOGGER.info("[FluidPort OUTPUT]@{} OilDerrick tank: {}mB of {}",
+                    LOGGER.debug("[FluidPort OUTPUT]@{} OilDerrick tank: {}mB of {}",
                             worldPosition.toShortString(), source.getFluidAmount(),
                             source.isEmpty() ? "empty" : source.getFluid().getFluid());
                 }
@@ -230,15 +270,15 @@ public class FluidPortBlockEntity extends BlockEntity {
                         if (!actual.isEmpty()) {
                             tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
                             changed = true;
-                            if (shouldLog) LOGGER.info("[FluidPort OUTPUT]@{} transferred {}mB from OilDerrick",
+                            if (shouldLog) LOGGER.debug("[FluidPort OUTPUT]@{} transferred {}mB from OilDerrick",
                                     worldPosition.toShortString(), actual.getAmount());
                         }
                     } else if (shouldLog) {
-                        LOGGER.info("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
+                        LOGGER.debug("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
                                 worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
                     }
                 } else if (shouldLog) {
-                    LOGGER.info("[FluidPort OUTPUT]@{} OilDerrick tank empty — nothing to transfer",
+                    LOGGER.debug("[FluidPort OUTPUT]@{} OilDerrick tank empty — nothing to transfer",
                             worldPosition.toShortString());
                 }
 
@@ -257,7 +297,7 @@ public class FluidPortBlockEntity extends BlockEntity {
                             : FluidStack.EMPTY;
                 }
                 if (shouldLog) {
-                    LOGGER.info("[FluidPort OUTPUT]@{} Refinery tank[{}]: {}mB available",
+                    LOGGER.debug("[FluidPort OUTPUT]@{} Refinery tank[{}]: {}mB available",
                             worldPosition.toShortString(), targetFluid, availableMb);
                 }
                 if (!toDrain.isEmpty()) {
@@ -275,23 +315,30 @@ public class FluidPortBlockEntity extends BlockEntity {
                         if (!actual.isEmpty()) {
                             tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
                             changed = true;
-                            if (shouldLog) LOGGER.info("[FluidPort OUTPUT]@{} transferred {}mB {} from Refinery",
+                            if (shouldLog) LOGGER.debug("[FluidPort OUTPUT]@{} transferred {}mB {} from Refinery",
                                     worldPosition.toShortString(), actual.getAmount(), actual.getFluid());
                         }
                     } else if (shouldLog) {
-                        LOGGER.info("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
+                        LOGGER.debug("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
                                 worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
                     }
                 } else if (shouldLog) {
-                    LOGGER.info("[FluidPort OUTPUT]@{} Refinery tank[{}] empty — nothing to transfer",
+                    LOGGER.debug("[FluidPort OUTPUT]@{} Refinery tank[{}] empty — nothing to transfer",
                             worldPosition.toShortString(), targetFluid);
                 }
 
             } else if (be instanceof GasCentrifugeBlockEntity gc) {
-                IFluidHandler outputHandler = gc.fluidOutputHandler;
+                // Pick the specific output tank when targeting a known product, else use combined handler
+                IFluidHandler outputHandler = switch (targetFluid) {
+                    case "enriched_uf6" -> gc.fluidOutputTank1;
+                    case "depleted_uf6" -> gc.fluidOutputTank2;
+                    default             -> gc.fluidOutputHandler;
+                };
                 FluidStack toDrain = outputHandler.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
                 if (!toDrain.isEmpty()) {
-                    boolean fluidMatches = "any".equals(targetFluid);
+                    boolean fluidMatches = "any".equals(targetFluid)
+                            || "enriched_uf6".equals(targetFluid)
+                            || "depleted_uf6".equals(targetFluid);
                     if (!fluidMatches) {
                         Fluid expected = getFluidByName(targetFluid);
                         fluidMatches = expected != null && toDrain.getFluid().isSame(expected);
@@ -312,7 +359,7 @@ public class FluidPortBlockEntity extends BlockEntity {
             } else if (be instanceof ChemicalMixerBlockEntity mixer) {
                 FluidTank outputTank = mixer.getFluidOutputTank();
                 if (shouldLog) {
-                    LOGGER.info("[FluidPort OUTPUT]@{} ChemicalMixer output tank: {}mB of {}",
+                    LOGGER.debug("[FluidPort OUTPUT]@{} ChemicalMixer output tank: {}mB of {}",
                             worldPosition.toShortString(), outputTank.getFluidAmount(),
                             outputTank.isEmpty() ? "empty" : outputTank.getFluid().getFluid());
                 }
@@ -322,7 +369,7 @@ public class FluidPortBlockEntity extends BlockEntity {
                         Fluid expected = getFluidByName(targetFluid);
                         fluidMatches = expected != null && outputTank.getFluid().getFluid().isSame(expected);
                         if (!fluidMatches && shouldLog) {
-                            LOGGER.info("[FluidPort OUTPUT]@{} ChemicalMixer fluid mismatch: expected={} actual={}",
+                            LOGGER.debug("[FluidPort OUTPUT]@{} ChemicalMixer fluid mismatch: expected={} actual={}",
                                     worldPosition.toShortString(), targetFluid, outputTank.getFluid().getFluid());
                         }
                     }
@@ -336,18 +383,153 @@ public class FluidPortBlockEntity extends BlockEntity {
                                 if (!actual.isEmpty()) {
                                     tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
                                     changed = true;
-                                    if (shouldLog) LOGGER.info("[FluidPort OUTPUT]@{} transferred {}mB from ChemicalMixer",
+                                    if (shouldLog) LOGGER.debug("[FluidPort OUTPUT]@{} transferred {}mB from ChemicalMixer",
                                             worldPosition.toShortString(), actual.getAmount());
                                 }
                             } else if (shouldLog) {
-                                LOGGER.info("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
+                                LOGGER.debug("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more",
                                         worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
                             }
                         }
                     }
                 } else if (shouldLog) {
-                    LOGGER.info("[FluidPort OUTPUT]@{} ChemicalMixer output tank empty — nothing to transfer",
+                    LOGGER.debug("[FluidPort OUTPUT]@{} ChemicalMixer output tank empty — nothing to transfer",
                             worldPosition.toShortString());
+                }
+
+            } else if (be instanceof CokeOvenControllerBlockEntity coke) {
+                if ("any".equals(targetFluid) || "creosote_oil".equals(targetFluid)) {
+                    FluidStack toDrain = coke.creosoteTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    if (!toDrain.isEmpty()) {
+                        int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                        if (accepted > 0) {
+                            FluidStack actual = coke.creosoteTank.drain(
+                                    new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            if (!actual.isEmpty()) {
+                                tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+
+            } else if (be instanceof WaterPumpBlockEntity wp) {
+                if ("any".equals(targetFluid) || "water".equals(targetFluid)) {
+                    FluidStack toDrain = wp.waterTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    if (!toDrain.isEmpty()) {
+                        int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                        if (accepted > 0) {
+                            FluidStack actual = wp.waterTank.drain(
+                                    new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            if (!actual.isEmpty()) {
+                                tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+
+            } else if (be instanceof ElectrolysisMachineBlockEntity em) {
+                // Select the output tank that contains the target fluid
+                FluidTank sourceTank;
+                if ("any".equals(targetFluid)) {
+                    sourceTank = !em.fluidOutputTank1.isEmpty() ? em.fluidOutputTank1 : em.fluidOutputTank2;
+                } else {
+                    Fluid expected = getFluidByName(targetFluid);
+                    if (expected != null && !em.fluidOutputTank1.isEmpty()
+                            && em.fluidOutputTank1.getFluid().getFluid().isSame(expected)) {
+                        sourceTank = em.fluidOutputTank1;
+                    } else if (expected != null && !em.fluidOutputTank2.isEmpty()
+                            && em.fluidOutputTank2.getFluid().getFluid().isSame(expected)) {
+                        sourceTank = em.fluidOutputTank2;
+                    } else {
+                        sourceTank = null;
+                    }
+                }
+                if (sourceTank != null) {
+                    FluidStack toDrain = sourceTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    if (!toDrain.isEmpty()) {
+                        int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                        if (accepted > 0) {
+                            FluidStack actual = sourceTank.drain(
+                                    new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            if (!actual.isEmpty()) {
+                                tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+
+            } else if (be instanceof FluidTankBlockEntity ft) {
+                FluidTank sourceTank = ft.getFluidTank();
+                if (!sourceTank.isEmpty()) {
+                    boolean fluidMatches = "any".equals(targetFluid);
+                    if (!fluidMatches) {
+                        Fluid expected = getFluidByName(targetFluid);
+                        fluidMatches = expected != null && sourceTank.getFluid().getFluid().isSame(expected);
+                    }
+                    if (fluidMatches) {
+                        FluidStack toDrain = sourceTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                        if (!toDrain.isEmpty()) {
+                            int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                            if (accepted > 0) {
+                                FluidStack actual = sourceTank.drain(
+                                        new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                                if (!actual.isEmpty()) {
+                                    tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } else if (be instanceof ReactorControllerBlockEntity reactor) {
+                // Pull steam from reactor
+                if ("any".equals(targetFluid) || "steam".equals(targetFluid)) {
+                    FluidStack toDrain = reactor.getSteamTank().drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    if (!toDrain.isEmpty()) {
+                        int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                        if (accepted > 0) {
+                            FluidStack actual = reactor.getSteamTank().drain(
+                                    new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            if (!actual.isEmpty()) {
+                                tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+
+            } else if (be instanceof CoolingTowerControllerBlockEntity ct) {
+                // Pull condensed water from cooling tower
+                if ("any".equals(targetFluid) || "water".equals(targetFluid)) {
+                    if (shouldLog) {
+                        LOGGER.debug("[FluidPort OUTPUT]@{} CoolingTower waterTank: {}mB available, buffer={}/{}mB",
+                                worldPosition.toShortString(), ct.getWaterTank().getFluidAmount(),
+                                tank.getFluidAmount(), tank.getCapacity());
+                    }
+                    FluidStack toDrain = ct.getWaterTank().drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                    if (!toDrain.isEmpty()) {
+                        int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                        if (accepted > 0) {
+                            FluidStack actual = ct.getWaterTank().drain(
+                                    new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                            if (!actual.isEmpty()) {
+                                tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                changed = true;
+                                if (shouldLog) LOGGER.debug("[FluidPort OUTPUT]@{} drained {}mB water from CoolingTower",
+                                        worldPosition.toShortString(), actual.getAmount());
+                            }
+                        } else if (shouldLog) {
+                            LOGGER.debug("[FluidPort OUTPUT]@{} buffer full ({}/{}mB) — cannot accept more water",
+                                    worldPosition.toShortString(), tank.getFluidAmount(), tank.getCapacity());
+                        }
+                    } else if (shouldLog) {
+                        LOGGER.debug("[FluidPort OUTPUT]@{} CoolingTower waterTank empty — nothing to drain",
+                                worldPosition.toShortString());
+                    }
                 }
             }
         }
@@ -358,7 +540,7 @@ public class FluidPortBlockEntity extends BlockEntity {
     private BlockPos findControllerBFS(boolean verbose) {
         if (level == null) return null;
 
-        LOGGER.info("[FluidPort BFS]@{} starting search (maxDepth={}, verbose={})",
+        LOGGER.debug("[FluidPort BFS]@{} starting search (maxDepth={}, verbose={})",
                 worldPosition.toShortString(), MAX_BFS_DEPTH, verbose);
 
         Set<BlockPos> visited = new HashSet<>();
@@ -381,7 +563,7 @@ public class FluidPortBlockEntity extends BlockEntity {
                 BlockEntity be = level.getBlockEntity(neighbor);
 
                 if (verbose) {
-                    LOGGER.info("[FluidPort BFS]@{} visit#{} {} — block={} hasBE={}",
+                    LOGGER.debug("[FluidPort BFS]@{} visit#{} {} — block={} hasBE={}",
                             worldPosition.toShortString(), visitCount,
                             neighbor.toShortString(),
                             net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block),
@@ -392,7 +574,15 @@ public class FluidPortBlockEntity extends BlockEntity {
                         || be instanceof RefineryControllerBlockEntity
                         || be instanceof ChemicalMixerBlockEntity
                         || be instanceof EuvLithographyControllerBlockEntity
-                        || be instanceof GasCentrifugeBlockEntity) {
+                        || be instanceof GasCentrifugeBlockEntity
+                        || be instanceof ElectrolysisMachineBlockEntity
+                        || be instanceof CokeOvenControllerBlockEntity
+                        || be instanceof WaterPumpBlockEntity
+                        || be instanceof AcidBathBlockEntity
+                        || be instanceof PlasmaEtcherBlockEntity
+                        || be instanceof FluidTankBlockEntity
+                        || be instanceof ReactorControllerBlockEntity
+                        || be instanceof CoolingTowerControllerBlockEntity) {
                     LOGGER.info("[FluidPort BFS]@{} FOUND controller: {} at {} (after {} visits)",
                             worldPosition.toShortString(),
                             be.getClass().getSimpleName(),
@@ -403,7 +593,7 @@ public class FluidPortBlockEntity extends BlockEntity {
 
                 if (isStructureBlock(block)) {
                     if (verbose) {
-                        LOGGER.info("[FluidPort BFS]@{} queuing structure block {} at {}",
+                        LOGGER.debug("[FluidPort BFS]@{} queuing structure block {} at {}",
                                 worldPosition.toShortString(),
                                 net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block),
                                 neighbor.toShortString());
@@ -413,7 +603,7 @@ public class FluidPortBlockEntity extends BlockEntity {
             }
         }
 
-        LOGGER.info("[FluidPort BFS]@{} search complete — visited {} blocks, no controller found",
+        LOGGER.debug("[FluidPort BFS]@{} search complete — visited {} blocks, no controller found",
                 worldPosition.toShortString(), visitCount);
         return null;
     }
@@ -426,6 +616,8 @@ public class FluidPortBlockEntity extends BlockEntity {
                 || block == ModBlocks.REFINERY_WALL.get()
                 || block == ModBlocks.REFINERY_TOP.get()
                 || block == ModBlocks.REFINERY_CONTROLLER.get()
+                || block == ModBlocks.COKE_OVEN_BRICK.get()
+                || block == ModBlocks.COKE_OVEN_CONTROLLER.get()
                 || block == ModBlocks.EUV_BASE.get()
                 || block == ModBlocks.EUV_WALL.get()
                 || block == ModBlocks.EUV_LENS_HOUSING.get()
@@ -433,6 +625,17 @@ public class FluidPortBlockEntity extends BlockEntity {
                 || block == ModBlocks.EUV_EMITTER_HOUSING.get()
                 || block == ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()
                 || block == ModBlocks.CHEMICAL_MIXER.get()
+                || block == ModBlocks.REACTOR_BASE.get()
+                || block == ModBlocks.REACTOR_WALL.get()
+                || block == ModBlocks.REACTOR_TOP.get()
+                || block == ModBlocks.REACTOR_CONTROL_ROD_HOUSING.get()
+                || block == ModBlocks.REACTOR_CONTROLLER.get()
+                || block == ModBlocks.LEAD_BLOCK.get()
+                || block == ModBlocks.STEAM_TURBINE.get()
+                || block == ModBlocks.COOLING_TOWER_BASE.get()
+                || block == ModBlocks.COOLING_TOWER_WALL.get()
+                || block == ModBlocks.COOLING_TOWER_VENT.get()
+                || block == ModBlocks.COOLING_TOWER_CONTROLLER.get()
                 || block == ModBlocks.ENERGY_PORT.get()
                 || block == ModBlocks.FLUID_PORT.get();
     }

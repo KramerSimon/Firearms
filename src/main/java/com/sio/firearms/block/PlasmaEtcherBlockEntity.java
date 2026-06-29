@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -35,8 +36,26 @@ public class PlasmaEtcherBlockEntity extends EnergyStorageBlock implements MenuP
     };
 
     public final FluidTank fluidTank = new FluidTank(TANK_SIZE) {
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return !stack.isEmpty() && stack.getFluid().isSame(ModFluids.CHLORINE_GAS_STILL.get());
+        }
         @Override protected void onContentsChanged() { setChanged(); }
     };
+
+    // Fill-only: accept chlorine gas input, no drain
+    public final IFluidHandler fillOnlyHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int t) { return fluidTank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int t) { return fluidTank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int t, FluidStack s) { return fluidTank.isFluidValid(0, s); }
+        @Override public int fill(FluidStack resource, FluidAction a) { return fluidTank.fill(resource, a); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) { return FluidStack.EMPTY; }
+    };
+
+    // Input-only machine; fullAccessHandler delegates entirely to fillOnlyHandler
+    public final IFluidHandler fullAccessHandler = fillOnlyHandler;
 
     private int progress = 0;
 

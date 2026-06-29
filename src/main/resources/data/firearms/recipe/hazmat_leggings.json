@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["RRR","R R","R R"],
+  "key": {"R": {"item": "firearms:rubber_sheet"}},
+  "result": {"id": "firearms:hazmat_leggings", "count": 1}
+}

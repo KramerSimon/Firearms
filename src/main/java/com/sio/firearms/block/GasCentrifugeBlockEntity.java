@@ -6,7 +6,6 @@ import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -31,7 +30,7 @@ public class GasCentrifugeBlockEntity extends EnergyStorageBlock implements Menu
     public final FluidTank fluidInputTank = new FluidTank(TANK_SIZE) {
         @Override
         public boolean isFluidValid(FluidStack stack) {
-            return fluidKey(stack).equals("firearms:uranium_hexafluoride_still");
+            return !stack.isEmpty() && stack.getFluid().isSame(ModFluids.URANIUM_HEXAFLUORIDE_STILL.get());
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -56,7 +55,7 @@ public class GasCentrifugeBlockEntity extends EnergyStorageBlock implements Menu
         @Override public FluidStack drain(int maxDrain, FluidAction action) { return FluidStack.EMPTY; }
     };
 
-    // Drain-only handler for output tanks (pipes can pull from either)
+    // Drain-only handler for output tanks (enriched UF6 first, then depleted UF6)
     public final IFluidHandler fluidOutputHandler = new IFluidHandler() {
         @Override public int getTanks() { return 2; }
         @Override public FluidStack getFluidInTank(int t) {
@@ -67,6 +66,42 @@ public class GasCentrifugeBlockEntity extends EnergyStorageBlock implements Menu
         }
         @Override public boolean isFluidValid(int t, FluidStack s) { return false; }
         @Override public int fill(FluidStack resource, FluidAction action) { return 0; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction action) {
+            FluidStack r = fluidOutputTank1.drain(resource, action);
+            if (r.isEmpty()) r = fluidOutputTank2.drain(resource, action);
+            return r;
+        }
+        @Override public FluidStack drain(int maxDrain, FluidAction action) {
+            FluidStack r = fluidOutputTank1.drain(maxDrain, action);
+            if (r.isEmpty()) r = fluidOutputTank2.drain(maxDrain, action);
+            return r;
+        }
+    };
+
+    // Full-access handler: fill() routes to input tank, drain() routes to output tanks.
+    // Registered on all sides so external pipes can push UF6 in and pull products out.
+    public final IFluidHandler fullAccessHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 3; }
+        @Override public FluidStack getFluidInTank(int t) {
+            return switch (t) {
+                case 0 -> fluidInputTank.getFluidInTank(0);
+                case 1 -> fluidOutputTank1.getFluidInTank(0);
+                default -> fluidOutputTank2.getFluidInTank(0);
+            };
+        }
+        @Override public int getTankCapacity(int t) {
+            return switch (t) {
+                case 0 -> fluidInputTank.getTankCapacity(0);
+                case 1 -> fluidOutputTank1.getTankCapacity(0);
+                default -> fluidOutputTank2.getTankCapacity(0);
+            };
+        }
+        @Override public boolean isFluidValid(int t, FluidStack s) {
+            return t == 0 && fluidInputTank.isFluidValid(0, s);
+        }
+        @Override public int fill(FluidStack resource, FluidAction action) {
+            return fluidInputTank.fill(resource, action);
+        }
         @Override public FluidStack drain(FluidStack resource, FluidAction action) {
             FluidStack r = fluidOutputTank1.drain(resource, action);
             if (r.isEmpty()) r = fluidOutputTank2.drain(resource, action);
@@ -118,11 +153,6 @@ public class GasCentrifugeBlockEntity extends EnergyStorageBlock implements Menu
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
         return new GasCentrifugeMenu(id, inv, data);
-    }
-
-    private static String fluidKey(FluidStack stack) {
-        if (stack.isEmpty()) return "";
-        return BuiltInRegistries.FLUID.getKey(stack.getFluid()).toString();
     }
 
     public void serverTick() {

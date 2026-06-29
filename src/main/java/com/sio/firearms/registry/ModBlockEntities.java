@@ -33,6 +33,10 @@ import com.sio.firearms.block.OilDerrickControllerBlockEntity;
 import com.sio.firearms.block.RefineryControllerBlockEntity;
 import com.sio.firearms.block.FluidPipeBlockEntity;
 import com.sio.firearms.block.FuelGeneratorBlockEntity;
+import com.sio.firearms.block.FluidTankBlockEntity;
+import com.sio.firearms.block.ReactorControllerBlockEntity;
+import com.sio.firearms.block.CoolingTowerControllerBlockEntity;
+import com.sio.firearms.block.SteamTurbineBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -203,4 +207,32 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("gas_centrifuge",
                     () -> BlockEntityType.Builder.of(GasCentrifugeBlockEntity::new,
                             ModBlocks.GAS_CENTRIFUGE.get()).build(null));
+
+    // ── Fluid storage ────────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity>> FLUID_TANK =
+            BLOCK_ENTITIES.register("fluid_tank",
+                    () -> BlockEntityType.Builder.of(FluidTankBlockEntity::new,
+                            ModBlocks.FLUID_TANK.get()).build(null));
+
+    // ── Nuclear Reactor Stage 2 ───────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorControllerBlockEntity>> REACTOR_CONTROLLER =
+            BLOCK_ENTITIES.register("reactor_controller",
+                    () -> BlockEntityType.Builder.of(ReactorControllerBlockEntity::new,
+                            ModBlocks.REACTOR_CONTROLLER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SteamTurbineBlockEntity>> STEAM_TURBINE =
+            BLOCK_ENTITIES.register("steam_turbine",
+                    () -> BlockEntityType.Builder.of(SteamTurbineBlockEntity::new,
+                            ModBlocks.STEAM_TURBINE.get()).build(null));
+
+    // ── Cooling Tower ─────────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CoolingTowerControllerBlockEntity>> COOLING_TOWER_CONTROLLER =
+            BLOCK_ENTITIES.register("cooling_tower_controller",
+                    () -> BlockEntityType.Builder.of(CoolingTowerControllerBlockEntity::new,
+                            ModBlocks.COOLING_TOWER_CONTROLLER.get()).build(null));
+
+    // ── Utility ───────────────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.TrashCanBlockEntity>> TRASH_CAN =
+            BLOCK_ENTITIES.register("trash_can",
+                    () -> BlockEntityType.Builder.of(com.sio.firearms.block.TrashCanBlockEntity::new,
+                            ModBlocks.TRASH_CAN.get()).build(null));
 }

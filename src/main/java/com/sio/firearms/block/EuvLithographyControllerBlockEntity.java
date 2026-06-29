@@ -4,6 +4,7 @@ import com.sio.firearms.energy.EnergyStorageBlock;
 import com.sio.firearms.menu.EuvLithographyMenu;
 import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModBlocks;
+import com.sio.firearms.registry.ModFluids;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -48,9 +49,7 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
     public final FluidTank photoresistTank = new FluidTank(10_000) {
         @Override
         public boolean isFluidValid(FluidStack stack) {
-            if (stack.isEmpty()) return false;
-            return BuiltInRegistries.FLUID.getKey(stack.getFluid())
-                    .toString().equals("firearms:photoresist_still");
+            return !stack.isEmpty() && stack.getFluid().isSame(ModFluids.PHOTORESIST_STILL.get());
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -98,6 +97,9 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
     };
 
     public IFluidHandler getPhotoresistInputHandler() { return fillOnlyPhotoresistHandler; }
+
+    // Input-only machine for fluid; fullAccessHandler delegates entirely to fillOnlyPhotoresistHandler
+    public final IFluidHandler fullAccessHandler = fillOnlyPhotoresistHandler;
 
     @Override
     public Component getDisplayName() {

@@ -2,6 +2,10 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlock;
+import com.sio.firearms.block.CoolingTowerControllerBlock;
+import com.sio.firearms.block.FluidTankBlock;
+import com.sio.firearms.block.ReactorControllerBlock;
+import com.sio.firearms.block.SteamTurbineBlock;
 import com.sio.firearms.block.GasCentrifugeBlock;
 import com.sio.firearms.block.CrystalGrowthControllerBlock;
 import com.sio.firearms.block.EuvLithographyControllerBlock;
@@ -575,4 +579,77 @@ public class ModBlocks {
                     () -> new LiquidBlock(ModFluids.STEAM_STILL.get(),
                             BlockBehaviour.Properties.of().noCollission().strength(100f).noLootTable()
                                     .pushReaction(PushReaction.DESTROY)));
+
+    // ── Fluid storage ────────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> FLUID_TANK =
+            BLOCKS.register("fluid_tank",
+                    () -> new FluidTankBlock(BlockBehaviour.Properties.of()
+                            .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── Nuclear Reactor Stage 2 ──────────────────────────────────────────────
+    public static final DeferredBlock<Block> REACTOR_BASE =
+            BLOCKS.register("reactor_base",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(10.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> REACTOR_WALL =
+            BLOCKS.register("reactor_wall",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> REACTOR_TOP =
+            BLOCKS.register("reactor_top",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> REACTOR_CONTROL_ROD_HOUSING =
+            BLOCKS.register("reactor_control_rod_housing",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> LEAD_BLOCK =
+            BLOCKS.register("lead_block",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(3.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> REACTOR_CONTROLLER =
+            BLOCKS.register("reactor_controller",
+                    () -> new ReactorControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> STEAM_TURBINE =
+            BLOCKS.register("steam_turbine",
+                    () -> new SteamTurbineBlock(BlockBehaviour.Properties.of()
+                            .strength(5.0f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── Cooling Tower ────────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> COOLING_TOWER_BASE =
+            BLOCKS.register("cooling_tower_base",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> COOLING_TOWER_WALL =
+            BLOCKS.register("cooling_tower_wall",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(6.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> COOLING_TOWER_VENT =
+            BLOCKS.register("cooling_tower_vent",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> COOLING_TOWER_CONTROLLER =
+            BLOCKS.register("cooling_tower_controller",
+                    () -> new CoolingTowerControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(6.0f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── Utility ───────────────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> TRASH_CAN =
+            BLOCKS.register("trash_can",
+                    () -> new com.sio.firearms.block.TrashCanBlock(BlockBehaviour.Properties.of()
+                            .strength(2.0f)
+                            .requiresCorrectToolForDrops()));
 }

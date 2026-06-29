@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["S S","STS","S S"],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "T": {"item": "firearms:tungsten_rod"}
+  },
+  "result": {"id": "firearms:reactor_control_rod_housing", "count": 1}
+}

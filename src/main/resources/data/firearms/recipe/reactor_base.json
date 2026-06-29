@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SLS","LSL","SLS"],
+  "key": {
+    "S": {"item": "firearms:hardened_steel_ingot"},
+    "L": {"item": "firearms:lead_ingot"}
+  },
+  "result": {"id": "firearms:reactor_base", "count": 1}
+}

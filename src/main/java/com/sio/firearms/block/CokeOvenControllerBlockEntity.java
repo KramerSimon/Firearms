@@ -39,6 +39,20 @@ public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuPr
         }
     };
 
+    // Drain-only: creosote output only, no fill accepted
+    public final IFluidHandler drainOnlyHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int t) { return creosoteTank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int t) { return creosoteTank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int t, FluidStack s) { return false; }
+        @Override public int fill(FluidStack r, FluidAction a) { return 0; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) { return creosoteTank.drain(resource, a); }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) { return creosoteTank.drain(maxDrain, a); }
+    };
+
+    // Output-only machine; fullAccessHandler delegates entirely to drainOnlyHandler
+    public final IFluidHandler fullAccessHandler = drainOnlyHandler;
+
     public final ItemStackHandler inventory = new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {

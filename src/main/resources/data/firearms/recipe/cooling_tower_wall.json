@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SSS","S S","SSS"],
+  "key": {
+    "S": {"item": "minecraft:stone"}
+  },
+  "result": {"id": "firearms:cooling_tower_wall", "count": 4}
+}

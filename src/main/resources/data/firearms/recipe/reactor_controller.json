@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SCS","CAC","SCS"],
+  "key": {
+    "S": {"item": "firearms:hardened_steel_ingot"},
+    "C": {"item": "firearms:circuit_board"},
+    "A": {"item": "firearms:advanced_microchip"}
+  },
+  "result": {"id": "firearms:reactor_controller", "count": 1}
+}

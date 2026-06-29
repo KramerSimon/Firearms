@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "G G",
+    "HHH"
+  ],
+  "key": {
+    "S": { "item": "firearms:steel_ingot" },
+    "G": { "item": "minecraft:glass" },
+    "H": { "item": "firearms:hardened_steel_ingot" }
+  },
+  "result": {
+    "id": "firearms:fluid_tank",
+    "count": 1
+  }
+}

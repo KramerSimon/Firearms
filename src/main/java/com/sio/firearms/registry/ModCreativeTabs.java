@@ -216,6 +216,26 @@ public class ModCreativeTabs {
                         output.accept(ModItems.HEAVY_WATER_BUCKET.get());
                         output.accept(ModItems.STEAM_BUCKET.get());
                         output.accept(ModItems.GAS_CENTRIFUGE.get());
+                        output.accept(ModItems.FLUID_TANK.get());
+                        // Nuclear Reactor Stage 2
+                        output.accept(ModItems.REACTOR_BASE.get());
+                        output.accept(ModItems.REACTOR_WALL.get());
+                        output.accept(ModItems.REACTOR_TOP.get());
+                        output.accept(ModItems.REACTOR_CONTROL_ROD_HOUSING.get());
+                        output.accept(ModItems.LEAD_BLOCK.get());
+                        output.accept(ModItems.REACTOR_CONTROLLER.get());
+                        output.accept(ModItems.STEAM_TURBINE.get());
+                        // ── Cooling Tower ─────────────────────────────────────
+                        output.accept(ModItems.COOLING_TOWER_BASE.get());
+                        output.accept(ModItems.COOLING_TOWER_WALL.get());
+                        output.accept(ModItems.COOLING_TOWER_VENT.get());
+                        output.accept(ModItems.COOLING_TOWER_CONTROLLER.get());
+                        output.accept(ModItems.HAZMAT_HELMET.get());
+                        output.accept(ModItems.HAZMAT_CHESTPLATE.get());
+                        output.accept(ModItems.HAZMAT_LEGGINGS.get());
+                        output.accept(ModItems.HAZMAT_BOOTS.get());
+                        output.accept(ModItems.GEIGER_COUNTER.get());
+                        output.accept(ModItems.TRASH_CAN.get());
                     })
                     .build());
 }

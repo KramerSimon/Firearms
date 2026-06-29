@@ -2,6 +2,7 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.effect.BleedingEffect;
+import com.sio.firearms.effect.RadiationEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -14,4 +15,7 @@ public class ModEffects {
 
     public static final DeferredHolder<MobEffect, MobEffect> BLEEDING =
             MOB_EFFECTS.register("bleeding", BleedingEffect::new);
+
+    public static final DeferredHolder<MobEffect, MobEffect> RADIATION =
+            MOB_EFFECTS.register("radiation", RadiationEffect::new);
 }

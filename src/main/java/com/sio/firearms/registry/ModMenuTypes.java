@@ -2,6 +2,10 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.menu.AcidBathMenu;
+import com.sio.firearms.menu.FluidTankMenu;
+import com.sio.firearms.menu.ReactorMenu;
+import com.sio.firearms.menu.CoolingTowerMenu;
+import com.sio.firearms.menu.SteamTurbineMenu;
 import com.sio.firearms.menu.GasCentrifugeMenu;
 import com.sio.firearms.menu.CrystalGrowthControllerMenu;
 import com.sio.firearms.menu.EuvLithographyMenu;
@@ -140,5 +144,28 @@ public class ModMenuTypes {
     // ── Nuclear Reactor Stage 1 ───────────────────────────────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<GasCentrifugeMenu>> GAS_CENTRIFUGE_MENU =
             MENU_TYPES.register("gas_centrifuge",
-                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new GasCentrifugeMenu(windowId, inv, data)));
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new GasCentrifugeMenu(windowId, inv)));
+
+    // ── Fluid storage ────────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidTankMenu>> FLUID_TANK_MENU =
+            MENU_TYPES.register("fluid_tank",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new FluidTankMenu(windowId, inv)));
+
+    // ── Nuclear Reactor Stage 2 ───────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<ReactorMenu>> REACTOR_MENU =
+            MENU_TYPES.register("reactor_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new ReactorMenu(windowId, inv)));
+    public static final DeferredHolder<MenuType<?>, MenuType<SteamTurbineMenu>> STEAM_TURBINE_MENU =
+            MENU_TYPES.register("steam_turbine",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new SteamTurbineMenu(windowId, inv)));
+
+    // ── Cooling Tower ─────────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<CoolingTowerMenu>> COOLING_TOWER_MENU =
+            MENU_TYPES.register("cooling_tower_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new CoolingTowerMenu(windowId, inv)));
+
+    // ── Utility ───────────────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.TrashCanMenu>> TRASH_CAN_MENU =
+            MENU_TYPES.register("trash_can",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new com.sio.firearms.menu.TrashCanMenu(windowId, inv)));
 }

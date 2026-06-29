@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["LLL","LLL","LLL"],
+  "key": {"L": {"item": "firearms:lead_ingot"}},
+  "result": {"id": "firearms:lead_block", "count": 1}
+}

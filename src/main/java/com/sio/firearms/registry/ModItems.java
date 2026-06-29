@@ -16,6 +16,8 @@ import com.sio.firearms.item.MedikitItem;
 import com.sio.firearms.item.ShotgunItem;
 import com.sio.firearms.item.SMGItem;
 import com.sio.firearms.item.SniperRifleItem;
+import com.sio.firearms.item.GeigerCounterItem;
+import com.sio.firearms.item.HazmatSuitItem;
 import com.sio.firearms.item.WrenchItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
@@ -361,4 +363,46 @@ public class ModItems {
     // ── Nuclear block items ───────────────────────────────────────────────────
     public static final DeferredItem<BlockItem> ZIRCONITE_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.ZIRCONITE_ORE);
     public static final DeferredItem<BlockItem> GAS_CENTRIFUGE = ITEMS.registerSimpleBlockItem(ModBlocks.GAS_CENTRIFUGE);
+
+    // ── Fluid storage ────────────────────────────────────────────────────────
+    public static final DeferredItem<BlockItem> FLUID_TANK = ITEMS.registerSimpleBlockItem(ModBlocks.FLUID_TANK);
+
+    // ── Nuclear Reactor Stage 2 blocks ────────────────────────────────────────
+    public static final DeferredItem<BlockItem> REACTOR_BASE                = ITEMS.registerSimpleBlockItem(ModBlocks.REACTOR_BASE);
+    public static final DeferredItem<BlockItem> REACTOR_WALL                = ITEMS.registerSimpleBlockItem(ModBlocks.REACTOR_WALL);
+    public static final DeferredItem<BlockItem> REACTOR_TOP                 = ITEMS.registerSimpleBlockItem(ModBlocks.REACTOR_TOP);
+    public static final DeferredItem<BlockItem> REACTOR_CONTROL_ROD_HOUSING = ITEMS.registerSimpleBlockItem(ModBlocks.REACTOR_CONTROL_ROD_HOUSING);
+    public static final DeferredItem<BlockItem> LEAD_BLOCK                  = ITEMS.registerSimpleBlockItem(ModBlocks.LEAD_BLOCK);
+    public static final DeferredItem<BlockItem> REACTOR_CONTROLLER          = ITEMS.registerSimpleBlockItem(ModBlocks.REACTOR_CONTROLLER);
+    public static final DeferredItem<BlockItem> STEAM_TURBINE               = ITEMS.registerSimpleBlockItem(ModBlocks.STEAM_TURBINE);
+
+    // ── Cooling Tower block items ─────────────────────────────────────────────
+    public static final DeferredItem<BlockItem> COOLING_TOWER_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.COOLING_TOWER_BASE);
+    public static final DeferredItem<BlockItem> COOLING_TOWER_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.COOLING_TOWER_WALL);
+    public static final DeferredItem<BlockItem> COOLING_TOWER_VENT       = ITEMS.registerSimpleBlockItem(ModBlocks.COOLING_TOWER_VENT);
+    public static final DeferredItem<BlockItem> COOLING_TOWER_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.COOLING_TOWER_CONTROLLER);
+
+    // ── Hazmat armor ─────────────────────────────────────────────────────────
+    public static final DeferredItem<Item> HAZMAT_HELMET =
+            ITEMS.register("hazmat_helmet",
+                    () -> new HazmatSuitItem(ModArmorMaterials.HAZMAT, net.minecraft.world.item.ArmorItem.Type.HELMET,
+                            new Item.Properties()));
+    public static final DeferredItem<Item> HAZMAT_CHESTPLATE =
+            ITEMS.register("hazmat_chestplate",
+                    () -> new HazmatSuitItem(ModArmorMaterials.HAZMAT, net.minecraft.world.item.ArmorItem.Type.CHESTPLATE,
+                            new Item.Properties()));
+    public static final DeferredItem<Item> HAZMAT_LEGGINGS =
+            ITEMS.register("hazmat_leggings",
+                    () -> new HazmatSuitItem(ModArmorMaterials.HAZMAT, net.minecraft.world.item.ArmorItem.Type.LEGGINGS,
+                            new Item.Properties()));
+    public static final DeferredItem<Item> HAZMAT_BOOTS =
+            ITEMS.register("hazmat_boots",
+                    () -> new HazmatSuitItem(ModArmorMaterials.HAZMAT, net.minecraft.world.item.ArmorItem.Type.BOOTS,
+                            new Item.Properties()));
+
+    // ── Radiation tools ───────────────────────────────────────────────────────
+    public static final DeferredItem<Item> GEIGER_COUNTER =
+            ITEMS.register("geiger_counter", GeigerCounterItem::new);
+
+    public static final DeferredItem<BlockItem> TRASH_CAN = ITEMS.registerSimpleBlockItem(ModBlocks.TRASH_CAN);
 }

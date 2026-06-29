@@ -39,9 +39,7 @@ public class AcidBathBlockEntity extends EnergyStorageBlock implements MenuProvi
     public final FluidTank acidTank = new FluidTank(TANK_SIZE) {
         @Override
         public boolean isFluidValid(FluidStack stack) {
-            if (stack.isEmpty()) return false;
-            return BuiltInRegistries.FLUID.getKey(stack.getFluid())
-                .toString().equals("firearms:sulfuric_acid_still");
+            return !stack.isEmpty() && stack.getFluid().isSame(ModFluids.SULFURIC_ACID_STILL.get());
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -71,6 +69,20 @@ public class AcidBathBlockEntity extends EnergyStorageBlock implements MenuProvi
     public AcidBathBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ACID_BATH.get(), pos, state, CAPACITY, MAX_RECEIVE, 0);
     }
+
+    // Fill-only: accept sulfuric acid input, no drain
+    public final IFluidHandler fillOnlyHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int t) { return acidTank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int t) { return acidTank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int t, FluidStack s) { return acidTank.isFluidValid(0, s); }
+        @Override public int fill(FluidStack resource, FluidAction a) { return acidTank.fill(resource, a); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) { return FluidStack.EMPTY; }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) { return FluidStack.EMPTY; }
+    };
+
+    // Input-only machine; fullAccessHandler delegates entirely to fillOnlyHandler
+    public final IFluidHandler fullAccessHandler = fillOnlyHandler;
 
     public ItemStackHandler getInventory() { return inventory; }
     public FluidTank getAcidTank()         { return acidTank; }

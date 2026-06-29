@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [" I ", "IHI", " I "],
+  "key": {
+    "I": {"item": "minecraft:iron_ingot"},
+    "H": {"item": "minecraft:hopper"}
+  },
+  "result": {"id": "firearms:trash_can", "count": 1}
+}

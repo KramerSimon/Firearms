@@ -1,6 +1,10 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.screen.AcidBathScreen;
+import com.sio.firearms.screen.FluidTankScreen;
+import com.sio.firearms.screen.ReactorScreen;
+import com.sio.firearms.screen.CoolingTowerScreen;
+import com.sio.firearms.screen.SteamTurbineScreen;
 import com.sio.firearms.screen.GasCentrifugeScreen;
 import com.sio.firearms.screen.CrystalGrowthControllerScreen;
 import com.sio.firearms.screen.EuvLithographyScreen;
@@ -64,5 +68,10 @@ public class ModScreens {
         event.register(ModMenuTypes.CRYSTAL_GROWTH_CONTROLLER_MENU.get(), CrystalGrowthControllerScreen::new);
         event.register(ModMenuTypes.EUV_LITHOGRAPHY_MENU.get(), EuvLithographyScreen::new);
         event.register(ModMenuTypes.GAS_CENTRIFUGE_MENU.get(), GasCentrifugeScreen::new);
+        event.register(ModMenuTypes.FLUID_TANK_MENU.get(), FluidTankScreen::new);
+        event.register(ModMenuTypes.REACTOR_MENU.get(), ReactorScreen::new);
+        event.register(ModMenuTypes.STEAM_TURBINE_MENU.get(), SteamTurbineScreen::new);
+        event.register(ModMenuTypes.COOLING_TOWER_MENU.get(), CoolingTowerScreen::new);
+        event.register(ModMenuTypes.TRASH_CAN_MENU.get(), com.sio.firearms.screen.TrashCanScreen::new);
     }
 }

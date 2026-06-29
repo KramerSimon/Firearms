@@ -2,6 +2,10 @@ package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlockEntity;
+import com.sio.firearms.block.FluidTankBlockEntity;
+import com.sio.firearms.block.ReactorControllerBlockEntity;
+import com.sio.firearms.block.CoolingTowerControllerBlockEntity;
+import com.sio.firearms.block.SteamTurbineBlockEntity;
 import com.sio.firearms.block.GasCentrifugeBlockEntity;
 import com.sio.firearms.block.CrystalGrowthControllerBlockEntity;
 import com.sio.firearms.block.EuvLithographyControllerBlockEntity;
@@ -131,13 +135,15 @@ public class ModCapabilities {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.REFINERY_CONTROLLER.get(),
-                (blockEntity, direction) -> blockEntity.getOilInputHandler()
+                // Full access: fill routes to oil input, drain routes to product output tanks
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
         );
 
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.COKE_OVEN_CONTROLLER.get(),
-                (blockEntity, direction) -> blockEntity.getCreosoteTank()
+                // Full access: output-only, drain routes to creosote tank
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
         );
 
         event.registerBlockEntity(
@@ -168,7 +174,8 @@ public class ModCapabilities {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.ACID_BATH.get(),
-                (blockEntity, direction) -> blockEntity.getAcidTank()
+                // Full access: input-only, fill routes to sulfuric acid tank
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
         );
 
         event.registerBlockEntity(
@@ -180,7 +187,8 @@ public class ModCapabilities {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.WATER_PUMP.get(),
-                (blockEntity, direction) -> blockEntity.getWaterTank()
+                // Full access: output-only, drain routes to water tank
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
         );
 
         event.registerBlockEntity(
@@ -192,7 +200,8 @@ public class ModCapabilities {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.ELECTROLYSIS_MACHINE.get(),
-                (blockEntity, direction) -> blockEntity.fluidInputHandler
+                // Full access: fill routes to water input, drain routes to gas output tanks
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
         );
 
         // ── IItemHandler for machines (enables item pipe connections) ────────────
@@ -302,7 +311,8 @@ public class ModCapabilities {
 
         // ── PlasmaEtcher: fluid handler ──────────────────────────────────────────
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.PLASMA_ETCHER.get(),
-                (be, dir) -> be.getFluidTank());
+                // Full access: input-only, fill routes to chlorine gas tank
+                (be, dir) -> be.fullAccessHandler);
 
         // ── Crystal Growth Chamber ────────────────────────────────────────────────
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.CRYSTAL_GROWTH_CONTROLLER.get(),
@@ -316,13 +326,50 @@ public class ModCapabilities {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
                 (be, dir) -> be.getInventory());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.EUV_LITHOGRAPHY_CONTROLLER.get(),
-                (be, dir) -> be.getPhotoresistInputHandler());
+                // Full access: input-only, fill routes to photoresist tank
+                (be, dir) -> be.fullAccessHandler);
 
         // ── Gas Centrifuge ────────────────────────────────────────────────────
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.GAS_CENTRIFUGE.get(),
                 (be, dir) -> be.getEnergyStorage());
-        // Fluid input (UF6 in) — fill only
+        // Full access: fill routes to UF6 input, drain routes to enriched/depleted output tanks
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.GAS_CENTRIFUGE.get(),
-                (be, dir) -> be.fluidInputHandler);
+                (be, dir) -> be.fullAccessHandler);
+
+        // ── Fluid Tank ────────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_TANK.get(),
+                (be, dir) -> be.fullAccessHandler);
+
+        // ── Nuclear Reactor Stage 2 ───────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.REACTOR_CONTROLLER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.REACTOR_CONTROLLER.get(),
+                (be, dir) -> be.waterInputHandler);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.REACTOR_CONTROLLER.get(),
+                (be, dir) -> be.getInventory());
+
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.STEAM_TURBINE.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.STEAM_TURBINE.get(),
+                (be, dir) -> be.getSteamInputHandler());
+
+        // ── Cooling Tower ──────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.COOLING_TOWER_CONTROLLER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        // fill() → steam input tank, drain() → water output tank
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.COOLING_TOWER_CONTROLLER.get(),
+                (be, dir) -> be.fullAccessHandler);
+
+        // ── Copper Wire ────────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.COPPER_WIRE.get(),
+                (be, dir) -> be.getEnergyStorage());
+
+        // ── Trash Can ──────────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.TRASH_CAN.get(),
+                (be, dir) -> be.itemHandler);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.TRASH_CAN.get(),
+                (be, dir) -> be.fluidHandler);
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.TRASH_CAN.get(),
+                (be, dir) -> be.energyHandler);
     }
 }

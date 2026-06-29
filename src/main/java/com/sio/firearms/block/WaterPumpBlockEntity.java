@@ -39,6 +39,20 @@ public class WaterPumpBlockEntity extends EnergyStorageBlock implements MenuProv
         protected void onContentsChanged() { setChanged(); }
     };
 
+    // Drain-only: water output only, no fill accepted
+    public final IFluidHandler drainOnlyHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 1; }
+        @Override public FluidStack getFluidInTank(int t) { return waterTank.getFluidInTank(0); }
+        @Override public int getTankCapacity(int t) { return waterTank.getTankCapacity(0); }
+        @Override public boolean isFluidValid(int t, FluidStack s) { return false; }
+        @Override public int fill(FluidStack r, FluidAction a) { return 0; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) { return waterTank.drain(resource, a); }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) { return waterTank.drain(maxDrain, a); }
+    };
+
+    // Output-only machine; fullAccessHandler delegates entirely to drainOnlyHandler
+    public final IFluidHandler fullAccessHandler = drainOnlyHandler;
+
     private final ContainerData data = new ContainerData() {
         @Override
         public int get(int i) {

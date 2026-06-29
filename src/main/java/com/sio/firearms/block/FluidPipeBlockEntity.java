@@ -29,6 +29,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
 
     private final FluidTank tank = new FluidTank(CAPACITY);
     private ResourceLocation lockedFluid = null; // null = accepts any fluid; set on first fill, cleared on empty
+    private ResourceLocation filterFluid = null; // null = no filter; set by wrench+fluid-bucket interaction
 
     public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FLUID_PIPE.get(), pos, state);
@@ -36,6 +37,8 @@ public class FluidPipeBlockEntity extends BlockEntity {
 
     public FluidTank getFluidTank() { return tank; }
     public ResourceLocation getLockedFluid() { return lockedFluid; }
+    public ResourceLocation getFilterFluid() { return filterFluid; }
+    public void setFilterFluid(ResourceLocation filter) { this.filterFluid = filter; }
 
     private int tickCount = 0;
 
@@ -80,6 +83,13 @@ public class FluidPipeBlockEntity extends BlockEntity {
                 if (shouldLog) {
                     LOGGER.info("Pipe@{} PULL {}: SKIP — locked to {} but source offers {}",
                             worldPosition.toShortString(), dir, lockedFluid, incomingKey);
+                }
+                continue;
+            }
+            if (filterFluid != null && !filterFluid.equals(incomingKey)) {
+                if (shouldLog) {
+                    LOGGER.info("Pipe@{} PULL {}: SKIP — filter set to {} but source offers {}",
+                            worldPosition.toShortString(), dir, filterFluid, incomingKey);
                 }
                 continue;
             }
@@ -154,6 +164,12 @@ public class FluidPipeBlockEntity extends BlockEntity {
 
             FluidStack inTank = tank.getFluid();
             if (inTank.isEmpty()) break;
+
+            // Skip push if this pipe has a filter and the carried fluid doesn't match
+            if (filterFluid != null) {
+                ResourceLocation carriedKey = BuiltInRegistries.FLUID.getKey(inTank.getFluid());
+                if (!filterFluid.equals(carriedKey)) continue;
+            }
 
             // copyWithAmount preserves fluid components for correct fill() matching
             FluidStack toOffer = inTank.copyWithAmount(Math.min(inTank.getAmount(), MAX_TRANSFER));
@@ -232,6 +248,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         tag.put("FluidTank", tank.writeToNBT(registries, new CompoundTag()));
         if (lockedFluid != null) tag.putString("LockedFluid", lockedFluid.toString());
+        if (filterFluid != null) tag.putString("FilterFluid", filterFluid.toString());
         return tag;
     }
 
@@ -245,6 +262,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         tag.put("FluidTank", tank.writeToNBT(registries, new CompoundTag()));
         if (lockedFluid != null) tag.putString("LockedFluid", lockedFluid.toString());
+        if (filterFluid != null) tag.putString("FilterFluid", filterFluid.toString());
     }
 
     @Override
@@ -252,5 +270,6 @@ public class FluidPipeBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         if (tag.contains("FluidTank")) tank.readFromNBT(registries, tag.getCompound("FluidTank"));
         if (tag.contains("LockedFluid")) lockedFluid = ResourceLocation.parse(tag.getString("LockedFluid"));
+        if (tag.contains("FilterFluid")) filterFluid = ResourceLocation.parse(tag.getString("FilterFluid"));
     }
 }

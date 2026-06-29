@@ -112,6 +112,25 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         }
     };
 
+    // Full-access: fill→oil input, drain→product outputs. Registered on all sides.
+    public final IFluidHandler fullAccessHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 8; }
+        @Override public FluidStack getFluidInTank(int t) {
+            if (t == 0) return oilTank.getFluidInTank(0);
+            return (t >= 1 && t <= 7) ? outputTanks[t - 1].getFluidInTank(0) : FluidStack.EMPTY;
+        }
+        @Override public int getTankCapacity(int t) {
+            if (t == 0) return oilTank.getTankCapacity(0);
+            return (t >= 1 && t <= 7) ? outputTanks[t - 1].getTankCapacity(0) : 0;
+        }
+        @Override public boolean isFluidValid(int t, FluidStack s) {
+            return t == 0 && oilTank.isFluidValid(0, s);
+        }
+        @Override public int fill(FluidStack resource, FluidAction a) { return oilTank.fill(resource, a); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) { return combinedOutputHandler.drain(resource, a); }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) { return combinedOutputHandler.drain(maxDrain, a); }
+    };
+
     // Slot 0: rubber sheet output   Slot 1: gun oil output
     private final ItemStackHandler inventory = new ItemStackHandler(2) {
         @Override

@@ -1,13 +1,16 @@
 package com.sio.firearms.block;
 
+import com.mojang.serialization.MapCodec;
+import com.sio.firearms.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.Nullable;
 
-public class WireBlock extends Block implements EntityBlock {
+public class WireBlock extends BaseEntityBlock {
 
     // Connection properties (whether wire currently connects that direction)
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -47,6 +50,16 @@ public class WireBlock extends Block implements EntityBlock {
     private static final VoxelShape WEST_SHAPE  = Block.box( 0, 6, 6,  6, 10, 10);
     private static final VoxelShape UP_SHAPE    = Block.box(6, 10, 6, 10, 16, 10);
     private static final VoxelShape DOWN_SHAPE  = Block.box(6,  0, 6, 10,  6, 10);
+
+    @Override
+    public MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(WireBlock::new);
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
 
     public WireBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -144,14 +157,8 @@ public class WireBlock extends Block implements EntityBlock {
         return new WireBlockEntity(pos, state);
     }
 
-    @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if (level.isClientSide()) return null;
-        return (lvl, pos, st, be) -> {
-            if (be instanceof WireBlockEntity wire) {
-                wire.serverTick();
-            }
-        };
+        return level.isClientSide ? null : createTickerHelper(type, ModBlockEntities.COPPER_WIRE.get(), WireBlockEntity::serverTick);
     }
 }

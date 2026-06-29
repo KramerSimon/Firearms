@@ -8,6 +8,7 @@ import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -39,7 +40,7 @@ public class ElectrolysisMachineBlockEntity extends EnergyStorageBlock implement
     public final FluidTank fluidInputTank = new FluidTank(TANK_SIZE) {
         @Override
         public boolean isFluidValid(FluidStack stack) {
-            return fluidKey(stack).equals("minecraft:water");
+            return !stack.isEmpty() && stack.getFluid().isSame(Fluids.WATER);
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -62,6 +63,62 @@ public class ElectrolysisMachineBlockEntity extends EnergyStorageBlock implement
         @Override public int fill(FluidStack r, FluidAction a) { return fluidInputTank.fill(r, a); }
         @Override public FluidStack drain(FluidStack r, FluidAction a) { return FluidStack.EMPTY; }
         @Override public FluidStack drain(int max, FluidAction a) { return FluidStack.EMPTY; }
+    };
+
+    // Drain-only wrapper for both output tanks
+    public final IFluidHandler drainOnlyHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 2; }
+        @Override public FluidStack getFluidInTank(int t) {
+            return t == 0 ? fluidOutputTank1.getFluidInTank(0) : fluidOutputTank2.getFluidInTank(0);
+        }
+        @Override public int getTankCapacity(int t) {
+            return t == 0 ? fluidOutputTank1.getTankCapacity(0) : fluidOutputTank2.getTankCapacity(0);
+        }
+        @Override public boolean isFluidValid(int t, FluidStack s) { return false; }
+        @Override public int fill(FluidStack r, FluidAction a) { return 0; }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) {
+            FluidStack r = fluidOutputTank1.drain(resource, a);
+            if (r.isEmpty()) r = fluidOutputTank2.drain(resource, a);
+            return r;
+        }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) {
+            FluidStack r = fluidOutputTank1.drain(maxDrain, a);
+            if (r.isEmpty()) r = fluidOutputTank2.drain(maxDrain, a);
+            return r;
+        }
+    };
+
+    // Full-access: fill→water input, drain→gas output tanks. Registered on all sides.
+    public final IFluidHandler fullAccessHandler = new IFluidHandler() {
+        @Override public int getTanks() { return 3; }
+        @Override public FluidStack getFluidInTank(int t) {
+            return switch (t) {
+                case 0 -> fluidInputTank.getFluidInTank(0);
+                case 1 -> fluidOutputTank1.getFluidInTank(0);
+                default -> fluidOutputTank2.getFluidInTank(0);
+            };
+        }
+        @Override public int getTankCapacity(int t) {
+            return switch (t) {
+                case 0 -> fluidInputTank.getTankCapacity(0);
+                case 1 -> fluidOutputTank1.getTankCapacity(0);
+                default -> fluidOutputTank2.getTankCapacity(0);
+            };
+        }
+        @Override public boolean isFluidValid(int t, FluidStack s) {
+            return t == 0 && fluidInputTank.isFluidValid(0, s);
+        }
+        @Override public int fill(FluidStack resource, FluidAction a) { return fluidInputTank.fill(resource, a); }
+        @Override public FluidStack drain(FluidStack resource, FluidAction a) {
+            FluidStack r = fluidOutputTank1.drain(resource, a);
+            if (r.isEmpty()) r = fluidOutputTank2.drain(resource, a);
+            return r;
+        }
+        @Override public FluidStack drain(int maxDrain, FluidAction a) {
+            FluidStack r = fluidOutputTank1.drain(maxDrain, a);
+            if (r.isEmpty()) r = fluidOutputTank2.drain(maxDrain, a);
+            return r;
+        }
     };
 
     private int progress = 0;

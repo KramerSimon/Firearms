@@ -39,4 +39,20 @@ public class ModArmorMaterials {
                     0.0f,
                     0.0f
             ));
+
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> HAZMAT =
+            ARMOR_MATERIALS.register("hazmat", () -> new ArmorMaterial(
+                    Map.of(
+                            ArmorItem.Type.HELMET,     4,
+                            ArmorItem.Type.CHESTPLATE, 6,
+                            ArmorItem.Type.LEGGINGS,   5,
+                            ArmorItem.Type.BOOTS,      3
+                    ),
+                    5,
+                    SoundEvents.ARMOR_EQUIP_LEATHER,
+                    () -> Ingredient.of(ModItems.RUBBER_SHEET.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "hazmat"))),
+                    0.5f,
+                    0.0f
+            ));
 }

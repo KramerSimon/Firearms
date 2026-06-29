@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SIS","I I","SIS"],
+  "key": {
+    "S": {"item": "minecraft:stone"},
+    "I": {"item": "minecraft:iron_bars"}
+  },
+  "result": {"id": "firearms:cooling_tower_vent", "count": 4}
+}
