@@ -112,10 +112,11 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CREOSOTE_OIL_BUCKET.get());
                         output.accept(ModItems.COKE_OVEN_BRICK.get());
                         output.accept(ModItems.COKE_OVEN_CONTROLLER.get());
-                        output.accept(ModItems.EBF_BASE.get());
-                        output.accept(ModItems.EBF_WALL.get());
-                        output.accept(ModItems.EBF_TOP.get());
                         output.accept(ModItems.EBF_CONTROLLER.get());
+                        output.accept(ModItems.BLAST_FURNACE_CASING.get());
+                        output.accept(ModItems.MUFFLER_HATCH.get());
+                        output.accept(ModItems.EBF_IMPORT_BUS.get());
+                        output.accept(ModItems.EBF_OUTPUT_BUS.get());
                         output.accept(ModItems.CHEMICAL_MIXER.get());
                         output.accept(ModItems.ACID_BATH.get());
                         output.accept(ModItems.QUARTZ_SAND.get());

@@ -22,6 +22,7 @@ import com.sio.firearms.menu.ElectrolysisMachineMenu;
 import com.sio.firearms.menu.ChemicalMixerMenu;
 import com.sio.firearms.menu.WaterPumpMenu;
 import com.sio.firearms.menu.EBFMenu;
+import com.sio.firearms.menu.EbfBusMenu;
 import com.sio.firearms.menu.CokeOvenMenu;
 import com.sio.firearms.menu.AutoTurretMenu;
 import com.sio.firearms.menu.CoalGeneratorMenu;
@@ -90,6 +91,10 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<EBFMenu>> EBF_MENU =
             MENU_TYPES.register("ebf",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new EBFMenu(windowId, inv)));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<EbfBusMenu>> EBF_BUS_MENU =
+            MENU_TYPES.register("ebf_bus",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new EbfBusMenu(windowId, inv)));
 
     public static final DeferredHolder<MenuType<?>, MenuType<ChemicalMixerMenu>> CHEMICAL_MIXER_MENU =
             MENU_TYPES.register("chemical_mixer",

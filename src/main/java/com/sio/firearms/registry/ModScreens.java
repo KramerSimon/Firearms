@@ -21,6 +21,7 @@ import com.sio.firearms.screen.ElectrolysisMachineScreen;
 import com.sio.firearms.screen.ChemicalMixerScreen;
 import com.sio.firearms.screen.WaterPumpScreen;
 import com.sio.firearms.screen.EBFScreen;
+import com.sio.firearms.screen.EbfBusScreen;
 import com.sio.firearms.screen.CokeOvenScreen;
 import com.sio.firearms.screen.AutoTurretScreen;
 import com.sio.firearms.screen.CoalGeneratorScreen;
@@ -53,6 +54,7 @@ public class ModScreens {
         event.register(ModMenuTypes.AUTO_TURRET_MENU.get(), AutoTurretScreen::new);
         event.register(ModMenuTypes.COKE_OVEN_MENU.get(), CokeOvenScreen::new);
         event.register(ModMenuTypes.EBF_MENU.get(), EBFScreen::new);
+        event.register(ModMenuTypes.EBF_BUS_MENU.get(), EbfBusScreen::new);
         event.register(ModMenuTypes.CHEMICAL_MIXER_MENU.get(), ChemicalMixerScreen::new);
         event.register(ModMenuTypes.ACID_BATH_MENU.get(), AcidBathScreen::new);
         event.register(ModMenuTypes.WATER_PUMP_MENU.get(), WaterPumpScreen::new);

@@ -23,20 +23,17 @@ public class EBFRecipeCategory implements IRecipeCategory<EBFJeiRecipe> {
             RecipeType.create(Firearms.MOD_ID, "ebf", EBFJeiRecipe.class);
 
     // Crop the EBF GUI texture:
-    //   origin (38, 9) captures slot0 (56,17), slot1 (56,44), output (116,30)
-    //   and the arrow area (79,30).
-    //   Crop width=100, height=55 covers all elements (slot1 bottom = 44+18 = 62 - 9 = 53).
+    //   origin (38, 9) captures the input slot (56,17), the arrow, and output (116,30).
+    //   Power-only recipes have a single input, so the second slot row is cropped out.
     private static final int CROP_X = 38;
     private static final int CROP_Y = 9;
     private static final int BG_W   = 100;
-    private static final int BG_H   = 55;
+    private static final int BG_H   = 40;
 
     // JEI slot positions = absolute GUI position - crop origin
-    // slot0: (56-38, 17-9) = (18, 8)
-    // slot1: (56-38, 44-9) = (18, 35)
+    // input:  (56-38, 17-9) = (18, 8)
     // output: (116-38, 30-9) = (78, 21)
     private static final int S0_X = 18, S0_Y = 8;
-    private static final int S1_X = 18, S1_Y = 35;
     private static final int OUT_X = 78, OUT_Y = 21;
 
     // Temperature text is drawn 3px below the background
@@ -63,10 +60,7 @@ public class EBFRecipeCategory implements IRecipeCategory<EBFJeiRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EBFJeiRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, S0_X, S0_Y)
-                .addItemStack(recipe.getInput0());
-
-        builder.addSlot(RecipeIngredientRole.INPUT, S1_X, S1_Y)
-                .addItemStack(recipe.getInput1());
+                .addItemStack(recipe.getInput());
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, OUT_X, OUT_Y)
                 .addItemStack(recipe.getOutput());

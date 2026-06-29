@@ -26,6 +26,7 @@ public class FirearmsJeiPlugin implements IModPlugin {
                 new AssemblyBenchRecipeCategory(gui),
                 new LatheRecipeCategory(gui),
                 new EBFRecipeCategory(gui),
+                new EBFStructureCategory(gui),
                 new ChemicalMixerRecipeCategory(gui),
                 new ElectrolysisRecipeCategory(gui),
                 // Semiconductor fabrication machines
@@ -49,6 +50,7 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipes(AssemblyBenchRecipeCategory.RECIPE_TYPE, AssemblyBenchJeiRecipe.getAllRecipes());
         registration.addRecipes(LatheRecipeCategory.RECIPE_TYPE,         LatheJeiRecipe.getAllRecipes());
         registration.addRecipes(EBFRecipeCategory.RECIPE_TYPE,           EBFJeiRecipe.getAllRecipes());
+        registration.addRecipes(EBFStructureCategory.RECIPE_TYPE,        EBFStructureJeiRecipe.getAllRecipes());
         registration.addRecipes(ChemicalMixerRecipeCategory.RECIPE_TYPE, ChemicalMixerJeiRecipe.getAllRecipes());
         registration.addRecipes(ElectrolysisRecipeCategory.RECIPE_TYPE,  ElectrolysisJeiRecipe.getAllRecipes());
         // Semiconductor fabrication machines
@@ -71,6 +73,9 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ASSEMBLY_BENCH.get()),       AssemblyBenchRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.LATHE.get()),                LatheRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.EBF_CONTROLLER.get()),       EBFRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EBF_CONTROLLER.get()),       EBFStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BLAST_FURNACE_CASING.get()), EBFStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MUFFLER_HATCH.get()),        EBFStructureCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_MIXER.get()),       ChemicalMixerRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELECTROLYSIS_MACHINE.get()), ElectrolysisRecipeCategory.RECIPE_TYPE);
         // Semiconductor fabrication machines

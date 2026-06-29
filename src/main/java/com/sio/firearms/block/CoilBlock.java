@@ -1,9 +1,8 @@
 package com.sio.firearms.block;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
-public class CoilBlock extends Block {
+public class CoilBlock extends EbfPartBlock {
 
     private final int temperature;
 
@@ -16,3 +15,31 @@ public class CoilBlock extends Block {
         return temperature;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

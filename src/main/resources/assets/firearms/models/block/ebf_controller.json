@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "all": "firearms:block/ebf_controller"
+    "front": "firearms:block/ebf_controller_front",
+    "side": "firearms:block/ebf_controller_side",
+    "top": "firearms:block/ebf_controller_top"
   }
 }

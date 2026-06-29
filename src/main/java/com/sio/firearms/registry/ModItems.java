@@ -239,10 +239,11 @@ public class ModItems {
     public static final DeferredItem<BlockItem> NICHROME_COIL = ITEMS.registerSimpleBlockItem(ModBlocks.NICHROME_COIL);
     public static final DeferredItem<BlockItem> TUNGSTEN_COIL = ITEMS.registerSimpleBlockItem(ModBlocks.TUNGSTEN_COIL);
 
-    public static final DeferredItem<BlockItem> EBF_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_BASE);
-    public static final DeferredItem<BlockItem> EBF_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_WALL);
-    public static final DeferredItem<BlockItem> EBF_TOP        = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_TOP);
+    public static final DeferredItem<BlockItem> EBF_IMPORT_BUS = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_IMPORT_BUS);
+    public static final DeferredItem<BlockItem> EBF_OUTPUT_BUS = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_OUTPUT_BUS);
     public static final DeferredItem<BlockItem> EBF_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.EBF_CONTROLLER);
+    public static final DeferredItem<BlockItem> BLAST_FURNACE_CASING = ITEMS.registerSimpleBlockItem(ModBlocks.BLAST_FURNACE_CASING);
+    public static final DeferredItem<BlockItem> MUFFLER_HATCH        = ITEMS.registerSimpleBlockItem(ModBlocks.MUFFLER_HATCH);
 
     public static final DeferredItem<BlockItem> COKE_OVEN_BRICK  = ITEMS.registerSimpleBlockItem(ModBlocks.COKE_OVEN_BRICK);
     public static final DeferredItem<BlockItem> COKE_OVEN_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.COKE_OVEN_CONTROLLER);

@@ -253,10 +253,18 @@ public class ModCapabilities {
                 (blockEntity, direction) -> blockEntity.getInventory()
         );
 
+        // EBF item handling is done through the import / output buses, not the
+        // controller directly — so pipes/hoppers connect to the buses.
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
-                ModBlockEntities.EBF_CONTROLLER.get(),
-                (blockEntity, direction) -> blockEntity.getInventory()
+                ModBlockEntities.EBF_IMPORT_BUS.get(),
+                (blockEntity, direction) -> blockEntity.getBuffer()
+        );
+
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.EBF_OUTPUT_BUS.get(),
+                (blockEntity, direction) -> blockEntity.getBuffer()
         );
 
         event.registerBlockEntity(

@@ -21,6 +21,8 @@ import com.sio.firearms.block.CoilBlock;
 import com.sio.firearms.block.AssemblyBenchBlock;
 import com.sio.firearms.block.ChemicalMixerBlock;
 import com.sio.firearms.block.EBFControllerBlock;
+import com.sio.firearms.block.EbfImportBusBlock;
+import com.sio.firearms.block.EbfOutputBusBlock;
 import com.sio.firearms.block.ElectrolysisMachineBlock;
 import com.sio.firearms.block.ItemPipeBlock;
 import com.sio.firearms.block.UraniumOreBlock;
@@ -194,27 +196,40 @@ public class ModBlocks {
                             .strength(3.5f)
                             .requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<Block> EBF_BASE =
-            BLOCKS.register("ebf_base",
-                    () -> new Block(BlockBehaviour.Properties.of()
+    // Item input hatch — feeds material/additive into the formed furnace.
+    public static final DeferredBlock<Block> EBF_IMPORT_BUS =
+            BLOCKS.register("ebf_import_bus",
+                    () -> new EbfImportBusBlock(BlockBehaviour.Properties.of()
                             .strength(4.0f)
                             .requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<Block> EBF_WALL =
-            BLOCKS.register("ebf_wall",
-                    () -> new Block(BlockBehaviour.Properties.of()
-                            .strength(4.0f)
-                            .requiresCorrectToolForDrops()));
-
-    public static final DeferredBlock<Block> EBF_TOP =
-            BLOCKS.register("ebf_top",
-                    () -> new Block(BlockBehaviour.Properties.of()
+    // Item output hatch — extracts smelted results from the formed furnace.
+    public static final DeferredBlock<Block> EBF_OUTPUT_BUS =
+            BLOCKS.register("ebf_output_bus",
+                    () -> new EbfOutputBusBlock(BlockBehaviour.Properties.of()
                             .strength(4.0f)
                             .requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<Block> EBF_CONTROLLER =
             BLOCKS.register("ebf_controller",
                     () -> new EBFControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()
+                            // Small green status indicators on the controller face.
+                            .lightLevel(state -> 7)));
+
+    // Unified dark-steel blast furnace casing used for the floor, outer walls and roof
+    // of the 5x5x5 Electric Blast Furnace multiblock.
+    public static final DeferredBlock<Block> BLAST_FURNACE_CASING =
+            BLOCKS.register("blast_furnace_casing",
+                    () -> new com.sio.firearms.block.EbfPartBlock(BlockBehaviour.Properties.of()
+                            .strength(4.0f)
+                            .requiresCorrectToolForDrops()));
+
+    // Industrial exhaust / muffler hatch placed at the centre of the roof.
+    public static final DeferredBlock<Block> MUFFLER_HATCH =
+            BLOCKS.register("muffler_hatch",
+                    () -> new com.sio.firearms.block.EbfPartBlock(BlockBehaviour.Properties.of()
                             .strength(4.0f)
                             .requiresCorrectToolForDrops()));
 
@@ -301,23 +316,28 @@ public class ModBlocks {
 
     // ── Coil blocks ──────────────────────────────────────────────────────────
 
+    // Coil light levels rise with tier so the inner chamber glows hotter:
+    // Kanthal (orange) < Nichrome (orange-white) < Tungsten (white-yellow).
     public static final DeferredBlock<CoilBlock> KANTHAL_COIL =
             BLOCKS.register("kanthal_coil",
                     () -> new CoilBlock(800, BlockBehaviour.Properties.of()
                             .strength(4.0f)
-                            .requiresCorrectToolForDrops()));
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> 10)));
 
     public static final DeferredBlock<CoilBlock> NICHROME_COIL =
             BLOCKS.register("nichrome_coil",
                     () -> new CoilBlock(1200, BlockBehaviour.Properties.of()
                             .strength(4.0f)
-                            .requiresCorrectToolForDrops()));
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> 12)));
 
     public static final DeferredBlock<CoilBlock> TUNGSTEN_COIL =
             BLOCKS.register("tungsten_coil",
                     () -> new CoilBlock(2000, BlockBehaviour.Properties.of()
                             .strength(4.0f)
-                            .requiresCorrectToolForDrops()));
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> 15)));
 
     public static final DeferredBlock<LiquidBlock> CREOSOTE_OIL_FLUID =
             BLOCKS.register("creosote_oil_fluid",

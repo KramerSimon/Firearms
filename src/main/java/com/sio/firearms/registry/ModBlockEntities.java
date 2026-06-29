@@ -20,6 +20,8 @@ import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.WaterPumpBlockEntity;
 import com.sio.firearms.block.WeaponRackBlockEntity;
 import com.sio.firearms.block.EBFControllerBlockEntity;
+import com.sio.firearms.block.EbfImportBusBlockEntity;
+import com.sio.firearms.block.EbfOutputBusBlockEntity;
 import com.sio.firearms.block.CokeOvenControllerBlockEntity;
 import com.sio.firearms.block.LandMineBlockEntity;
 import com.sio.firearms.block.AutoTurretBlockEntity;
@@ -122,6 +124,16 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("ebf_controller",
                     () -> BlockEntityType.Builder.of(EBFControllerBlockEntity::new,
                             ModBlocks.EBF_CONTROLLER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EbfImportBusBlockEntity>> EBF_IMPORT_BUS =
+            BLOCK_ENTITIES.register("ebf_import_bus",
+                    () -> BlockEntityType.Builder.of(EbfImportBusBlockEntity::new,
+                            ModBlocks.EBF_IMPORT_BUS.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EbfOutputBusBlockEntity>> EBF_OUTPUT_BUS =
+            BLOCK_ENTITIES.register("ebf_output_bus",
+                    () -> BlockEntityType.Builder.of(EbfOutputBusBlockEntity::new,
+                            ModBlocks.EBF_OUTPUT_BUS.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LandMineBlockEntity>> LAND_MINE =
             BLOCK_ENTITIES.register("land_mine",
