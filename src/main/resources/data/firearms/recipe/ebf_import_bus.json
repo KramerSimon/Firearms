@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SHS",
+    "CDC",
+    "SSS"
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "H": {"item": "minecraft:hopper"},
+    "C": {"item": "firearms:blast_furnace_casing"},
+    "D": {"item": "minecraft:chest"}
+  },
+  "result": {
+    "id": "firearms:ebf_import_bus",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "ICI",
+    " I "
+  ],
+  "key": {
+    "I": {"item": "minecraft:iron_bars"},
+    "C": {"item": "firearms:blast_furnace_casing"}
+  },
+  "result": {
+    "id": "firearms:muffler_hatch",
+    "count": 1
+  }
+}

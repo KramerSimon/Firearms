@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firearms:ebf_import_bus",
+          "functions": [{"function": "minecraft:explosion_decay"}]
+        }
+      ]
+    }
+  ]
+}

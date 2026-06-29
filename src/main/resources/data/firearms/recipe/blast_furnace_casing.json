@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SBS",
+    "SSS"
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "B": {"item": "minecraft:brick"}
+  },
+  "result": {
+    "id": "firearms:blast_furnace_casing",
+    "count": 8
+  }
+}
