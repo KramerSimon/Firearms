@@ -204,11 +204,11 @@ public class FluidPortBlockEntity extends BlockEntity {
                 if (be instanceof RefineryControllerBlockEntity refinery) {
                     target = refinery.getOilInputHandler();
                 } else if (be instanceof ChemicalMixerBlockEntity mixer) {
-                    // Route to the correct input tank based on the fluid being carried
-                    FluidStack carrying = tank.getFluid();
-                    target = mixer.getFluidInputTank2().isFluidValid(carrying)
-                            ? mixer.fluidInputHandler2
-                            : mixer.fluidInputHandler;
+                    // Use combined handler: tank1 is tried first, tank2 is fallback.
+                    // Sulfuric acid → tank1 when empty (saltpeter+SA→nitric_acid recipe),
+                    // falls to tank2 when tank1 has a different fluid (nitroglycerin recipe).
+                    // Naphtha is rejected by tank1 → always goes to tank2.
+                    target = mixer.combinedFluidInputHandler;
                 } else if (be instanceof EuvLithographyControllerBlockEntity euv) {
                     target = euv.getPhotoresistInputHandler();
                 } else if (be instanceof GasCentrifugeBlockEntity gc) {
@@ -637,7 +637,12 @@ public class FluidPortBlockEntity extends BlockEntity {
                 || block == ModBlocks.COOLING_TOWER_VENT.get()
                 || block == ModBlocks.COOLING_TOWER_CONTROLLER.get()
                 || block == ModBlocks.ENERGY_PORT.get()
-                || block == ModBlocks.FLUID_PORT.get();
+                || block == ModBlocks.FLUID_PORT.get()
+                || block == ModBlocks.GARAGE_FLOOR.get()
+                || block == ModBlocks.GARAGE_WALL.get()
+                || block == ModBlocks.GARAGE_ROOF.get()
+                || block == ModBlocks.GARAGE_DOOR.get()
+                || block == ModBlocks.GARAGE_CONTROLLER.get();
     }
 
     @Override

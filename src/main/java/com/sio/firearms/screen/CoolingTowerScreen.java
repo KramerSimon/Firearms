@@ -63,15 +63,15 @@ public class CoolingTowerScreen extends AbstractContainerScreen<CoolingTowerMenu
     @Override
     protected void renderTooltip(GuiGraphics gui, int mx, int my) {
         if (inBar(mx, my, STEAM_X)) {
-            gui.renderTooltip(font,
-                    Component.literal("Steam: " + menu.getSteamAmount() + " / " + menu.getSteamMax() + " mB"),
-                    mx, my);
+            int amt = menu.getSteamAmount();
+            String text = amt == 0 ? "Steam: Empty" : "Steam: " + amt + "/" + menu.getSteamMax() + " mB";
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         if (inBar(mx, my, WATER_X)) {
-            gui.renderTooltip(font,
-                    Component.literal("Water: " + menu.getWaterAmount() + " / " + menu.getWaterMax() + " mB"),
-                    mx, my);
+            int amt = menu.getWaterAmount();
+            String text = amt == 0 ? "Water: Empty" : "Water: " + amt + "/" + menu.getWaterMax() + " mB";
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);

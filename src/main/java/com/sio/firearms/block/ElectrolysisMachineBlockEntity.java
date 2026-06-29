@@ -137,11 +137,14 @@ public class ElectrolysisMachineBlockEntity extends EnergyStorageBlock implement
                 case 7 -> TANK_SIZE;
                 case 8 -> fluidOutputTank2.getFluidAmount();
                 case 9 -> TANK_SIZE;
+                case 10 -> fluidInputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
+                case 11 -> fluidOutputTank1.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank1.getFluid().getFluid());
+                case 12 -> fluidOutputTank2.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank2.getFluid().getFluid());
                 default -> 0;
             };
         }
         @Override public void set(int i, int v) { if (i == 2) progress = v; }
-        @Override public int getCount() { return 10; }
+        @Override public int getCount() { return 13; }
     };
 
     public ElectrolysisMachineBlockEntity(BlockPos pos, BlockState state) {

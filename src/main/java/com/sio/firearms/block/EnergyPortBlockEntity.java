@@ -145,6 +145,7 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
         if (be instanceof CrystalGrowthControllerBlockEntity cgc) return cgc.getEnergyStorage();
         if (be instanceof EuvLithographyControllerBlockEntity euv) return euv.getEnergyStorage();
         if (be instanceof ReactorControllerBlockEntity reactor) return reactor.getEnergyStorage();
+        if (be instanceof VehicleGarageControllerBlockEntity garage) return garage.getEnergyStorage();
         return null;
     }
 
@@ -155,7 +156,8 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || be instanceof EBFControllerBlockEntity
                 || be instanceof CrystalGrowthControllerBlockEntity
                 || be instanceof EuvLithographyControllerBlockEntity
-                || be instanceof ReactorControllerBlockEntity;
+                || be instanceof ReactorControllerBlockEntity
+                || be instanceof VehicleGarageControllerBlockEntity;
     }
 
     private BlockPos findControllerBFS() {
@@ -238,6 +240,11 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || block == ModBlocks.COOLING_TOWER_VENT.get()
                 || block == ModBlocks.COOLING_TOWER_CONTROLLER.get()
                 || block == ModBlocks.ENERGY_PORT.get()
-                || block == ModBlocks.FLUID_PORT.get();
+                || block == ModBlocks.FLUID_PORT.get()
+                || block == ModBlocks.GARAGE_FLOOR.get()
+                || block == ModBlocks.GARAGE_WALL.get()
+                || block == ModBlocks.GARAGE_ROOF.get()
+                || block == ModBlocks.GARAGE_DOOR.get()
+                || block == ModBlocks.GARAGE_CONTROLLER.get();
     }
 }

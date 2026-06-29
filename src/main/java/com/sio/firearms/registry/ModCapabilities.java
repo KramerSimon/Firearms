@@ -27,6 +27,7 @@ import com.sio.firearms.block.FuelGeneratorBlockEntity;
 import com.sio.firearms.block.HeatTreatmentFurnaceBlockEntity;
 import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.LatheBlockEntity;
+import com.sio.firearms.block.VehicleGarageControllerBlockEntity;
 import com.sio.firearms.block.WaterPumpBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import com.sio.firearms.item.BatteryItem;
@@ -371,6 +372,12 @@ public class ModCapabilities {
         // ── Copper Wire ────────────────────────────────────────────────────────
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.COPPER_WIRE.get(),
                 (be, dir) -> be.getEnergyStorage());
+
+        // ── Vehicle Garage ─────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.VEHICLE_GARAGE_CONTROLLER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.VEHICLE_GARAGE_CONTROLLER.get(),
+                (be, dir) -> new net.neoforged.neoforge.items.wrapper.InvWrapper(be.inputSlots));
 
         // ── Trash Can ──────────────────────────────────────────────────────────
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.TRASH_CAN.get(),

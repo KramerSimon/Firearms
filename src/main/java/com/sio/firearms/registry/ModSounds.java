@@ -43,4 +43,20 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> GRENADE_PIN =
             SOUND_EVENTS.register("grenade_pin", () ->
                     SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "grenade_pin")));
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> CHAINSAW_START =
+            SOUND_EVENTS.register("chainsaw_start", () ->
+                    SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "chainsaw_start")));
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> CHAINSAW_RUNNING =
+            SOUND_EVENTS.register("chainsaw_running", () ->
+                    SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "chainsaw_running")));
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> CHAINSAW_STOP =
+            SOUND_EVENTS.register("chainsaw_stop", () ->
+                    SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "chainsaw_stop")));
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> CHAINSAW_EMPTY =
+            SOUND_EVENTS.register("chainsaw_empty", () ->
+                    SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "chainsaw_empty")));
 }

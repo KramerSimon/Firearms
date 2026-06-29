@@ -60,7 +60,17 @@ public class MetalPressJeiRecipe {
                 new MetalPressJeiRecipe(
                         new ItemStack(ModItems.ZIRCONIUM_INGOT.get()),
                         ItemStack.EMPTY,
-                        new ItemStack(ModItems.FUEL_ROD_CLADDING.get(), 2))
+                        new ItemStack(ModItems.FUEL_ROD_CLADDING.get(), 2)),
+                // ── Tank Production Chain & new materials ─────────────────────
+                new MetalPressJeiRecipe(
+                        new ItemStack(ModItems.STEEL_INGOT.get()),
+                        new ItemStack(ModItems.STEEL_INGOT.get()),
+                        new ItemStack(ModItems.STEEL_PLATE.get())),
+                // copper_ingot x2 → 4x bullet_casing
+                new MetalPressJeiRecipe(
+                        new ItemStack(Items.COPPER_INGOT),
+                        new ItemStack(Items.COPPER_INGOT),
+                        new ItemStack(ModItems.BULLET_CASING.get(), 4))
         );
     }
 }

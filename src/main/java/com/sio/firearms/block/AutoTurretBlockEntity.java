@@ -1,5 +1,6 @@
 package com.sio.firearms.block;
 
+import com.sio.firearms.config.FirearmsConfig;
 import com.sio.firearms.energy.EnergyStorageBlock;
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.menu.AutoTurretMenu;
@@ -129,7 +130,8 @@ public class AutoTurretBlockEntity extends EnergyStorageBlock implements MenuPro
     }
 
     private Entity findTarget() {
-        AABB scanBox = new AABB(worldPosition).inflate(SCAN_RANGE);
+        double range = FirearmsConfig.AUTO_TURRET_RANGE.get();
+        AABB scanBox = new AABB(worldPosition).inflate(range);
         List<Mob> hostiles = level.getEntitiesOfClass(Mob.class, scanBox,
                 entity -> entity instanceof Enemy && entity.isAlive());
 

@@ -1,5 +1,6 @@
 package com.sio.firearms.block;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.energy.EnergyStorageBlock;
 import com.sio.firearms.menu.ChemicalMixerMenu;
 import com.sio.firearms.registry.ModBlockEntities;
@@ -17,14 +18,19 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidActionResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.slf4j.Logger;
 
 public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final int CAPACITY     = 30_000;
     public static final int MAX_RECEIVE  = 500;
@@ -60,7 +66,9 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         @Override
         public boolean isFluidValid(FluidStack stack) {
             if (stack.isEmpty()) return false;
-            return fluidKey(stack).equals("firearms:naphtha_still");
+            String key = fluidKey(stack);
+            return key.equals("firearms:naphtha_still")
+                || key.equals("firearms:sulfuric_acid_still");
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -88,13 +96,16 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 case 7 -> TANK_SIZE;
                 case 8 -> fluidInputTank2.getFluidAmount();
                 case 9 -> TANK_SIZE;
+                case 10 -> fluidInputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
+                case 11 -> fluidOutputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank.getFluid().getFluid());
+                case 12 -> fluidInputTank2.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank2.getFluid().getFluid());
                 default -> 0;
             };
         }
         @Override
         public void set(int i, int v) { if (i == 2) progress = v; }
         @Override
-        public int getCount() { return 10; }
+        public int getCount() { return 13; }
     };
 
     public ChemicalMixerBlockEntity(BlockPos pos, BlockState state) {
@@ -224,13 +235,13 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         return stack.getCount() >= qty && itemKey(stack).equals(id);
     }
 
-    private boolean fluidIs(String id, int mb) {
-        return fluidKey(fluidInputTank.getFluid()).equals(id)
+    private boolean fluidIs(Fluid fluid, int mb) {
+        return fluidInputTank.getFluid().getFluid().isSame(fluid)
             && fluidInputTank.getFluidAmount() >= mb;
     }
 
-    private boolean fluid2Is(String id, int mb) {
-        return fluidKey(fluidInputTank2.getFluid()).equals(id)
+    private boolean fluid2Is(Fluid fluid, int mb) {
+        return fluidInputTank2.getFluid().getFluid().isSame(fluid)
             && fluidInputTank2.getFluidAmount() >= mb;
     }
 
@@ -284,23 +295,41 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         ItemStack slotB   = inventory.getStackInSlot(1);
         ItemStack outSlot = inventory.getStackInSlot(4);   // slot 4 = item output
 
+        // N. sugar + nitric_acid 500mB (tank1) + sulfuric_acid 250mB (tank2) → nitroglycerin x2
+        if (itemIs(slotA, "minecraft:sugar", 1)
+                && fluidIs(ModFluids.NITRIC_ACID_STILL.get(), 500)
+                && fluid2Is(ModFluids.SULFURIC_ACID_STILL.get(), 250)
+                && canOutputItem(outSlot, new ItemStack(ModItems.NITROGLYCERIN.get(), 2))) {
+            return new RecipeResult("minecraft:sugar", 1, null, 0, 500, 250,
+                new ItemStack(ModItems.NITROGLYCERIN.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // N. sulfur + saltpeter + water 100–249mB → propellant_powder x8
+        if (itemIs(slotA, "firearms:sulfur", 1) && itemIs(slotB, "firearms:saltpeter", 1)
+                && fluidIs(Fluids.WATER, 100)
+                && fluidInputTank.getFluidAmount() < 250
+                && canOutputItem(outSlot, new ItemStack(ModItems.PROPELLANT_POWDER.get(), 8))) {
+            return new RecipeResult("firearms:sulfur", 1, "firearms:saltpeter", 1, 100, 0,
+                new ItemStack(ModItems.PROPELLANT_POWDER.get(), 8), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
         // 0. sulfur + saltpeter + water 250mB → refined_gunpowder x4 (checked first — more specific than recipe 1)
         if (itemIs(slotA, "firearms:sulfur", 1) && itemIs(slotB, "firearms:saltpeter", 1)
-                && fluidIs("minecraft:water", 250)
+                && fluidIs(Fluids.WATER, 250)
                 && canOutputItem(outSlot, new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4))) {
             return new RecipeResult("firearms:sulfur", 1, "firearms:saltpeter", 1, 250, 0,
                 new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         // 1. sulfur + water 500mB → sulfuric_acid 500mB
-        if (itemIs(slotA, "firearms:sulfur", 1) && fluidIs("minecraft:water", 500)
+        if (itemIs(slotA, "firearms:sulfur", 1) && fluidIs(Fluids.WATER, 500)
                 && fluidOutputTank.getSpace() >= 500) {
             return new RecipeResult("firearms:sulfur", 1, null, 0, 500, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 500), PROCESS_TIME);
         }
 
         // 2. rubber_sheet + fuel 500mB → synthetic_rubber 500mB
-        if (itemIs(slotA, "firearms:rubber_sheet", 1) && fluidIs("firearms:fuel_still", 500)
+        if (itemIs(slotA, "firearms:rubber_sheet", 1) && fluidIs(ModFluids.FUEL_STILL.get(), 500)
                 && fluidOutputTank.getSpace() >= 500) {
             return new RecipeResult("firearms:rubber_sheet", 1, null, 0, 500, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.SYNTHETIC_RUBBER_STILL.get(), 500), PROCESS_TIME);
@@ -315,28 +344,28 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // 4. saltpeter + sulfuric_acid 250mB → nitric_acid 250mB
-        if (itemIs(slotA, "firearms:saltpeter", 1) && fluidIs("firearms:sulfuric_acid_still", 250)
+        if (itemIs(slotA, "firearms:saltpeter", 1) && fluidIs(ModFluids.SULFURIC_ACID_STILL.get(), 250)
                 && fluidOutputTank.getSpace() >= 250) {
             return new RecipeResult("firearms:saltpeter", 1, null, 0, 250, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 250), PROCESS_TIME);
         }
 
         // 5. paper + nitric_acid 250mB → nitrocellulose×1
-        if (itemIs(slotA, "minecraft:paper", 1) && fluidIs("firearms:nitric_acid_still", 250)
+        if (itemIs(slotA, "minecraft:paper", 1) && fluidIs(ModFluids.NITRIC_ACID_STILL.get(), 250)
                 && canOutputItem(outSlot, new ItemStack(ModItems.NITROCELLULOSE.get(), 1))) {
             return new RecipeResult("minecraft:paper", 1, null, 0, 250, 0,
                 new ItemStack(ModItems.NITROCELLULOSE.get(), 1), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         // 6. chlorine_gas_bucket + fuel 500mB → pvc_resin 500mB
-        if (itemIs(slotA, "firearms:chlorine_gas_bucket", 1) && fluidIs("firearms:fuel_still", 500)
+        if (itemIs(slotA, "firearms:chlorine_gas_bucket", 1) && fluidIs(ModFluids.FUEL_STILL.get(), 500)
                 && fluidOutputTank.getSpace() >= 500) {
             return new RecipeResult("firearms:chlorine_gas_bucket", 1, null, 0, 500, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.PVC_RESIN_STILL.get(), 500), PROCESS_TIME);
         }
 
         // 7. bauxite_dust + sulfuric_acid 500mB → aluminum_ingot x2
-        if (itemIs(slotA, "firearms:bauxite_dust", 1) && fluidIs("firearms:sulfuric_acid_still", 500)
+        if (itemIs(slotA, "firearms:bauxite_dust", 1) && fluidIs(ModFluids.SULFURIC_ACID_STILL.get(), 500)
                 && canOutputItem(outSlot, new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2))) {
             return new RecipeResult("firearms:bauxite_dust", 1, null, 0, 500, 0,
                 new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
@@ -351,14 +380,14 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // 9. naphtha 500mB (tank2) + nitric_acid 500mB (tank1) → photoresist 1000mB
-        if (fluid2Is("firearms:naphtha_still", 500) && fluidIs("firearms:nitric_acid_still", 500)
+        if (fluid2Is(ModFluids.NAPHTHA_STILL.get(), 500) && fluidIs(ModFluids.NITRIC_ACID_STILL.get(), 500)
                 && fluidOutputTank.getSpace() >= 1000) {
             return new RecipeResult(null, 0, null, 0, 500, 500,
                 ItemStack.EMPTY, new FluidStack(ModFluids.PHOTORESIST_STILL.get(), 1000), 300);
         }
 
         // 10. synthetic_rubber + nitric_acid 500mB → photoresist 1000mB
-        if (itemIs(slotA, "firearms:synthetic_rubber", 1) && fluidIs("firearms:nitric_acid_still", 500)
+        if (itemIs(slotA, "firearms:synthetic_rubber", 1) && fluidIs(ModFluids.NITRIC_ACID_STILL.get(), 500)
                 && fluidOutputTank.getSpace() >= 1000) {
             return new RecipeResult("firearms:synthetic_rubber", 1, null, 0, 500, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.PHOTORESIST_STILL.get(), 1000), 300);
@@ -374,7 +403,7 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // 12. enriched_uf6 500mB → uranium_dioxide_powder x4
-        if (fluidIs("firearms:enriched_uf6_still", 500)
+        if (fluidIs(ModFluids.ENRICHED_UF6_STILL.get(), 500)
                 && canOutputItem(outSlot, new ItemStack(ModItems.URANIUM_DIOXIDE_POWDER.get(), 4))) {
             return new RecipeResult(null, 0, null, 0, 500, 0,
                 new ItemStack(ModItems.URANIUM_DIOXIDE_POWDER.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
@@ -389,10 +418,18 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // 14. water 1000mB → heavy_water 500mB
-        if (fluidIs("minecraft:water", 1000) && fluidOutputTank.getSpace() >= 500
+        if (fluidIs(Fluids.WATER, 1000) && fluidOutputTank.getSpace() >= 500
                 && slotA.isEmpty() && slotB.isEmpty()) {
             return new RecipeResult(null, 0, null, 0, 1000, 0,
                 ItemStack.EMPTY, new FluidStack(ModFluids.HEAVY_WATER_STILL.get(), 500), 400);
+        }
+
+        // 15. nitrocellulose + nitroglycerin + water 250mB → cordite×4
+        if (itemIs(slotA, "firearms:nitrocellulose", 1) && itemIs(slotB, "firearms:nitroglycerin", 1)
+                && fluidIs(Fluids.WATER, 250)
+                && canOutputItem(outSlot, new ItemStack(ModItems.CORDITE.get(), 4))) {
+            return new RecipeResult("firearms:nitrocellulose", 1, "firearms:nitroglycerin", 1, 250, 0,
+                new ItemStack(ModItems.CORDITE.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         return null;
@@ -422,6 +459,13 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
 
         if (recipe != null && energy.getEnergyStored() >= FE_PER_TICK) {
             currentProcessTime = recipe.processTime();
+            if (progress == 0) {
+                LOGGER.info("[ChemicalMixer]@{} recipe started: tank1={} {}mB, tank2={} {}mB, slotA={} slotB={}",
+                        worldPosition.toShortString(),
+                        fluidKey(fluidInputTank.getFluid()), fluidInputTank.getFluidAmount(),
+                        fluidKey(fluidInputTank2.getFluid()), fluidInputTank2.getFluidAmount(),
+                        itemKey(inventory.getStackInSlot(0)), itemKey(inventory.getStackInSlot(1)));
+            }
             energy.extractEnergy(FE_PER_TICK, false);
             progress++;
             changed = true;

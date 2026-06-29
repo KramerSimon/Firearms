@@ -23,7 +23,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.damagesource.DamageSource;
 
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +35,8 @@ public class BulletEntity extends Projectile implements ItemSupplier {
     private int life = 0;
     private int piercingCount = 0;
     private boolean armorPiercing = false;
+    private boolean partialArmorPiercing = false;
+    private boolean explosive = false;
     private final Set<UUID> playersFlybyPlayed = new HashSet<>();
     private final Set<UUID> piercedEntities = new HashSet<>();
     private ItemStack shooterGun = ItemStack.EMPTY;
@@ -58,6 +59,14 @@ public class BulletEntity extends Projectile implements ItemSupplier {
 
     public void setArmorPiercing(boolean ap) {
         this.armorPiercing = ap;
+    }
+
+    public void setPartialArmorPiercing(boolean partial) {
+        this.partialArmorPiercing = partial;
+    }
+
+    public void setExplosive(boolean explosive) {
+        this.explosive = explosive;
     }
 
     public void setShooterGun(ItemStack gun) {
@@ -120,8 +129,19 @@ public class BulletEntity extends Projectile implements ItemSupplier {
         if (!level().isClientSide()) {
             Entity target = result.getEntity();
             Entity owner = getOwner();
-            DamageSource source = armorPiercing ? damageSources().magic() : damageSources().thrown(this, owner);
-            target.hurt(source, damage);
+            if (armorPiercing) {
+                target.hurt(damageSources().magic(), damage);
+            } else if (partialArmorPiercing) {
+                // 30% bypasses armor as magic, 70% is reduced by armor
+                target.hurt(damageSources().magic(), damage * 0.3f);
+                target.hurt(damageSources().thrown(this, owner), damage * 0.7f);
+            } else {
+                target.hurt(damageSources().thrown(this, owner), damage);
+            }
+            if (explosive) {
+                level().explode(null, getX(), getY(), getZ(), 1.0f, false,
+                        net.minecraft.world.level.Level.ExplosionInteraction.NONE);
+            }
 
             if (target instanceof LivingEntity living) {
                 if (living.isDeadOrDying() && !shooterGun.isEmpty()) {

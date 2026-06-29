@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "firearms:block/spent_fuel_storage_base" }
+  }
+}

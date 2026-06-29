@@ -66,9 +66,10 @@ public class AcidBathScreen extends AbstractContainerScreen<AcidBathMenu> {
         }
         // Sulfuric acid bar (27–39, top 14, bottom 66)
         if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Sulfuric Acid: " + menu.getAcidAmount() + " / " + menu.getAcidMax() + " mB"),
-                    mx, my);
+            int amt = menu.getAcidAmount();
+            String text = amt == 0 ? "Sulfuric Acid: Empty"
+                    : "Sulfuric Acid: " + amt + "/" + menu.getAcidMax() + " mB";
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);

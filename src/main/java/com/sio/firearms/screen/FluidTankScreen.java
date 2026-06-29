@@ -3,16 +3,18 @@ package com.sio.firearms.screen;
 import com.sio.firearms.menu.FluidTankMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidTankScreen extends AbstractContainerScreen<FluidTankMenu> {
 
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath("firearms", "textures/gui/fluid_tank.png");
 
-    // Fluid bar bounds (screen-relative, within the 176x166 GUI)
     private static final int BAR_X = 80;
     private static final int BAR_Y = 14;
     private static final int BAR_W = 16;
@@ -22,6 +24,13 @@ public class FluidTankScreen extends AbstractContainerScreen<FluidTankMenu> {
         super(menu, playerInventory, title);
         this.imageWidth  = 176;
         this.imageHeight = 166;
+    }
+
+    private static String fluidName(int fluidId) {
+        if (fluidId <= 0) return null;
+        var fluid = BuiltInRegistries.FLUID.byId(fluidId);
+        if (fluid == null || fluid == Fluids.EMPTY) return null;
+        return new FluidStack(fluid, 1).getHoverName().getString();
     }
 
     @Override
@@ -49,9 +58,15 @@ public class FluidTankScreen extends AbstractContainerScreen<FluidTankMenu> {
         int ax = leftPos + BAR_X;
         int ay = topPos + BAR_Y;
         if (mx >= ax && mx < ax + BAR_W && my >= ay && my < ay + BAR_H) {
-            gui.renderTooltip(font,
-                    Component.literal(menu.getFluidAmount() + " / " + menu.getCapacity() + " mB"),
-                    mx, my);
+            String text;
+            int amount = menu.getFluidAmount();
+            if (amount == 0) {
+                text = "Empty";
+            } else {
+                String name = fluidName(menu.getFluidTypeId());
+                text = (name != null ? name + ": " : "") + amount + "/" + menu.getCapacity() + " mB";
+            }
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);

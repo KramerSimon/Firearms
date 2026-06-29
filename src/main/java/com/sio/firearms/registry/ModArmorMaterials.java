@@ -55,4 +55,26 @@ public class ModArmorMaterials {
                     0.5f,
                     0.0f
             ));
+
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> GAS_MASK =
+            ARMOR_MATERIALS.register("gas_mask", () -> new ArmorMaterial(
+                    Map.of(ArmorItem.Type.HELMET, 3),
+                    8,
+                    SoundEvents.ARMOR_EQUIP_CHAIN,
+                    () -> Ingredient.of(ModItems.RUBBER_SHEET.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "gas_mask"))),
+                    1.0f,
+                    0.0f
+            ));
+
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> RUBBER_BOOTS =
+            ARMOR_MATERIALS.register("rubber_boots", () -> new ArmorMaterial(
+                    Map.of(ArmorItem.Type.BOOTS, 3),
+                    5,
+                    SoundEvents.ARMOR_EQUIP_LEATHER,
+                    () -> Ingredient.of(ModItems.RUBBER_SHEET.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "rubber_boots"))),
+                    0.0f,
+                    0.0f
+            ));
 }

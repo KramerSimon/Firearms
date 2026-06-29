@@ -1,5 +1,6 @@
 package com.sio.firearms.effect;
 
+import com.sio.firearms.config.FirearmsConfig;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,7 +18,8 @@ public class BleedingEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        float damage = 0.5f * (amplifier + 1);
+        if (!FirearmsConfig.BLEEDING_ENABLED.get()) return true;
+        float damage = (float) FirearmsConfig.BLEEDING_DAMAGE.get().doubleValue() * (amplifier + 1);
         entity.hurt(entity.damageSources().magic(), damage);
         return true;
     }

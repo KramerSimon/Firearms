@@ -39,6 +39,7 @@ import com.sio.firearms.block.FluidTankBlockEntity;
 import com.sio.firearms.block.ReactorControllerBlockEntity;
 import com.sio.firearms.block.CoolingTowerControllerBlockEntity;
 import com.sio.firearms.block.SteamTurbineBlockEntity;
+import com.sio.firearms.block.VehicleGarageControllerBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -242,9 +243,21 @@ public class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(CoolingTowerControllerBlockEntity::new,
                             ModBlocks.COOLING_TOWER_CONTROLLER.get()).build(null));
 
+    // ── Vehicle Garage ────────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VehicleGarageControllerBlockEntity>> VEHICLE_GARAGE_CONTROLLER =
+            BLOCK_ENTITIES.register("vehicle_garage_controller",
+                    () -> BlockEntityType.Builder.of(VehicleGarageControllerBlockEntity::new,
+                            ModBlocks.GARAGE_CONTROLLER.get()).build(null));
+
     // ── Utility ───────────────────────────────────────────────────────────────
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.TrashCanBlockEntity>> TRASH_CAN =
             BLOCK_ENTITIES.register("trash_can",
                     () -> BlockEntityType.Builder.of(com.sio.firearms.block.TrashCanBlockEntity::new,
                             ModBlocks.TRASH_CAN.get()).build(null));
+
+    // ── Spent Fuel Storage ────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.SpentFuelStorageBlockEntity>> SPENT_FUEL_STORAGE =
+            BLOCK_ENTITIES.register("spent_fuel_storage",
+                    () -> BlockEntityType.Builder.of(com.sio.firearms.block.SpentFuelStorageBlockEntity::new,
+                            ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER.get()).build(null));
 }

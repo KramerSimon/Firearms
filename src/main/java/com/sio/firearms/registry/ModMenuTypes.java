@@ -17,8 +17,10 @@ import com.sio.firearms.menu.MetallizationChamberMenu;
 import com.sio.firearms.menu.WaferTesterMenu;
 import com.sio.firearms.menu.DicingSawMenu;
 import com.sio.firearms.menu.ChipPackagingMachineMenu;
+import com.sio.firearms.menu.AmmoBoxMenu;
 import com.sio.firearms.menu.AssemblyBenchMenu;
 import com.sio.firearms.menu.ElectrolysisMachineMenu;
+import com.sio.firearms.menu.GunCaseMenu;
 import com.sio.firearms.menu.ChemicalMixerMenu;
 import com.sio.firearms.menu.WaterPumpMenu;
 import com.sio.firearms.menu.EBFMenu;
@@ -32,7 +34,9 @@ import com.sio.firearms.menu.RefineryMenu;
 import com.sio.firearms.menu.HeatTreatmentFurnaceMenu;
 import com.sio.firearms.menu.LatheMenu;
 import com.sio.firearms.menu.GunModificationTableMenu;
+import com.sio.firearms.menu.VehicleGarageMenu;
 import com.sio.firearms.menu.MetalPressMenu;
+import com.sio.firearms.menu.SpentFuelStorageMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -169,8 +173,29 @@ public class ModMenuTypes {
             MENU_TYPES.register("cooling_tower_controller",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new CoolingTowerMenu(windowId, inv)));
 
+    // ── Vehicle Garage ────────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<VehicleGarageMenu>> VEHICLE_GARAGE_MENU =
+            MENU_TYPES.register("vehicle_garage_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new VehicleGarageMenu(windowId, inv)));
+
     // ── Utility ───────────────────────────────────────────────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.TrashCanMenu>> TRASH_CAN_MENU =
             MENU_TYPES.register("trash_can",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new com.sio.firearms.menu.TrashCanMenu(windowId, inv)));
+
+    // ── Item containers ───────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<AmmoBoxMenu>> AMMO_BOX_MENU =
+            MENU_TYPES.register("ammo_box",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) ->
+                            new AmmoBoxMenu(windowId, inv, data.readEnum(net.minecraft.world.InteractionHand.class))));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<GunCaseMenu>> GUN_CASE_MENU =
+            MENU_TYPES.register("gun_case",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) ->
+                            new GunCaseMenu(windowId, inv, data.readEnum(net.minecraft.world.InteractionHand.class))));
+
+    // ── Spent Fuel Storage ────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<SpentFuelStorageMenu>> SPENT_FUEL_STORAGE_MENU =
+            MENU_TYPES.register("spent_fuel_storage",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new SpentFuelStorageMenu(windowId, inv)));
 }

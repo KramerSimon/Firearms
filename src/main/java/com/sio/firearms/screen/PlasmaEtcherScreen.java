@@ -59,9 +59,10 @@ public class PlasmaEtcherScreen extends AbstractContainerScreen<PlasmaEtcherMenu
             return;
         }
         if (mx >= leftPos + 27 && mx < leftPos + 39 && my >= topPos + 14 && my <= topPos + 66) {
-            gui.renderTooltip(font,
-                    Component.literal("Chlorine Gas: " + menu.getFluidAmount() + " / " + menu.getFluidMax() + " mB"),
-                    mx, my);
+            int amt = menu.getFluidAmount();
+            String text = amt == 0 ? "Chlorine Gas: Empty"
+                    : "Chlorine Gas: " + amt + "/" + menu.getFluidMax() + " mB";
+            gui.renderTooltip(font, Component.literal(text), mx, my);
             return;
         }
         super.renderTooltip(gui, mx, my);
