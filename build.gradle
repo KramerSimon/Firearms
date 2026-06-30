@@ -28,6 +28,7 @@ sourceSets.main.resources {
 
 repositories {
     maven { url "https://maven.blamejared.com" }
+    maven { url "https://www.cursemaven.com" }
 }
 
 base {
@@ -120,6 +121,9 @@ configurations {
 dependencies {
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:19.21.0.247"
     localRuntime "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
+
+    // FTB Quests — optional, no hard dependency; quest data files are used only when the mod is present
+    localRuntime "curse.maven:ftb-quests-forge-289412:7429016"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

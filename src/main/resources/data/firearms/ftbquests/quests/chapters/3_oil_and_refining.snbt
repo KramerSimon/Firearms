@@ -1,0 +1,107 @@
+{
+	id: "0000000000000003",
+	group: "",
+	order_index: 2,
+	filename: "3_oil_and_refining",
+	title: "Oil & Refining",
+	icon: "firearms:oil_derrick_controller",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Strike Oil",
+			subtitle: "Black gold awaits underground",
+			description: [
+				"Oil can be found underground as fluid-filled deposits.",
+				"Use a Fluid Tank and a bucket to collect crude oil.",
+				"Tip: search for large caverns deep underground."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "0000000000000301",
+			tasks: [
+				{
+					id: "0000000000001301",
+					type: "item",
+					item: "firearms:oil_bucket",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002301",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Build an Oil Derrick",
+			subtitle: "Automated oil extraction",
+			description: [
+				"The Oil Derrick is a multiblock structure that pumps oil automatically.",
+				"Build it: place the Derrick Base, stack Pillars, then place the Controller on top.",
+				"Connect power and a Fluid Tank to collect the output."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000301"],
+			id: "0000000000000302",
+			tasks: [
+				{
+					id: "0000000000001302",
+					type: "item",
+					item: "firearms:oil_derrick_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002302",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build the Refinery",
+			subtitle: "Turn crude oil into fuel",
+			description: [
+				"The Refinery is a multiblock that cracks crude oil into useful products:",
+				"gasoline, kerosene, diesel, and more.",
+				"Build it from Refinery Base, Refinery Walls, Refinery Top, and a Controller.",
+				"Outputs are used in the Fuel Generator and incendiary weapons."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000302"],
+			id: "0000000000000303",
+			tasks: [
+				{
+					id: "0000000000001303",
+					type: "item",
+					item: "firearms:refinery_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002303",
+					type: "item",
+					item: "firearms:refined_gunpowder",
+					count: 8
+				}
+			]
+		}
+	],
+	quest_links: []
+}
