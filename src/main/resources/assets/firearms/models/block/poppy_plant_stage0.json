@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "firearms:block/poppy_plant_stage0"
+  }
+}

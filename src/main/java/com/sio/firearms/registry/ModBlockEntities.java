@@ -15,6 +15,7 @@ import com.sio.firearms.block.DicingSawBlockEntity;
 import com.sio.firearms.block.ChipPackagingMachineBlockEntity;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
 import com.sio.firearms.block.ChemicalMixerBlockEntity;
+import com.sio.firearms.block.ChemicalMixerControllerBlockEntity;
 import com.sio.firearms.block.ElectrolysisMachineBlockEntity;
 import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.WaterPumpBlockEntity;
@@ -145,6 +146,11 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("chemical_mixer",
                     () -> BlockEntityType.Builder.of(ChemicalMixerBlockEntity::new,
                             ModBlocks.CHEMICAL_MIXER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChemicalMixerControllerBlockEntity>> CHEMICAL_MIXER_CONTROLLER =
+            BLOCK_ENTITIES.register("chemical_mixer_controller",
+                    () -> BlockEntityType.Builder.of(ChemicalMixerControllerBlockEntity::new,
+                            ModBlocks.CHEMICAL_MIXER_CONTROLLER.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AcidBathBlockEntity>> ACID_BATH =
             BLOCK_ENTITIES.register("acid_bath",

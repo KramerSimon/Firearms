@@ -29,6 +29,10 @@
     "firearms:euv_lens_housing",
     "firearms:euv_mirror_array",
     "firearms:euv_emitter_housing",
-    "firearms:euv_lithography_controller"
+    "firearms:euv_lithography_controller",
+    "firearms:titanium_ore",
+    "firearms:iridium_ore",
+    "firearms:osmium_ore",
+    "firearms:iridium_coil"
   ]
 }

@@ -146,6 +146,7 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
         if (be instanceof EuvLithographyControllerBlockEntity euv) return euv.getEnergyStorage();
         if (be instanceof ReactorControllerBlockEntity reactor) return reactor.getEnergyStorage();
         if (be instanceof VehicleGarageControllerBlockEntity garage) return garage.getEnergyStorage();
+        if (be instanceof ChemicalMixerControllerBlockEntity ctrl) return ctrl.getEnergyStorage();
         return null;
     }
 
@@ -157,7 +158,8 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || be instanceof CrystalGrowthControllerBlockEntity
                 || be instanceof EuvLithographyControllerBlockEntity
                 || be instanceof ReactorControllerBlockEntity
-                || be instanceof VehicleGarageControllerBlockEntity;
+                || be instanceof VehicleGarageControllerBlockEntity
+                || be instanceof ChemicalMixerControllerBlockEntity;
     }
 
     private BlockPos findControllerBFS() {
@@ -245,6 +247,9 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || block == ModBlocks.GARAGE_WALL.get()
                 || block == ModBlocks.GARAGE_ROOF.get()
                 || block == ModBlocks.GARAGE_DOOR.get()
-                || block == ModBlocks.GARAGE_CONTROLLER.get();
+                || block == ModBlocks.GARAGE_CONTROLLER.get()
+                || block == ModBlocks.CHEMICAL_MIXER_BASE.get()
+                || block == ModBlocks.CHEMICAL_MIXER_WALL.get()
+                || block == ModBlocks.CHEMICAL_MIXER_CONTROLLER.get();
     }
 }

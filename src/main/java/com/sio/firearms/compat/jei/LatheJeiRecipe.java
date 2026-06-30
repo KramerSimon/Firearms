@@ -71,7 +71,17 @@ public class LatheJeiRecipe {
             new LatheJeiRecipe(
                 new ItemStack(ModItems.TUNGSTEN_CARBIDE.get()),
                 new ItemStack(ModItems.STEEL_ROD.get()),
-                new ItemStack(ModItems.TANK_CANNON.get()))
+                new ItemStack(ModItems.TANK_CANNON.get())),
+            // pvc_pellets → pipe_fitting x2
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.PVC_PELLETS.get()),
+                ItemStack.EMPTY,
+                new ItemStack(ModItems.PIPE_FITTING.get(), 2)),
+            // iridium_alloy → iridium_wire x4
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.IRIDIUM_ALLOY.get()),
+                ItemStack.EMPTY,
+                new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4))
         );
     }
 }

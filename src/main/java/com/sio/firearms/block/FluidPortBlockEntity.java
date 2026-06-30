@@ -131,6 +131,26 @@ public class FluidPortBlockEntity extends BlockEntity {
         setChanged();
     }
 
+    public void setTargetFluid(String key) {
+        this.targetFluid = key;
+        setChanged();
+    }
+
+    public void setMode(Mode newMode) {
+        this.mode = newMode;
+        setChanged();
+    }
+
+    /** Returns the FLUID_CYCLE key for the given fluid, or "any" if not found. */
+    public String findCycleKeyForFluid(Fluid fluid) {
+        if (fluid == null) return "any";
+        for (String key : FLUID_CYCLE) {
+            Fluid f = getFluidByName(key);
+            if (f != null && f.isSame(fluid)) return key;
+        }
+        return "any";
+    }
+
     public IFluidHandler getExposedHandler() {
         return mode == Mode.INPUT ? fillOnlyHandler : drainOnlyHandler;
     }
@@ -204,11 +224,9 @@ public class FluidPortBlockEntity extends BlockEntity {
                 if (be instanceof RefineryControllerBlockEntity refinery) {
                     target = refinery.getOilInputHandler();
                 } else if (be instanceof ChemicalMixerBlockEntity mixer) {
-                    // Use combined handler: tank1 is tried first, tank2 is fallback.
-                    // Sulfuric acid → tank1 when empty (saltpeter+SA→nitric_acid recipe),
-                    // falls to tank2 when tank1 has a different fluid (nitroglycerin recipe).
-                    // Naphtha is rejected by tank1 → always goes to tank2.
                     target = mixer.combinedFluidInputHandler;
+                } else if (be instanceof ChemicalMixerControllerBlockEntity ctrl) {
+                    target = ctrl.combinedFluidInputHandler;
                 } else if (be instanceof EuvLithographyControllerBlockEntity euv) {
                     target = euv.getPhotoresistInputHandler();
                 } else if (be instanceof GasCentrifugeBlockEntity gc) {
@@ -397,6 +415,30 @@ public class FluidPortBlockEntity extends BlockEntity {
                             worldPosition.toShortString());
                 }
 
+            } else if (be instanceof ChemicalMixerControllerBlockEntity ctrl) {
+                FluidTank outputTank = ctrl.getFluidOutputTank();
+                if (!outputTank.isEmpty()) {
+                    boolean fluidMatches = "any".equals(targetFluid);
+                    if (!fluidMatches) {
+                        Fluid expected = getFluidByName(targetFluid);
+                        fluidMatches = expected != null && outputTank.getFluid().getFluid().isSame(expected);
+                    }
+                    if (fluidMatches) {
+                        FluidStack toDrain = outputTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
+                        if (!toDrain.isEmpty()) {
+                            int accepted = tank.fill(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                            if (accepted > 0) {
+                                FluidStack actual = outputTank.drain(
+                                        new FluidStack(toDrain.getFluid(), accepted), IFluidHandler.FluidAction.EXECUTE);
+                                if (!actual.isEmpty()) {
+                                    tank.fill(actual, IFluidHandler.FluidAction.EXECUTE);
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
             } else if (be instanceof CokeOvenControllerBlockEntity coke) {
                 if ("any".equals(targetFluid) || "creosote_oil".equals(targetFluid)) {
                     FluidStack toDrain = coke.creosoteTank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
@@ -573,6 +615,7 @@ public class FluidPortBlockEntity extends BlockEntity {
                 if (be instanceof OilDerrickControllerBlockEntity
                         || be instanceof RefineryControllerBlockEntity
                         || be instanceof ChemicalMixerBlockEntity
+                        || be instanceof ChemicalMixerControllerBlockEntity
                         || be instanceof EuvLithographyControllerBlockEntity
                         || be instanceof GasCentrifugeBlockEntity
                         || be instanceof ElectrolysisMachineBlockEntity
@@ -625,6 +668,9 @@ public class FluidPortBlockEntity extends BlockEntity {
                 || block == ModBlocks.EUV_EMITTER_HOUSING.get()
                 || block == ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()
                 || block == ModBlocks.CHEMICAL_MIXER.get()
+                || block == ModBlocks.CHEMICAL_MIXER_BASE.get()
+                || block == ModBlocks.CHEMICAL_MIXER_WALL.get()
+                || block == ModBlocks.CHEMICAL_MIXER_CONTROLLER.get()
                 || block == ModBlocks.REACTOR_BASE.get()
                 || block == ModBlocks.REACTOR_WALL.get()
                 || block == ModBlocks.REACTOR_TOP.get()

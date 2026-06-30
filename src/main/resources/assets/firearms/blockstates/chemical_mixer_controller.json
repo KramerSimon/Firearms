@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "firearms:block/chemical_mixer_controller" }
+  }
+}

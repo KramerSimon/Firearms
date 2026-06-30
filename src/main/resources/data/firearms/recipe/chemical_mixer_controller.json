@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS ",
+    "SCL",
+    "SS "
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "C": {"item": "firearms:circuit_board"},
+    "L": {"item": "minecraft:lever"}
+  },
+  "result": {"id": "firearms:chemical_mixer_controller", "count": 1}
+}

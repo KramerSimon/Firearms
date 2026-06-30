@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": ["R R","RRR","RRR"],
-  "key": {"R": {"item": "firearms:rubber_sheet"}},
+  "key": {"R": [{"item": "firearms:rubber_sheet"}, {"item": "firearms:plastic_sheet"}]},
   "result": {"id": "firearms:hazmat_chestplate", "count": 1}
 }

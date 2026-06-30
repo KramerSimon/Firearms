@@ -182,7 +182,45 @@ public class ChemicalMixerJeiRecipe {
                 ItemStack.EMPTY,
                 new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 1000),
                 ItemStack.EMPTY,
-                new FluidStack(ModFluids.HEAVY_WATER_STILL.get(), 500))
+                new FluidStack(ModFluids.HEAVY_WATER_STILL.get(), 500)),
+
+            // pvc_resin 1000mB → pvc_pellets x4
+            new ChemicalMixerJeiRecipe(
+                ItemStack.EMPTY, ItemStack.EMPTY,
+                new FluidStack(ModFluids.PVC_RESIN_STILL.get(), 1000),
+                new ItemStack(ModItems.PVC_PELLETS.get(), 4),
+                FluidStack.EMPTY),
+
+            // ── Pharmaceutical ────────────────────────────────────────────────
+            // raw_opium + water 250mB → refined_opium
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.RAW_OPIUM.get()),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 250),
+                new ItemStack(ModItems.REFINED_OPIUM.get()),
+                FluidStack.EMPTY),
+
+            // refined_opium + sulfuric_acid 100mB → 2x morphine
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.REFINED_OPIUM.get()),
+                new FluidStack(ModFluids.SULFURIC_ACID_STILL.get(), 100),
+                new ItemStack(ModItems.MORPHINE.get(), 2),
+                FluidStack.EMPTY),
+
+            // sugar + glass_bottle + nitric_acid 100mB → adrenaline
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(net.minecraft.world.item.Items.SUGAR),
+                new ItemStack(net.minecraft.world.item.Items.GLASS_BOTTLE),
+                new FluidStack(ModFluids.NITRIC_ACID_STILL.get(), 100),
+                new ItemStack(ModItems.ADRENALINE.get()),
+                FluidStack.EMPTY),
+
+            // spider_eye + saltpeter + water 100mB → 2x coagulant
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(net.minecraft.world.item.Items.SPIDER_EYE),
+                new ItemStack(ModItems.SALTPETER.get()),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 100),
+                new ItemStack(ModItems.COAGULANT.get(), 2),
+                FluidStack.EMPTY)
         );
     }
 }

@@ -113,6 +113,18 @@ public class MetalPressMenu extends AbstractContainerMenu {
             return;
         }
 
+        // pvc_pellets + pvc_pellets → plastic_sheet (2 pellets per sheet)
+        if (slotIs(0, "firearms:pvc_pellets") && slotIs(1, "firearms:pvc_pellets")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.PLASTIC_SHEET.get()));
+            return;
+        }
+
+        // glass + iron_nugget → syringe
+        if (slotIs(0, "minecraft:glass") && slotIs(1, "minecraft:iron_nugget")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.SYRINGE.get()));
+            return;
+        }
+
         handler.setStackInSlot(2, ItemStack.EMPTY);
     }
 

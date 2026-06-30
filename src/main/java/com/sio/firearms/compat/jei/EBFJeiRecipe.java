@@ -14,18 +14,26 @@ import java.util.List;
 public class EBFJeiRecipe {
 
     private final ItemStack input;
+    private final ItemStack additiveInput; // slot 1 (may be EMPTY for single-ingredient recipes)
     private final ItemStack output;
     private final int requiredTemp;
 
     public EBFJeiRecipe(ItemStack input, ItemStack output, int requiredTemp) {
-        this.input        = input;
-        this.output       = output;
-        this.requiredTemp = requiredTemp;
+        this(input, ItemStack.EMPTY, output, requiredTemp);
     }
 
-    public ItemStack getInput()  { return input; }
-    public ItemStack getOutput() { return output; }
-    public int getRequiredTemp() { return requiredTemp; }
+    public EBFJeiRecipe(ItemStack input, ItemStack additiveInput, ItemStack output, int requiredTemp) {
+        this.input         = input;
+        this.additiveInput = additiveInput;
+        this.output        = output;
+        this.requiredTemp  = requiredTemp;
+    }
+
+    public ItemStack getInput()         { return input; }
+    public ItemStack getAdditiveInput() { return additiveInput; }
+    public ItemStack getOutput()        { return output; }
+    public int getRequiredTemp()        { return requiredTemp; }
+    public boolean hasAdditive()        { return !additiveInput.isEmpty(); }
 
     public static List<EBFJeiRecipe> getAllRecipes() {
         return List.of(
@@ -49,9 +57,15 @@ public class EBFJeiRecipe {
             // ── @1200°C ───────────────────────────────────────────────────────
             new EBFJeiRecipe(new ItemStack(ModItems.TUNGSTEN_ORE_RAW.get()),
                     new ItemStack(ModItems.TUNGSTEN_INGOT.get()), 1200),
+            new EBFJeiRecipe(new ItemStack(ModItems.TITANIUM_ORE_RAW.get()),
+                    new ItemStack(ModItems.COAL_COKE.get()),
+                    new ItemStack(ModItems.TITANIUM_INGOT.get()), 1200),
             // ── @2000°C ───────────────────────────────────────────────────────
             new EBFJeiRecipe(new ItemStack(ModItems.URANIUM_ORE_RAW.get()),
-                    new ItemStack(ModItems.URANIUM_INGOT.get()), 2000)
+                    new ItemStack(ModItems.URANIUM_INGOT.get()), 2000),
+            new EBFJeiRecipe(new ItemStack(ModItems.IRIDIUM_ORE_RAW.get()),
+                    new ItemStack(ModItems.OSMIUM_ORE_RAW.get()),
+                    new ItemStack(ModItems.IRIDIUM_ALLOY.get()), 2000)
         );
     }
 }

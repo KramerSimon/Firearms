@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS",
+    "TT"
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "T": {"item": "minecraft:terracotta"}
+  },
+  "result": {"id": "firearms:chemical_mixer_base", "count": 4}
+}

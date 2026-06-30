@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firearms:poppy_seeds"
+        }
+      ],
+      "functions": [{"function": "minecraft:explosion_decay"}]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "firearms:raw_opium",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {"type": "minecraft:uniform", "min": 1, "max": 2}
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "firearms:poppy_plant",
+          "properties": {"age": "3"}
+        }
+      ],
+      "functions": [{"function": "minecraft:explosion_decay"}]
+    }
+  ]
+}

@@ -28,6 +28,12 @@ import com.sio.firearms.item.MingunItem;
 import com.sio.firearms.item.AmmoBoxItem;
 import com.sio.firearms.item.GunCaseItem;
 import com.sio.firearms.item.RubberBootsItem;
+import com.sio.firearms.item.AdrenalineItem;
+import com.sio.firearms.item.AdrenalineSyringeItem;
+import com.sio.firearms.item.CoagulantItem;
+import com.sio.firearms.item.CoagulantSyringeItem;
+import com.sio.firearms.item.MorphineItem;
+import com.sio.firearms.item.MorphineSyringeItem;
 import com.sio.firearms.item.RiotShieldItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
@@ -165,6 +171,11 @@ public class ModItems {
     public static final DeferredItem<Item> BORON              = ITEMS.registerSimpleItem("boron");
     public static final DeferredItem<Item> PHOSPHORUS         = ITEMS.registerSimpleItem("phosphorus");
 
+    // ── PVC production chain ─────────────────────────────────────────────────
+    public static final DeferredItem<Item> PVC_PELLETS        = ITEMS.registerSimpleItem("pvc_pellets");
+    public static final DeferredItem<Item> PLASTIC_SHEET      = ITEMS.registerSimpleItem("plastic_sheet");
+    public static final DeferredItem<Item> PIPE_FITTING       = ITEMS.registerSimpleItem("pipe_fitting");
+
     // ── New chemical items ───────────────────────────────────────────────────
     public static final DeferredItem<Item> QUARTZ_SAND        = ITEMS.registerSimpleItem("quartz_sand");
     public static final DeferredItem<Item> ETCHED_STEEL       = ITEMS.registerSimpleItem("etched_steel");
@@ -184,7 +195,10 @@ public class ModItems {
             () -> new BucketItem(ModFluids.SYNTHETIC_RUBBER_STILL.get(),
                     new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
-    public static final DeferredItem<BlockItem> CHEMICAL_MIXER = ITEMS.registerSimpleBlockItem(ModBlocks.CHEMICAL_MIXER);
+    public static final DeferredItem<BlockItem> CHEMICAL_MIXER            = ITEMS.registerSimpleBlockItem(ModBlocks.CHEMICAL_MIXER);
+    public static final DeferredItem<BlockItem> CHEMICAL_MIXER_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.CHEMICAL_MIXER_BASE);
+    public static final DeferredItem<BlockItem> CHEMICAL_MIXER_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.CHEMICAL_MIXER_WALL);
+    public static final DeferredItem<BlockItem> CHEMICAL_MIXER_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.CHEMICAL_MIXER_CONTROLLER);
     public static final DeferredItem<BlockItem> ACID_BATH      = ITEMS.registerSimpleBlockItem(ModBlocks.ACID_BATH);
     public static final DeferredItem<BlockItem> WATER_PUMP     = ITEMS.registerSimpleBlockItem(ModBlocks.WATER_PUMP);
 
@@ -473,6 +487,42 @@ public class ModItems {
     public static final DeferredItem<Item> CORDITE          = ITEMS.registerSimpleItem("cordite");
     public static final DeferredItem<Item> CORDITE_BULLET   = ITEMS.registerSimpleItem("cordite_bullet");
     public static final DeferredItem<Item> EXPLOSIVE_BULLET = ITEMS.registerSimpleItem("explosive_bullet");
+
+    // ── Pharmaceutical system ─────────────────────────────────────────────────
+    public static final DeferredItem<Item> POPPY_SEEDS      = ITEMS.registerSimpleItem("poppy_seeds");
+    public static final DeferredItem<Item> RAW_OPIUM        = ITEMS.registerSimpleItem("raw_opium");
+    public static final DeferredItem<Item> REFINED_OPIUM    = ITEMS.registerSimpleItem("refined_opium");
+    public static final DeferredItem<Item> MORPHINE =
+            ITEMS.register("morphine", () -> new MorphineItem(new Item.Properties().stacksTo(8)));
+    public static final DeferredItem<Item> ADRENALINE =
+            ITEMS.register("adrenaline", () -> new AdrenalineItem(new Item.Properties().stacksTo(8)));
+    public static final DeferredItem<Item> COAGULANT =
+            ITEMS.register("coagulant", () -> new CoagulantItem(new Item.Properties().stacksTo(8)));
+    public static final DeferredItem<Item> SYRINGE         = ITEMS.registerSimpleItem("syringe");
+    public static final DeferredItem<Item> MORPHINE_SYRINGE =
+            ITEMS.register("morphine_syringe",
+                    () -> new MorphineSyringeItem(new Item.Properties().stacksTo(1).durability(5)));
+    public static final DeferredItem<Item> ADRENALINE_SYRINGE =
+            ITEMS.register("adrenaline_syringe",
+                    () -> new AdrenalineSyringeItem(new Item.Properties().stacksTo(1).durability(5)));
+    public static final DeferredItem<Item> COAGULANT_SYRINGE =
+            ITEMS.register("coagulant_syringe",
+                    () -> new CoagulantSyringeItem(new Item.Properties().stacksTo(1).durability(5)));
+
+    // ── Titanium / Iridium / Osmium processing chain ──────────────────────────
+    public static final DeferredItem<Item> TITANIUM_ORE_RAW = ITEMS.registerSimpleItem("titanium_ore_raw");
+    public static final DeferredItem<Item> IRIDIUM_ORE_RAW  = ITEMS.registerSimpleItem("iridium_ore_raw");
+    public static final DeferredItem<Item> OSMIUM_ORE_RAW   = ITEMS.registerSimpleItem("osmium_ore_raw");
+    public static final DeferredItem<Item> TITANIUM_INGOT   = ITEMS.registerSimpleItem("titanium_ingot");
+    public static final DeferredItem<Item> IRIDIUM_INGOT    = ITEMS.registerSimpleItem("iridium_ingot");
+    public static final DeferredItem<Item> OSMIUM_INGOT     = ITEMS.registerSimpleItem("osmium_ingot");
+    public static final DeferredItem<Item> IRIDIUM_ALLOY    = ITEMS.registerSimpleItem("iridium_alloy");
+    public static final DeferredItem<Item> IRIDIUM_WIRE     = ITEMS.registerSimpleItem("iridium_wire");
+
+    public static final DeferredItem<BlockItem> TITANIUM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.TITANIUM_ORE);
+    public static final DeferredItem<BlockItem> IRIDIUM_ORE  = ITEMS.registerSimpleBlockItem(ModBlocks.IRIDIUM_ORE);
+    public static final DeferredItem<BlockItem> OSMIUM_ORE   = ITEMS.registerSimpleBlockItem(ModBlocks.OSMIUM_ORE);
+    public static final DeferredItem<BlockItem> IRIDIUM_COIL = ITEMS.registerSimpleBlockItem(ModBlocks.IRIDIUM_COIL);
 
     // ── Spent Fuel Storage block items ────────────────────────────────────────
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_BASE);

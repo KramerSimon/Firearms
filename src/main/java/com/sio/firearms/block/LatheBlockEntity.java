@@ -145,6 +145,12 @@ public class LatheBlockEntity extends EnergyStorageBlock implements MenuProvider
         if (primary.is(ModItems.TUNGSTEN_CARBIDE.get()) && secondary.isEmpty()) {
             return new ItemStack(ModItems.TUNGSTEN_WIRE.get(), 4);
         }
+        if (primary.is(ModItems.PVC_PELLETS.get()) && secondary.isEmpty()) {
+            return new ItemStack(ModItems.PIPE_FITTING.get(), 2);
+        }
+        if (primary.is(ModItems.IRIDIUM_ALLOY.get()) && secondary.isEmpty()) {
+            return new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4);
+        }
 
         return ItemStack.EMPTY;
     }

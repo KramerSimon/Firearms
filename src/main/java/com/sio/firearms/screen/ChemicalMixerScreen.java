@@ -1,6 +1,8 @@
 package com.sio.firearms.screen;
 
+import com.sio.firearms.block.ChemicalMixerControllerBlockEntity;
 import com.sio.firearms.menu.ChemicalMixerMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -67,7 +69,39 @@ public class ChemicalMixerScreen extends AbstractContainerScreen<ChemicalMixerMe
             gui.fill(leftPos + 154, topPos + 66 - h, leftPos + 166, topPos + 66, 0xFFFF8800);
         }
 
+        if (!menu.isStructureValid()) {
+            gui.drawString(font, "Structure: Invalid", leftPos + 8, topPos + 68, 0xFF5555, false);
+        }
+
+        int recipeIdx = menu.getSelectedRecipeIndex();
+        String recipeName = recipeIdx < 0 ? "Auto"
+                : ChemicalMixerControllerBlockEntity.RECIPE_NAMES[recipeIdx];
+        String recipeLabel = "Recipe: " + recipeName;
+        gui.drawString(font, "<", leftPos + 8,  topPos + 76, 0xCCCCCC, false);
+        gui.drawString(font, ">", leftPos + 162, topPos + 76, 0xCCCCCC, false);
+        int tx = leftPos + 22 + (138 - font.width(recipeLabel)) / 2;
+        gui.drawString(font, recipeLabel, tx, topPos + 76, 0xFFFFFF, false);
+
         renderTooltip(gui, mouseX, mouseY);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            int rx = (int) mouseX - leftPos;
+            int ry = (int) mouseY - topPos;
+            if (ry >= 74 && ry <= 84) {
+                if (rx >= 6 && rx <= 16) {
+                    Minecraft.getInstance().gameMode.handleInventoryButtonClick(menu.containerId, 0);
+                    return true;
+                }
+                if (rx >= 160 && rx <= 174) {
+                    Minecraft.getInstance().gameMode.handleInventoryButtonClick(menu.containerId, 1);
+                    return true;
+                }
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.sio.firearms.menu;
 
+import com.sio.firearms.block.ChemicalMixerControllerBlockEntity;
 import com.sio.firearms.registry.ModMenuTypes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +17,7 @@ public class ChemicalMixerMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public ChemicalMixerMenu(int containerId, Inventory playerInventory) {
-        this(containerId, playerInventory, new ItemStackHandler(5), new SimpleContainerData(13));
+        this(containerId, playerInventory, new ItemStackHandler(5), new SimpleContainerData(15));
     }
 
     public ChemicalMixerMenu(int containerId, Inventory playerInventory,
@@ -62,6 +63,18 @@ public class ChemicalMixerMenu extends AbstractContainerMenu {
     public int getFluidInTypeId()   { return data.get(10); }
     public int getFluidOutTypeId()  { return data.get(11); }
     public int getFluidIn2TypeId()  { return data.get(12); }
+    public boolean isStructureValid()       { return data.get(13) != 0; }
+    public int getSelectedRecipeIndex()     { return data.get(14); }
+
+    @Override
+    public boolean clickMenuButton(Player player, int id) {
+        int current = data.get(14);
+        int count   = ChemicalMixerControllerBlockEntity.RECIPE_COUNT;
+        int next    = (id == 0) ? (current <= -1 ? count - 1 : current - 1)
+                                : (current >= count - 1 ? -1 : current + 1);
+        data.set(14, next);
+        return true;
+    }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {

@@ -198,4 +198,25 @@ public class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<SpentFuelStorageMenu>> SPENT_FUEL_STORAGE_MENU =
             MENU_TYPES.register("spent_fuel_storage",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new SpentFuelStorageMenu(windowId, inv)));
+
+    // ── Fluid routing config screens ──────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.FluidPortConfigMenu>> FLUID_PORT_CONFIG_MENU =
+            MENU_TYPES.register("fluid_port_config",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> {
+                        net.minecraft.core.BlockPos pos = data.readBlockPos();
+                        String target = data.readUtf();
+                        boolean outputMode = data.readBoolean();
+                        return new com.sio.firearms.menu.FluidPortConfigMenu(windowId, inv, pos, target,
+                                outputMode ? com.sio.firearms.block.FluidPortBlockEntity.Mode.OUTPUT
+                                           : com.sio.firearms.block.FluidPortBlockEntity.Mode.INPUT);
+                    }));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.FluidPipeConfigMenu>> FLUID_PIPE_CONFIG_MENU =
+            MENU_TYPES.register("fluid_pipe_config",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> {
+                        net.minecraft.core.BlockPos pos = data.readBlockPos();
+                        boolean hasFilter = data.readBoolean();
+                        net.minecraft.resources.ResourceLocation filter = hasFilter ? data.readResourceLocation() : null;
+                        return new com.sio.firearms.menu.FluidPipeConfigMenu(windowId, inv, pos, filter);
+                    }));
 }

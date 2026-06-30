@@ -16,5 +16,8 @@ public class ModNetwork {
         registrar.playToServer(ShootGunPayload.TYPE, ShootGunPayload.STREAM_CODEC, ShootGunPayload::handle);
         registrar.playToServer(TankInputPayload.TYPE, TankInputPayload.STREAM_CODEC, TankInputPayload::handle);
         registrar.playToServer(TankTurretPayload.TYPE, TankTurretPayload.STREAM_CODEC, TankTurretPayload::handle);
+        registrar.playToServer(SetFluidPortTargetPayload.TYPE, SetFluidPortTargetPayload.STREAM_CODEC, SetFluidPortTargetPayload::handle);
+        registrar.playToServer(SetFluidPortModePayload.TYPE, SetFluidPortModePayload.STREAM_CODEC, SetFluidPortModePayload::handle);
+        registrar.playToServer(SetFluidPipeFilterPayload.TYPE, SetFluidPipeFilterPayload.STREAM_CODEC, SetFluidPipeFilterPayload::handle);
     }
 }

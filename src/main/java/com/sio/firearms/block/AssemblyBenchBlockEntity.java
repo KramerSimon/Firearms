@@ -400,6 +400,13 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                     Map.of("firearms:nichrome_wire", 4));
         }
 
+        // Iridium Coil: iridium_wire×4 → iridium_coil×1
+        // Checked before Tungsten Coil — iridium_wire is a distinct item, no overlap risk.
+        if (hasAtLeast(in, "firearms:iridium_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModBlocks.IRIDIUM_COIL.get().asItem()),
+                    Map.of("firearms:iridium_wire", 4));
+        }
+
         // Tungsten Coil: tungsten_wire×4 → tungsten_coil×1
         if (hasAtLeast(in, "firearms:tungsten_wire", 4)) {
             return new RecipeMatch(new ItemStack(ModBlocks.TUNGSTEN_COIL.get().asItem()),
@@ -466,6 +473,25 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
             return new RecipeMatch(new ItemStack(ModItems.SPENT_FUEL_STORAGE_BASE.get(), 4),
                     Map.of("firearms:lead_ingot", 4, "minecraft:stone", 4,
                             "minecraft:iron_bars", 1));
+        }
+
+        // ── Pharmaceutical syringes ───────────────────────────────────────────
+        // morphine_syringe: syringe×1 + morphine×1
+        if (hasAtLeast(in, "firearms:syringe", 1) && hasAtLeast(in, "firearms:morphine", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.MORPHINE_SYRINGE.get()),
+                    Map.of("firearms:syringe", 1, "firearms:morphine", 1));
+        }
+
+        // adrenaline_syringe: syringe×1 + adrenaline×1
+        if (hasAtLeast(in, "firearms:syringe", 1) && hasAtLeast(in, "firearms:adrenaline", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.ADRENALINE_SYRINGE.get()),
+                    Map.of("firearms:syringe", 1, "firearms:adrenaline", 1));
+        }
+
+        // coagulant_syringe: syringe×1 + coagulant×1
+        if (hasAtLeast(in, "firearms:syringe", 1) && hasAtLeast(in, "firearms:coagulant", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.COAGULANT_SYRINGE.get()),
+                    Map.of("firearms:syringe", 1, "firearms:coagulant", 1));
         }
 
         return null;

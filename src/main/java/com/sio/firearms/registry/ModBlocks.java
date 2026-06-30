@@ -20,6 +20,7 @@ import com.sio.firearms.block.ChipPackagingMachineBlock;
 import com.sio.firearms.block.CoilBlock;
 import com.sio.firearms.block.AssemblyBenchBlock;
 import com.sio.firearms.block.ChemicalMixerBlock;
+import com.sio.firearms.block.ChemicalMixerControllerBlock;
 import com.sio.firearms.block.EBFControllerBlock;
 import com.sio.firearms.block.EbfImportBusBlock;
 import com.sio.firearms.block.EbfOutputBusBlock;
@@ -44,6 +45,7 @@ import com.sio.firearms.block.GunModificationTableBlock;
 import com.sio.firearms.block.MetalPressBlock;
 import com.sio.firearms.block.GarageDoorBlock;
 import com.sio.firearms.block.VehicleGarageControllerBlock;
+import com.sio.firearms.block.PoppyPlantBlock;
 import com.sio.firearms.block.WireBlock;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
@@ -239,6 +241,25 @@ public class ModBlocks {
             BLOCKS.register("chemical_mixer",
                     () -> new ChemicalMixerBlock(BlockBehaviour.Properties.of()
                             .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> CHEMICAL_MIXER_BASE =
+            BLOCKS.register("chemical_mixer_base",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(5.0f)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> CHEMICAL_MIXER_WALL =
+            BLOCKS.register("chemical_mixer_wall",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(5.0f)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> CHEMICAL_MIXER_CONTROLLER =
+            BLOCKS.register("chemical_mixer_controller",
+                    () -> new ChemicalMixerControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(5.0f)
                             .requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<Block> ACID_BATH =
@@ -702,6 +723,47 @@ public class ModBlocks {
                     () -> new com.sio.firearms.block.TrashCanBlock(BlockBehaviour.Properties.of()
                             .strength(2.0f)
                             .requiresCorrectToolForDrops()));
+
+    // ── New ore blocks ────────────────────────────────────────────────────────
+
+    public static final DeferredBlock<Block> TITANIUM_ORE =
+            BLOCKS.register("titanium_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(1, 2), BlockBehaviour.Properties.of()
+                            .strength(3.0f, 3.0f)
+                            .sound(SoundType.STONE)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> IRIDIUM_ORE =
+            BLOCKS.register("iridium_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(2, 5), BlockBehaviour.Properties.of()
+                            .strength(4.0f, 4.0f)
+                            .sound(SoundType.STONE)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> OSMIUM_ORE =
+            BLOCKS.register("osmium_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(2, 5), BlockBehaviour.Properties.of()
+                            .strength(4.0f, 4.0f)
+                            .sound(SoundType.STONE)
+                            .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<CoilBlock> IRIDIUM_COIL =
+            BLOCKS.register("iridium_coil",
+                    () -> new CoilBlock(5000, BlockBehaviour.Properties.of()
+                            .strength(5.0f)
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> 15)));
+
+    // ── Pharmaceutical ────────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> POPPY_PLANT =
+            BLOCKS.register("poppy_plant",
+                    () -> new PoppyPlantBlock(BlockBehaviour.Properties.of()
+                            .noCollission()
+                            .randomTicks()
+                            .instabreak()
+                            .sound(SoundType.CROP)
+                            .noOcclusion()
+                            .pushReaction(PushReaction.DESTROY)));
 
     // ── Spent Fuel Storage ────────────────────────────────────────────────────
     public static final DeferredBlock<Block> SPENT_FUEL_STORAGE_BASE =

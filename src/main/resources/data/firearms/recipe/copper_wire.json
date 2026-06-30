@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CCC"
+    "CCC",
+    "R R"
   ],
   "key": {
-    "C": {
-      "item": "minecraft:copper_ingot"
-    }
+    "C": {"item": "minecraft:copper_ingot"},
+    "R": {"item": "firearms:rubber_sheet"}
   },
   "result": {
     "id": "firearms:copper_wire",

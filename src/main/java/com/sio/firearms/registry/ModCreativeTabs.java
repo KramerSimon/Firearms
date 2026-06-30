@@ -122,6 +122,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.EBF_IMPORT_BUS.get());
                         output.accept(ModItems.EBF_OUTPUT_BUS.get());
                         output.accept(ModItems.CHEMICAL_MIXER.get());
+                        output.accept(ModItems.CHEMICAL_MIXER_BASE.get());
+                        output.accept(ModItems.CHEMICAL_MIXER_WALL.get());
+                        output.accept(ModItems.CHEMICAL_MIXER_CONTROLLER.get());
                         output.accept(ModItems.ACID_BATH.get());
                         output.accept(ModItems.QUARTZ_SAND.get());
                         output.accept(ModItems.ETCHED_STEEL.get());
@@ -170,6 +173,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CHLORINE_GAS_BUCKET.get());
                         output.accept(ModItems.NITRATE_SOLUTION_BUCKET.get());
                         output.accept(ModItems.PVC_RESIN_BUCKET.get());
+                        output.accept(ModItems.PVC_PELLETS.get());
+                        output.accept(ModItems.PLASTIC_SHEET.get());
+                        output.accept(ModItems.PIPE_FITTING.get());
                         output.accept(ModItems.BUTANE_BUCKET.get());
                         output.accept(ModItems.GASOLINE_BUCKET.get());
                         output.accept(ModItems.NAPHTHA_BUCKET.get());
@@ -266,6 +272,30 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CORDITE.get());
                         output.accept(ModItems.CORDITE_BULLET.get());
                         output.accept(ModItems.EXPLOSIVE_BULLET.get());
+                        // ── Pharmaceutical ────────────────────────────────────
+                        output.accept(ModItems.POPPY_SEEDS.get());
+                        output.accept(ModItems.RAW_OPIUM.get());
+                        output.accept(ModItems.REFINED_OPIUM.get());
+                        output.accept(ModItems.MORPHINE.get());
+                        output.accept(ModItems.ADRENALINE.get());
+                        output.accept(ModItems.COAGULANT.get());
+                        output.accept(ModItems.SYRINGE.get());
+                        output.accept(ModItems.MORPHINE_SYRINGE.get());
+                        output.accept(ModItems.ADRENALINE_SYRINGE.get());
+                        output.accept(ModItems.COAGULANT_SYRINGE.get());
+                        // ── Titanium / Iridium / Osmium ───────────────────────
+                        output.accept(ModItems.TITANIUM_ORE.get());
+                        output.accept(ModItems.IRIDIUM_ORE.get());
+                        output.accept(ModItems.OSMIUM_ORE.get());
+                        output.accept(ModItems.TITANIUM_ORE_RAW.get());
+                        output.accept(ModItems.IRIDIUM_ORE_RAW.get());
+                        output.accept(ModItems.OSMIUM_ORE_RAW.get());
+                        output.accept(ModItems.TITANIUM_INGOT.get());
+                        output.accept(ModItems.IRIDIUM_INGOT.get());
+                        output.accept(ModItems.OSMIUM_INGOT.get());
+                        output.accept(ModItems.IRIDIUM_ALLOY.get());
+                        output.accept(ModItems.IRIDIUM_WIRE.get());
+                        output.accept(ModItems.IRIDIUM_COIL.get());
                         // ── Spent Fuel Storage ────────────────────────────────
                         output.accept(ModItems.SPENT_FUEL_STORAGE_BASE.get());
                         output.accept(ModItems.SPENT_FUEL_STORAGE_WALL.get());

@@ -1,17 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "CGC",
-    "CGC",
-    "CGC"
+    " P ",
+    "GPG",
+    " P "
   ],
   "key": {
-    "C": {
-      "item": "minecraft:copper_ingot"
-    },
-    "G": {
-      "item": "minecraft:glass"
-    }
+    "P": {"item": "firearms:plastic_sheet"},
+    "G": {"item": "minecraft:glass"}
   },
   "result": {
     "id": "firearms:fluid_pipe",

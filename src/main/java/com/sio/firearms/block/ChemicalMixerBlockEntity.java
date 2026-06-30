@@ -56,7 +56,8 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 || key.equals("firearms:sulfuric_acid_still")
                 || key.equals("firearms:nitric_acid_still")
                 || key.equals("firearms:uranium_hexafluoride_still")
-                || key.equals("firearms:enriched_uf6_still");
+                || key.equals("firearms:enriched_uf6_still")
+                || key.equals("firearms:pvc_resin_still");
         }
         @Override
         protected void onContentsChanged() { setChanged(); }
@@ -99,13 +100,15 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 case 10 -> fluidInputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
                 case 11 -> fluidOutputTank.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidOutputTank.getFluid().getFluid());
                 case 12 -> fluidInputTank2.isEmpty() ? 0 : BuiltInRegistries.FLUID.getId(fluidInputTank2.getFluid().getFluid());
+                case 13 -> 1;  // always structurally valid for standalone block
+                case 14 -> -1; // no recipe selection for standalone; always Auto
                 default -> 0;
             };
         }
         @Override
         public void set(int i, int v) { if (i == 2) progress = v; }
         @Override
-        public int getCount() { return 13; }
+        public int getCount() { return 15; }
     };
 
     public ChemicalMixerBlockEntity(BlockPos pos, BlockState state) {
@@ -430,6 +433,44 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 && canOutputItem(outSlot, new ItemStack(ModItems.CORDITE.get(), 4))) {
             return new RecipeResult("firearms:nitrocellulose", 1, "firearms:nitroglycerin", 1, 250, 0,
                 new ItemStack(ModItems.CORDITE.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 16. pvc_resin 1000mB → pvc_pellets x4  (cooling/solidification)
+        if (fluidIs(ModFluids.PVC_RESIN_STILL.get(), 1000)
+                && canOutputItem(outSlot, new ItemStack(ModItems.PVC_PELLETS.get(), 4))
+                && slotA.isEmpty() && slotB.isEmpty()) {
+            return new RecipeResult(null, 0, null, 0, 1000, 0,
+                new ItemStack(ModItems.PVC_PELLETS.get(), 4), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 17. raw_opium + water 250mB → refined_opium
+        if (itemIs(slotA, "firearms:raw_opium", 1) && fluidIs(Fluids.WATER, 250) && slotB.isEmpty()
+                && canOutputItem(outSlot, new ItemStack(ModItems.REFINED_OPIUM.get()))) {
+            return new RecipeResult("firearms:raw_opium", 1, null, 0, 250, 0,
+                new ItemStack(ModItems.REFINED_OPIUM.get()), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 18. refined_opium + sulfuric_acid 100mB → 2x morphine
+        if (itemIs(slotA, "firearms:refined_opium", 1) && fluidIs(ModFluids.SULFURIC_ACID_STILL.get(), 100)
+                && slotB.isEmpty() && canOutputItem(outSlot, new ItemStack(ModItems.MORPHINE.get(), 2))) {
+            return new RecipeResult("firearms:refined_opium", 1, null, 0, 100, 0,
+                new ItemStack(ModItems.MORPHINE.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 19. sugar + glass_bottle + nitric_acid 100mB → adrenaline
+        if (itemIs(slotA, "minecraft:sugar", 1) && itemIs(slotB, "minecraft:glass_bottle", 1)
+                && fluidIs(ModFluids.NITRIC_ACID_STILL.get(), 100)
+                && canOutputItem(outSlot, new ItemStack(ModItems.ADRENALINE.get()))) {
+            return new RecipeResult("minecraft:sugar", 1, "minecraft:glass_bottle", 1, 100, 0,
+                new ItemStack(ModItems.ADRENALINE.get()), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 20. spider_eye + saltpeter + water 100mB → 2x coagulant
+        if (itemIs(slotA, "minecraft:spider_eye", 1) && itemIs(slotB, "firearms:saltpeter", 1)
+                && fluidIs(Fluids.WATER, 100)
+                && canOutputItem(outSlot, new ItemStack(ModItems.COAGULANT.get(), 2))) {
+            return new RecipeResult("minecraft:spider_eye", 1, "firearms:saltpeter", 1, 100, 0,
+                new ItemStack(ModItems.COAGULANT.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         return null;

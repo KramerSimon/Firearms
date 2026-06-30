@@ -34,10 +34,11 @@ public class EBFRecipeCategory implements IRecipeCategory<EBFJeiRecipe> {
     // input:  (56-38, 17-9) = (18, 8)
     // output: (116-38, 30-9) = (78, 21)
     private static final int S0_X = 18, S0_Y = 8;
-    private static final int OUT_X = 78, OUT_Y = 21;
+    private static final int S1_X = 18, S1_Y = 30;  // additive input below primary
+    private static final int OUT_X = 78, OUT_Y = 16; // output centered between S0 and S1
 
-    // Temperature text is drawn 3px below the background
-    private static final int TEMP_Y = BG_H + 3;
+    // Temperature text is drawn below all slots
+    private static final int TEMP_Y = 53;
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -55,12 +56,17 @@ public class EBFRecipeCategory implements IRecipeCategory<EBFJeiRecipe> {
     @Override public Component getTitle() { return title; }
     @Override public IDrawable getIcon() { return icon; }
     @Override public int getWidth()  { return BG_W; }
-    @Override public int getHeight() { return BG_H + 14; }  // extra room for temp text
+    @Override public int getHeight() { return TEMP_Y + 12; }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EBFJeiRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, S0_X, S0_Y)
                 .addItemStack(recipe.getInput());
+
+        if (recipe.hasAdditive()) {
+            builder.addSlot(RecipeIngredientRole.INPUT, S1_X, S1_Y)
+                    .addItemStack(recipe.getAdditiveInput());
+        }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, OUT_X, OUT_Y)
                 .addItemStack(recipe.getOutput());
@@ -70,7 +76,8 @@ public class EBFRecipeCategory implements IRecipeCategory<EBFJeiRecipe> {
     public void draw(EBFJeiRecipe recipe, IRecipeSlotsView recipeSlotsView,
                      GuiGraphics graphics, double mouseX, double mouseY) {
         String text = "Requires: " + recipe.getRequiredTemp() + "°C";
-        int color = recipe.getRequiredTemp() >= 2000 ? 0xCC0000
+        int color = recipe.getRequiredTemp() >= 5000 ? 0x8800FF
+                  : recipe.getRequiredTemp() >= 2000 ? 0xCC0000
                   : recipe.getRequiredTemp() >= 1200 ? 0xFF6600
                   : 0xFF9900;
         graphics.drawString(Minecraft.getInstance().font, text, 0, TEMP_Y, color, false);

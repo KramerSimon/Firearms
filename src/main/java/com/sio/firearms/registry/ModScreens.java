@@ -83,5 +83,7 @@ public class ModScreens {
         event.register(ModMenuTypes.AMMO_BOX_MENU.get(), AmmoBoxScreen::new);
         event.register(ModMenuTypes.GUN_CASE_MENU.get(), GunCaseScreen::new);
         event.register(ModMenuTypes.SPENT_FUEL_STORAGE_MENU.get(), SpentFuelStorageScreen::new);
+        event.register(ModMenuTypes.FLUID_PORT_CONFIG_MENU.get(), com.sio.firearms.screen.FluidPortConfigScreen::new);
+        event.register(ModMenuTypes.FLUID_PIPE_CONFIG_MENU.get(), com.sio.firearms.screen.FluidPipeConfigScreen::new);
     }
 }

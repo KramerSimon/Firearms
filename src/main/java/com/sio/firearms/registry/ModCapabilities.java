@@ -19,6 +19,7 @@ import com.sio.firearms.block.DicingSawBlockEntity;
 import com.sio.firearms.block.ChipPackagingMachineBlockEntity;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
 import com.sio.firearms.block.ChemicalMixerBlockEntity;
+import com.sio.firearms.block.ChemicalMixerControllerBlockEntity;
 import com.sio.firearms.block.CokeOvenControllerBlockEntity;
 import com.sio.firearms.block.CoalGeneratorBlockEntity;
 import com.sio.firearms.block.EBFControllerBlockEntity;
@@ -164,6 +165,24 @@ public class ModCapabilities {
                 ModBlockEntities.CHEMICAL_MIXER.get(),
                 // All faces: fill() routes to input tanks, drain() routes to output tank
                 (blockEntity, direction) -> blockEntity.fullAccessHandler
+        );
+
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.CHEMICAL_MIXER_CONTROLLER.get(),
+                (blockEntity, direction) -> blockEntity.getEnergyStorage()
+        );
+
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                ModBlockEntities.CHEMICAL_MIXER_CONTROLLER.get(),
+                (blockEntity, direction) -> blockEntity.fullAccessHandler
+        );
+
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.CHEMICAL_MIXER_CONTROLLER.get(),
+                (blockEntity, direction) -> blockEntity.getInventory()
         );
 
         event.registerBlockEntity(

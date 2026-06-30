@@ -7,12 +7,15 @@ import com.sio.firearms.block.FluidPortBlockEntity;
 import com.sio.firearms.block.ItemPipeBlock;
 import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.WireBlock;
+import com.sio.firearms.menu.FluidPipeConfigMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
@@ -81,6 +84,21 @@ public class WrenchItem extends Item {
                                 + " | Filter: none"
                                 + " | " + pipe.getFluidTank().getFluidAmount() + "/" + pipe.getFluidTank().getCapacity() + " mB";
                         player.displayClientMessage(Component.literal(status), true);
+                        return InteractionResult.SUCCESS;
+                    } else if (player.isShiftKeyDown() && player instanceof ServerPlayer sp) {
+                        // Sneak + wrench (no special offhand) → open filter config screen
+                        ResourceLocation filter = pipe.getFilterFluid();
+                        sp.openMenu(
+                                new SimpleMenuProvider(
+                                        (id, inv, pl) -> new FluidPipeConfigMenu(id, inv, pos, filter),
+                                        Component.literal("Fluid Pipe Filter")
+                                ),
+                                buf -> {
+                                    buf.writeBlockPos(pos);
+                                    buf.writeBoolean(filter != null);
+                                    if (filter != null) buf.writeResourceLocation(filter);
+                                }
+                        );
                         return InteractionResult.SUCCESS;
                     }
                 }

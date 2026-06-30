@@ -77,7 +77,13 @@ public class AssemblyBenchJeiRecipe {
                 createCorditeBulletRecipe(),
                 createExplosiveBulletRecipe(),
                 // ── Spent Fuel Storage ────────────────────────────────────────
-                createSpentFuelStorageBaseRecipe()
+                createSpentFuelStorageBaseRecipe(),
+                // ── Pharmaceutical syringes ───────────────────────────────────
+                createMorphineSyringeRecipe(),
+                createAdrenalineSyringeRecipe(),
+                createCoagulantSyringeRecipe(),
+                // ── Iridium chain ─────────────────────────────────────────────
+                createIridiumCoilRecipe()
         );
     }
 
@@ -450,5 +456,32 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(Items.STONE, 4),
                 new ItemStack(Items.IRON_BARS)
         }, new ItemStack(ModItems.SPENT_FUEL_STORAGE_BASE.get(), 4));
+    }
+
+    private static AssemblyBenchJeiRecipe createMorphineSyringeRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.SYRINGE.get()),
+                new ItemStack(ModItems.MORPHINE.get())
+        }, new ItemStack(ModItems.MORPHINE_SYRINGE.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createAdrenalineSyringeRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.SYRINGE.get()),
+                new ItemStack(ModItems.ADRENALINE.get())
+        }, new ItemStack(ModItems.ADRENALINE_SYRINGE.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createCoagulantSyringeRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.SYRINGE.get()),
+                new ItemStack(ModItems.COAGULANT.get())
+        }, new ItemStack(ModItems.COAGULANT_SYRINGE.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createIridiumCoilRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4)
+        }, new ItemStack(ModBlocks.IRIDIUM_COIL.get().asItem()));
     }
 }

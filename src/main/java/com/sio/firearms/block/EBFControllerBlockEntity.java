@@ -117,8 +117,14 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals(id);
     }
 
-    private ItemStack getRecipeOutput(ItemStack in0) {
+    private ItemStack getRecipeOutput(ItemStack in0, ItemStack in1) {
         if (in0.isEmpty()) return ItemStack.EMPTY;
+        // ── Two-ingredient recipes (slot 0 + slot 1) ──────────────────────────
+        if (stackIs(in0, "firearms:titanium_ore_raw") && stackIs(in1, "firearms:coal_coke"))
+            return new ItemStack(ModItems.TITANIUM_INGOT.get());
+        if (stackIs(in0, "firearms:iridium_ore_raw") && stackIs(in1, "firearms:osmium_ore_raw"))
+            return new ItemStack(ModItems.IRIDIUM_ALLOY.get());
+        // ── Single-ingredient recipes ─────────────────────────────────────────
         if (stackIs(in0, "minecraft:raw_iron"))         return new ItemStack(ModItems.STEEL_INGOT.get(), 2);
         if (stackIs(in0, "minecraft:iron_ingot"))       return new ItemStack(ModItems.STEEL_INGOT.get(), 3);
         if (stackIs(in0, "firearms:steel_ingot"))       return new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 1);
@@ -132,10 +138,18 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         return ItemStack.EMPTY;
     }
 
-    private int getRequiredTemperature(ItemStack in0) {
+    private int getRequiredTemperature(ItemStack in0, ItemStack in1) {
+        if (stackIs(in0, "firearms:titanium_ore_raw") && stackIs(in1, "firearms:coal_coke")) return 1200;
+        if (stackIs(in0, "firearms:iridium_ore_raw") && stackIs(in1, "firearms:osmium_ore_raw")) return 2000;
         if (stackIs(in0, "firearms:uranium_ore_raw"))  return 2000;
         if (stackIs(in0, "firearms:tungsten_ore_raw")) return 1200;
-        return getRecipeOutput(in0).isEmpty() ? 0 : 800;
+        return getRecipeOutput(in0, in1).isEmpty() ? 0 : 800;
+    }
+
+    private boolean consumesAdditive(ItemStack in0, ItemStack in1) {
+        if (stackIs(in0, "firearms:titanium_ore_raw") && stackIs(in1, "firearms:coal_coke")) return true;
+        if (stackIs(in0, "firearms:iridium_ore_raw") && stackIs(in1, "firearms:osmium_ore_raw")) return true;
+        return false;
     }
 
     private boolean canOutput(ItemStack result, ItemStack outputSlot) {
@@ -157,10 +171,11 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         ItemStack in0 = inventory.getStackInSlot(0);
+        ItemStack in1 = inventory.getStackInSlot(1);
         ItemStack out = inventory.getStackInSlot(2);
-        ItemStack result = getRecipeOutput(in0);
+        ItemStack result = getRecipeOutput(in0, in1);
 
-        requiredTemp = getRequiredTemperature(in0);
+        requiredTemp = getRequiredTemperature(in0, in1);
         boolean canProcess = enabled
                 && !result.isEmpty()
                 && canOutput(result, out)
@@ -172,7 +187,9 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
             energy.extractEnergy(FE_PER_TICK, false);
             progress++;
             if (progress >= MAX_PROCESS_TIME) {
+                boolean useAdditive = consumesAdditive(in0, in1);
                 in0.shrink(1);
+                if (useAdditive) in1.shrink(1);
                 if (out.isEmpty()) {
                     inventory.setStackInSlot(2, result.copy());
                 } else {
