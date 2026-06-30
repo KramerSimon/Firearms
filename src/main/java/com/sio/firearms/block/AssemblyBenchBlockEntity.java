@@ -314,6 +314,19 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:bullet_casing", 16));
         }
 
+        // Stainless Pistol: stainless_steel_ingot×4 + stainless_plate×2 + copper_wire×2 + bullet_casing×8
+        // Unique ingredients (stainless_steel_ingot, stainless_plate) guarantee no ordering conflicts.
+        if (hasAtLeast(in, "firearms:stainless_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:stainless_plate", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:bullet_casing", 8)) {
+            ItemStack result = new ItemStack(ModItems.PISTOL.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.STAINLESS.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:stainless_steel_ingot", 4, "firearms:stainless_plate", 2,
+                            "firearms:copper_wire", 2, "firearms:bullet_casing", 8));
+        }
+
         // Pistol: steel×4 + copper×2 + circuit×1 + bullet_casing×8 + propellant×4
         if (hasAtLeast(in, "firearms:steel_ingot", 4)
                 && hasAtLeast(in, "firearms:copper_wire", 2)
@@ -464,6 +477,17 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // ── Intermediate parts ────────────────────────────────────────────────
+
+        // Gold Wire Circuit Board (alt): gold_wire×4 + gold_ingot×1 + redstone×4 + silicon_die×2
+        // gold_wire uniquely identifies this variant; checked before copper_wire circuit board.
+        if (hasAtLeast(in, "firearms:gold_wire", 4)
+                && hasAtLeast(in, "minecraft:gold_ingot", 1)
+                && hasAtLeast(in, "minecraft:redstone", 4)
+                && hasAtLeast(in, "firearms:silicon_die", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                    Map.of("firearms:gold_wire", 4, "minecraft:gold_ingot", 1,
+                            "minecraft:redstone", 4, "firearms:silicon_die", 2));
+        }
 
         // Circuit Board: copper×4 + gold_ingot×1 + redstone×4 + silicon_die×2
         if (hasAtLeast(in, "firearms:copper_wire", 4)
@@ -661,8 +685,24 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:hardened_steel_ingot", 2));
         }
 
+        // Kevlar Vest: kevlar_weave×6 + kevlar_plate×2 → kevlar_vest
+        // Checked before kevlar_weave recipe since it consumes kevlar_weave; kevlar_plate uniquely guards it.
+        if (hasAtLeast(in, "firearms:kevlar_weave", 6)
+                && hasAtLeast(in, "firearms:kevlar_plate", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.KEVLAR_VEST.get()),
+                    Map.of("firearms:kevlar_weave", 6, "firearms:kevlar_plate", 2));
+        }
+
+        // Kevlar Weave: rubber_sheet×2 + string×4 → 4x kevlar_weave
+        // Checked after Kevlar Vest to avoid consuming weave before the vest recipe can fire.
+        if (hasAtLeast(in, "firearms:rubber_sheet", 2)
+                && hasAtLeast(in, "minecraft:string", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.KEVLAR_WEAVE.get(), 4),
+                    Map.of("firearms:rubber_sheet", 2, "minecraft:string", 4));
+        }
+
         // Rubber Boots: rubber_sheet×4 + steel_ingot×2 → rubber_boots
-        // rubber_sheet uniquely identifies this recipe; no overlap with existing ammo/machines.
+        // rubber_sheet×4 required (more than kevlar_weave's ×2), so no conflict.
         if (hasAtLeast(in, "firearms:rubber_sheet", 4)
                 && hasAtLeast(in, "firearms:steel_ingot", 2)) {
             return new RecipeMatch(new ItemStack(ModItems.RUBBER_BOOTS.get()),
@@ -743,6 +783,14 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                 && hasAtLeast(in, "firearms:titanium_ingot", 6)) {
             return new RecipeMatch(new ItemStack(ModItems.AIRCRAFT_FUSELAGE.get()),
                     Map.of("firearms:steel_plate", 10, "firearms:titanium_ingot", 6));
+        }
+
+        // Carbon Fiber Wings (alt): carbon_fiber_sheet×8 + titanium_ingot×4 → 2
+        // carbon_fiber_sheet uniquely identifies this variant; checked before steel_plate wings.
+        if (hasAtLeast(in, "firearms:carbon_fiber_sheet", 8)
+                && hasAtLeast(in, "firearms:titanium_ingot", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.AIRCRAFT_WINGS.get(), 2),
+                    Map.of("firearms:carbon_fiber_sheet", 8, "firearms:titanium_ingot", 4));
         }
 
         // Aircraft Wings: steel_plate×8 + titanium_ingot×4 → 2

@@ -93,4 +93,15 @@ public class ModArmorMaterials {
                     4.0f,
                     0.1f
             ));
+
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> KEVLAR_VEST =
+            ARMOR_MATERIALS.register("kevlar_vest", () -> new ArmorMaterial(
+                    Map.of(ArmorItem.Type.CHESTPLATE, 10),
+                    8,
+                    SoundEvents.ARMOR_EQUIP_CHAIN,
+                    () -> Ingredient.of(ModItems.KEVLAR_WEAVE.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "kevlar_vest"))),
+                    2.5f,
+                    0.0f
+            ));
 }

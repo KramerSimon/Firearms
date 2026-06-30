@@ -124,6 +124,15 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
             return new ItemStack(ModItems.TITANIUM_INGOT.get());
         if (stackIs(in0, "firearms:iridium_ore_raw") && stackIs(in1, "firearms:osmium_ore_raw"))
             return new ItemStack(ModItems.IRIDIUM_ALLOY.get());
+        // New-tier two-ingredient recipes — must come before single-ingredient checks for steel/copper
+        if (stackIs(in0, "firearms:steel_ingot") && stackIs(in1, "firearms:chromium_ingot"))
+            return new ItemStack(ModItems.STAINLESS_STEEL_INGOT.get(), 2);
+        if (stackIs(in0, "firearms:steel_ingot") && stackIs(in1, "firearms:tungsten_ingot"))
+            return new ItemStack(ModItems.TOOL_STEEL_INGOT.get(), 2);
+        if (stackIs(in0, "minecraft:copper_ingot") && stackIs(in1, "firearms:fluorite_crystal"))
+            return new ItemStack(ModItems.BERYLLIUM_COPPER_INGOT.get(), 2);
+        if (stackIs(in0, "firearms:neodymium_ore_raw") && stackIs(in1, "firearms:coal_coke"))
+            return new ItemStack(ModItems.NEODYMIUM_INGOT.get());
         // ── Single-ingredient recipes ─────────────────────────────────────────
         if (stackIs(in0, "minecraft:raw_iron"))         return new ItemStack(ModItems.STEEL_INGOT.get(), 2);
         if (stackIs(in0, "minecraft:iron_ingot"))       return new ItemStack(ModItems.STEEL_INGOT.get(), 3);
@@ -142,6 +151,10 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     private int getRequiredTemperature(ItemStack in0, ItemStack in1) {
         if (stackIs(in0, "firearms:titanium_ore_raw") && stackIs(in1, "firearms:coal_coke")) return 1200;
         if (stackIs(in0, "firearms:iridium_ore_raw") && stackIs(in1, "firearms:osmium_ore_raw")) return 2000;
+        if (stackIs(in0, "firearms:steel_ingot") && stackIs(in1, "firearms:chromium_ingot")) return 1200;
+        if (stackIs(in0, "firearms:steel_ingot") && stackIs(in1, "firearms:tungsten_ingot")) return 800;
+        if (stackIs(in0, "minecraft:copper_ingot") && stackIs(in1, "firearms:fluorite_crystal")) return 800;
+        if (stackIs(in0, "firearms:neodymium_ore_raw") && stackIs(in1, "firearms:coal_coke")) return 2000;
         if (stackIs(in0, "firearms:uranium_ore_raw"))  return 2000;
         if (stackIs(in0, "firearms:tungsten_ore_raw")) return 1200;
         return getRecipeOutput(in0, in1).isEmpty() ? 0 : 800;
@@ -150,6 +163,10 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     private boolean consumesAdditive(ItemStack in0, ItemStack in1) {
         if (stackIs(in0, "firearms:titanium_ore_raw") && stackIs(in1, "firearms:coal_coke")) return true;
         if (stackIs(in0, "firearms:iridium_ore_raw") && stackIs(in1, "firearms:osmium_ore_raw")) return true;
+        if (stackIs(in0, "firearms:steel_ingot") && stackIs(in1, "firearms:chromium_ingot")) return true;
+        if (stackIs(in0, "firearms:steel_ingot") && stackIs(in1, "firearms:tungsten_ingot")) return true;
+        if (stackIs(in0, "minecraft:copper_ingot") && stackIs(in1, "firearms:fluorite_crystal")) return true;
+        if (stackIs(in0, "firearms:neodymium_ore_raw") && stackIs(in1, "firearms:coal_coke")) return true;
         return false;
     }
 

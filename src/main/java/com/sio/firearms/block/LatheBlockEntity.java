@@ -151,6 +151,9 @@ public class LatheBlockEntity extends EnergyStorageBlock implements MenuProvider
         if (primary.is(ModItems.IRIDIUM_ALLOY.get()) && secondary.isEmpty()) {
             return new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4);
         }
+        if (primary.is(net.minecraft.world.item.Items.GOLD_INGOT) && secondary.isEmpty()) {
+            return new ItemStack(ModItems.GOLD_WIRE.get(), 2);
+        }
 
         return ItemStack.EMPTY;
     }

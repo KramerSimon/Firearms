@@ -90,7 +90,8 @@ public class HeatTreatmentFurnaceBlockEntity extends EnergyStorageBlock implemen
             changed = true;
 
             if (progress >= PROCESS_TIME) {
-                boolean consumeSecondary = !secondary.isEmpty() && secondary.is(Items.COAL);
+                boolean consumeSecondary = !secondary.isEmpty()
+                        && (secondary.is(Items.COAL) || secondary.is(ModItems.FLUORITE_CRYSTAL.get()));
                 primary.shrink(1);
                 if (consumeSecondary) {
                     secondary.shrink(1);
@@ -112,12 +113,19 @@ public class HeatTreatmentFurnaceBlockEntity extends EnergyStorageBlock implemen
 
     private ItemStack getRecipeOutput(ItemStack primary, ItemStack secondary) {
         if (primary.isEmpty()) return ItemStack.EMPTY;
-        if (!primary.is(ModItems.STEEL_INGOT.get())) return ItemStack.EMPTY;
 
-        if (!secondary.isEmpty() && secondary.is(Items.COAL)) {
-            return new ItemStack(ModItems.CARBON_STEEL.get());
+        if (primary.is(ModItems.STEEL_INGOT.get())) {
+            if (!secondary.isEmpty() && secondary.is(Items.COAL)) {
+                return new ItemStack(ModItems.CARBON_STEEL.get());
+            }
+            return new ItemStack(ModItems.HARDENED_STEEL_INGOT.get());
         }
-        return new ItemStack(ModItems.HARDENED_STEEL_INGOT.get());
+
+        if (primary.is(Items.CLAY_BALL) && !secondary.isEmpty() && secondary.is(ModItems.FLUORITE_CRYSTAL.get())) {
+            return new ItemStack(ModItems.CERAMIC_PLATE.get(), 2);
+        }
+
+        return ItemStack.EMPTY;
     }
 
     private boolean canOutput(ItemStack current, ItemStack result) {

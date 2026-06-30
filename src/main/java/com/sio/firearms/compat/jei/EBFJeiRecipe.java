@@ -54,18 +54,30 @@ public class EBFJeiRecipe {
                     new ItemStack(ModItems.ZIRCONIUM_INGOT.get()), 800),
             new EBFJeiRecipe(new ItemStack(ModItems.TUNGSTEN_INGOT.get()),
                     new ItemStack(ModItems.TUNGSTEN_CARBIDE.get(), 2), 800),
+            new EBFJeiRecipe(new ItemStack(ModItems.STEEL_INGOT.get()),
+                    new ItemStack(ModItems.TUNGSTEN_INGOT.get()),
+                    new ItemStack(ModItems.TOOL_STEEL_INGOT.get(), 2), 800),
+            new EBFJeiRecipe(new ItemStack(Items.COPPER_INGOT),
+                    new ItemStack(ModItems.FLUORITE_CRYSTAL.get()),
+                    new ItemStack(ModItems.BERYLLIUM_COPPER_INGOT.get(), 2), 800),
             // ── @1200°C ───────────────────────────────────────────────────────
             new EBFJeiRecipe(new ItemStack(ModItems.TUNGSTEN_ORE_RAW.get()),
                     new ItemStack(ModItems.TUNGSTEN_INGOT.get()), 1200),
             new EBFJeiRecipe(new ItemStack(ModItems.TITANIUM_ORE_RAW.get()),
                     new ItemStack(ModItems.COAL_COKE.get()),
                     new ItemStack(ModItems.TITANIUM_INGOT.get()), 1200),
+            new EBFJeiRecipe(new ItemStack(ModItems.STEEL_INGOT.get()),
+                    new ItemStack(ModItems.CHROMIUM_INGOT.get()),
+                    new ItemStack(ModItems.STAINLESS_STEEL_INGOT.get(), 2), 1200),
             // ── @2000°C ───────────────────────────────────────────────────────
             new EBFJeiRecipe(new ItemStack(ModItems.URANIUM_ORE_RAW.get()),
                     new ItemStack(ModItems.URANIUM_INGOT.get()), 2000),
             new EBFJeiRecipe(new ItemStack(ModItems.IRIDIUM_ORE_RAW.get()),
                     new ItemStack(ModItems.OSMIUM_ORE_RAW.get()),
-                    new ItemStack(ModItems.IRIDIUM_ALLOY.get()), 2000)
+                    new ItemStack(ModItems.IRIDIUM_ALLOY.get()), 2000),
+            new EBFJeiRecipe(new ItemStack(ModItems.NEODYMIUM_ORE_RAW.get()),
+                    new ItemStack(ModItems.COAL_COKE.get()),
+                    new ItemStack(ModItems.NEODYMIUM_INGOT.get()), 2000)
         );
     }
 }

@@ -33,7 +33,12 @@ public class HeatTreatmentJeiRecipe {
             new HeatTreatmentJeiRecipe(
                 new ItemStack(ModItems.STEEL_INGOT.get()),
                 new ItemStack(Items.COAL),
-                new ItemStack(ModItems.CARBON_STEEL.get()))
+                new ItemStack(ModItems.CARBON_STEEL.get())),
+            // clay_ball + fluorite_crystal → ceramic_plate×2
+            new HeatTreatmentJeiRecipe(
+                new ItemStack(Items.CLAY_BALL),
+                new ItemStack(ModItems.FLUORITE_CRYSTAL.get()),
+                new ItemStack(ModItems.CERAMIC_PLATE.get(), 2))
         );
     }
 }

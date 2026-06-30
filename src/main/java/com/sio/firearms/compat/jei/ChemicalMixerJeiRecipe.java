@@ -229,6 +229,23 @@ public class ChemicalMixerJeiRecipe {
                 new ItemStack(ModItems.NITROCELLULOSE.get()),
                 FluidStack.EMPTY,
                 new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 2),
+                FluidStack.EMPTY),
+
+            // ── New Materials Tier ────────────────────────────────────────────
+            // coal + naphtha 500mB (tank2) → 2x carbon_fiber_sheet
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(net.minecraft.world.item.Items.COAL), ItemStack.EMPTY,
+                FluidStack.EMPTY,
+                new FluidStack(ModFluids.NAPHTHA_STILL.get(), 500),
+                new ItemStack(ModItems.CARBON_FIBER_SHEET.get(), 2),
+                FluidStack.EMPTY),
+
+            // silicon_wafer + glass → 2x optical_fiber (no fluid)
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.SILICON_WAFER.get()),
+                new ItemStack(net.minecraft.world.item.Items.GLASS),
+                FluidStack.EMPTY,
+                new ItemStack(ModItems.OPTICAL_FIBER.get(), 2),
                 FluidStack.EMPTY)
         );
     }

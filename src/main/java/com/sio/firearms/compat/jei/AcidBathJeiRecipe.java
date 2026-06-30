@@ -27,7 +27,8 @@ public class AcidBathJeiRecipe {
         return List.of(
             new AcidBathJeiRecipe(new ItemStack(Items.IRON_INGOT),   new ItemStack(ModItems.ETCHED_IRON.get())),
             new AcidBathJeiRecipe(new ItemStack(Items.COPPER_INGOT), new ItemStack(ModItems.ETCHED_COPPER.get())),
-            new AcidBathJeiRecipe(new ItemStack(ModItems.STEEL_INGOT.get()), new ItemStack(ModItems.ETCHED_STEEL.get()))
+            new AcidBathJeiRecipe(new ItemStack(ModItems.STEEL_INGOT.get()), new ItemStack(ModItems.ETCHED_STEEL.get())),
+            new AcidBathJeiRecipe(new ItemStack(ModItems.STAINLESS_STEEL_INGOT.get()), new ItemStack(ModItems.STAINLESS_PLATE.get()))
         );
     }
 }

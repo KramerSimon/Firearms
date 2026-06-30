@@ -117,8 +117,14 @@ public class AssemblyBenchJeiRecipe {
                 // ── Aircraft Components ───────────────────────────────────────
                 createAircraftFuselageRecipe(),
                 createAircraftWingsRecipe(),
+                createCarbonFiberWingsRecipe(),
                 createJetEngineRecipe(),
-                createCockpitAvionicsRecipe()
+                createCockpitAvionicsRecipe(),
+                // ── New Materials Tier ────────────────────────────────────────
+                createGoldWireCircuitBoardRecipe(),
+                createKevlarWeaveRecipe(),
+                createKevlarVestRecipe(),
+                createStainlessPistolRecipe()
         );
     }
 
@@ -718,6 +724,49 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(ModItems.CORDITE.get(), 4)
         }), makeQualityWeapon(ModItems.SNIPER_RIFLE.get(), WeaponQuality.MILITARY_GRADE),
                 qualityDescription(WeaponQuality.MILITARY_GRADE));
+    }
+
+    private static AssemblyBenchJeiRecipe createCarbonFiberWingsRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.CARBON_FIBER_SHEET.get(), 8),
+                new ItemStack(ModItems.TITANIUM_INGOT.get(), 4)
+        }, new ItemStack(ModItems.AIRCRAFT_WINGS.get(), 2));
+    }
+
+    private static AssemblyBenchJeiRecipe createGoldWireCircuitBoardRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.GOLD_WIRE.get(), 4),
+                new ItemStack(Items.GOLD_INGOT),
+                new ItemStack(Items.REDSTONE, 4),
+                new ItemStack(ModItems.SILICON_DIE.get(), 2)
+        }, new ItemStack(ModItems.CIRCUIT_BOARD.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createKevlarWeaveRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.RUBBER_SHEET.get(), 2),
+                new ItemStack(Items.STRING, 4)
+        }, new ItemStack(ModItems.KEVLAR_WEAVE.get(), 4));
+    }
+
+    private static AssemblyBenchJeiRecipe createKevlarVestRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.KEVLAR_WEAVE.get(), 6),
+                new ItemStack(ModItems.KEVLAR_PLATE.get(), 2)
+        }, new ItemStack(ModItems.KEVLAR_VEST.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createStainlessPistolRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STAINLESS_STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.STAINLESS_PLATE.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.BULLET_CASING.get(), 8)
+        }), makeQualityWeapon(ModItems.PISTOL.get(), WeaponQuality.STAINLESS),
+                List.of(
+                    Component.literal("Quality: ").withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal("Stainless").withStyle(ChatFormatting.AQUA)),
+                    Component.literal("+10% Damage  +20% Durability").withStyle(ChatFormatting.GRAY)));
     }
 
     private static NonNullList<ItemStack> buildInputs(ItemStack[] items) {

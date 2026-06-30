@@ -1473,6 +1473,351 @@ def make_match_grade_bullet():
     save(img, os.path.join(ITEM, "match_grade_bullet.png"))
 
 
+# ── New Materials Tier textures ───────────────────────────────────────────────
+
+def make_stainless_steel_ingot():
+    """Bright, slightly blue-tinted steel ingot."""
+    SL = (210, 218, 228, 255)  # highlight
+    SM = (170, 180, 195, 255)  # body
+    SD = (120, 130, 145, 255)  # shadow
+    SE = ( 90,  98, 115, 255)  # edge
+    grid = [
+        [SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE],
+        [SE,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SE],
+        [SE,SL,SM,SM,SM,SM,SM,SM,SM,SM,SM,SM,SM,SM,SL,SE],
+        [SE,SL,SM,SD,SD,SD,SD,SD,SD,SD,SD,SD,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SL,SL,SL,SL,SL,SL,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SM,SM,SM,SM,SM,SM,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SM,SL,SL,SL,SL,SM,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SM,SL,SM,SM,SL,SM,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SM,SL,SM,SM,SL,SM,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SM,SM,SM,SM,SM,SM,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SL,SL,SL,SL,SL,SL,SL,SL,SD,SM,SL,SE],
+        [SE,SL,SM,SD,SD,SD,SD,SD,SD,SD,SD,SD,SD,SM,SL,SE],
+        [SE,SL,SM,SM,SM,SM,SM,SM,SM,SM,SM,SM,SM,SM,SL,SE],
+        [SE,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SL,SE],
+        [SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE],
+        [SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE,SE],
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            img.putpixel((x, y), c)
+    save(img, os.path.join(ITEM, "stainless_steel_ingot.png"))
+
+
+def make_stainless_plate():
+    """Flat stainless steel plate — thin layered look."""
+    SL = (215, 222, 232, 255)
+    SM = (175, 185, 200, 255)
+    SD = (125, 135, 150, 255)
+    SE = ( 85,  95, 110, 255)
+    img = px(16, 16)
+    for y in range(16):
+        for x in range(16):
+            if x == 0 or x == 15 or y == 0 or y == 15:
+                img.putpixel((x, y), SE)
+            elif y in (3, 7, 11):
+                img.putpixel((x, y), SD)
+            elif y in (4, 8, 12):
+                img.putpixel((x, y), SL)
+            else:
+                img.putpixel((x, y), SM)
+    save(img, os.path.join(ITEM, "stainless_plate.png"))
+
+
+def make_tool_steel_ingot():
+    """Dark, hard steel ingot with brown-grey tone."""
+    TL = (175, 165, 148, 255)
+    TM = (140, 130, 115, 255)
+    TD = ( 95,  88,  75, 255)
+    TE2= ( 65,  60,  50, 255)
+    grid = [
+        [TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2],
+        [TE2,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TE2],
+        [TE2,TL ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TM ,TM ,TM ,TM ,TM ,TM ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TM ,TL ,TL ,TL ,TL ,TM ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TM ,TL ,TD ,TD ,TL ,TM ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TM ,TL ,TD ,TD ,TL ,TM ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TM ,TM ,TM ,TM ,TM ,TM ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TD ,TM ,TL ,TE2],
+        [TE2,TL ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TM ,TL ,TE2],
+        [TE2,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TL ,TE2],
+        [TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2],
+        [TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2,TE2],
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            img.putpixel((x, y), c)
+    save(img, os.path.join(ITEM, "tool_steel_ingot.png"))
+
+
+def make_carbon_fiber_sheet():
+    """Woven carbon fiber — dark grey diagonal weave pattern."""
+    CA = ( 28,  30,  35, 255)  # dark fibre
+    CB = ( 42,  46,  52, 255)  # lighter fibre
+    CC = ( 18,  20,  24, 255)  # shadow
+    img = px(16, 16)
+    for y in range(16):
+        for x in range(16):
+            if x == 0 or x == 15 or y == 0 or y == 15:
+                img.putpixel((x, y), CC)
+            elif (x + y) % 4 == 0:
+                img.putpixel((x, y), CB)
+            elif (x + y) % 4 == 2:
+                img.putpixel((x, y), CB)
+            else:
+                img.putpixel((x, y), CA)
+    save(img, os.path.join(ITEM, "carbon_fiber_sheet.png"))
+
+
+def make_kevlar_weave():
+    """Kevlar — tan/yellow crosshatch weave."""
+    KA = (195, 178, 118, 255)  # weave main
+    KB = (228, 212, 148, 255)  # highlight thread
+    KC = (145, 130,  82, 255)  # shadow thread
+    KD = (105,  95,  58, 255)  # border
+    img = px(16, 16)
+    for y in range(16):
+        for x in range(16):
+            if x == 0 or x == 15 or y == 0 or y == 15:
+                img.putpixel((x, y), KD)
+            elif x % 2 == 0 and y % 2 == 0:
+                img.putpixel((x, y), KB)
+            elif x % 2 == 1 and y % 2 == 1:
+                img.putpixel((x, y), KC)
+            else:
+                img.putpixel((x, y), KA)
+    save(img, os.path.join(ITEM, "kevlar_weave.png"))
+
+
+def make_kevlar_vest():
+    """Kevlar vest item — stylised vest silhouette."""
+    KA = (195, 178, 118, 255)
+    KB = (228, 212, 148, 255)
+    KC = (145, 130,  82, 255)
+    KD = (105,  95,  58, 255)
+    T2 = (0, 0, 0, 0)
+    # Vest silhouette pattern
+    vest = [
+        "                ",
+        "  ##########    ",
+        " #KKKKKKKKKK#   ",
+        " #KKKKKKKKKK#   ",
+        "#KK##KKKK##KK#  ",
+        "#KKK##KK##KKK#  ",
+        "#KKKK####KKKK#  ",
+        "#KKKKKKKKKKKK#  ",
+        "#KKKKKKKKKKKK#  ",
+        "#KKKKKKKKKKKK#  ",
+        "#KKKKKKKKKKKK#  ",
+        "#KKKKKKKKKKKK#  ",
+        " #KKKKKKKKKK#   ",
+        "  ##########    ",
+        "                ",
+        "                ",
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(vest):
+        for x, ch in enumerate(row[:16]):
+            if ch == 'K':
+                img.putpixel((x, y), KA if (x + y) % 2 == 0 else KB)
+            elif ch == '#':
+                img.putpixel((x, y), KD)
+            else:
+                img.putpixel((x, y), T2)
+    save(img, os.path.join(ITEM, "kevlar_vest.png"))
+
+
+def make_ceramic_plate():
+    """Ceramic plate — off-white with slight crack detail."""
+    CA = (238, 235, 225, 255)  # ceramic body
+    CB = (252, 250, 245, 255)  # highlight
+    CC = (180, 175, 165, 255)  # shadow / edge
+    CD = (155, 148, 138, 255)  # crack colour
+    img = px(16, 16)
+    for y in range(16):
+        for x in range(16):
+            if x == 0 or x == 15 or y == 0 or y == 15:
+                img.putpixel((x, y), CC)
+            elif x < 3 or y < 3:
+                img.putpixel((x, y), CB)
+            else:
+                img.putpixel((x, y), CA)
+    # crack lines
+    for x in range(5, 12):
+        img.putpixel((x, 8), CD)
+    for y in range(4, 9):
+        img.putpixel((8, y), CD)
+    save(img, os.path.join(ITEM, "ceramic_plate.png"))
+
+
+def make_gold_wire():
+    """Gold wire coil — bright gold with shadow."""
+    GL = (255, 220,  50, 255)  # gold bright
+    GM = (215, 175,  28, 255)  # gold mid
+    GD = (155, 118,  10, 255)  # gold shadow
+    GE = (100,  75,   5, 255)  # dark edge
+    img = px(16, 16)
+    # Draw a coil of wire as several horizontal arcs
+    arcs = [(3, 4, 12, 1), (5, 3, 13, 2), (7, 4, 12, 3),
+            (9, 3, 13, 1), (11, 4, 12, 2)]
+    for (y, xs, xe, hi) in arcs:
+        for x in range(xs, xe + 1):
+            col = GL if x < xs + hi else GM
+            img.putpixel((x, y), col)
+            img.putpixel((x, y + 1), GD)
+    # shadow leftmost
+    for y in range(3, 13):
+        if img.getpixel((3, y))[3] > 0:
+            img.putpixel((3, y), GE)
+    save(img, os.path.join(ITEM, "gold_wire.png"))
+
+
+def make_optical_fiber():
+    """Optical fiber strand — glowing cyan core, glass cladding."""
+    GC = (210, 235, 245, 255)  # glass cladding
+    GL2= (180, 212, 228, 255)  # glass shadow
+    CO = ( 80, 220, 245, 255)  # core glow cyan
+    COL= (150, 240, 255, 255)  # core highlight
+    img = px(16, 16)
+    # Strand: diagonal line from top-left to bottom-right
+    for i in range(16):
+        x, y = i, i
+        if 0 <= x < 16 and 0 <= y < 16:
+            img.putpixel((x, y), COL)
+        if 0 <= x+1 < 16 and 0 <= y < 16:
+            img.putpixel((x+1, y), GC)
+        if 0 <= x < 16 and 0 <= y+1 < 16:
+            img.putpixel((x, y+1), GL2)
+    # add a second shifted strand
+    for i in range(2, 14):
+        x, y = i, 15 - i
+        if 0 <= x < 16 and 0 <= y < 16:
+            img.putpixel((x, y), CO)
+    save(img, os.path.join(ITEM, "optical_fiber.png"))
+
+
+def make_neodymium_ore_raw():
+    """Raw neodymium chunk — silver-purple metallic."""
+    NL = (195, 185, 215, 255)  # light
+    NM = (155, 142, 185, 255)  # mid
+    ND2= (105,  92, 138, 255)  # dark
+    NE = ( 65,  55,  90, 255)  # edge
+    img = px(16, 16)
+    for y in range(16):
+        for x in range(16):
+            d = abs(x - 7) + abs(y - 7)
+            if d <= 2:
+                img.putpixel((x, y), NL)
+            elif d <= 5:
+                img.putpixel((x, y), NM)
+            elif d <= 8:
+                img.putpixel((x, y), ND2)
+            else:
+                img.putpixel((x, y), NE)
+    save(img, os.path.join(ITEM, "neodymium_ore_raw.png"))
+
+
+def make_neodymium_ingot():
+    """Neodymium ingot — silver-purple ingot."""
+    NL = (200, 188, 220, 255)
+    NM = (158, 145, 188, 255)
+    ND2= (108,  95, 140, 255)
+    NE = ( 68,  58,  95, 255)
+    grid = [
+        [NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ],
+        [NE ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NE ],
+        [NE ,NL ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,ND2,ND2,ND2,ND2,ND2,ND2,ND2,ND2,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NM ,NM ,NM ,NM ,NM ,NM ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NM ,NL ,NL ,NL ,NL ,NM ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NM ,NL ,NM ,NM ,NL ,NM ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NM ,NL ,NM ,NM ,NL ,NM ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NM ,NM ,NM ,NM ,NM ,NM ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,ND2,ND2,ND2,ND2,ND2,ND2,ND2,ND2,ND2,ND2,NM ,NL ,NE ],
+        [NE ,NL ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NM ,NL ,NE ],
+        [NE ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NL ,NE ],
+        [NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ],
+        [NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ,NE ],
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            img.putpixel((x, y), c)
+    save(img, os.path.join(ITEM, "neodymium_ingot.png"))
+
+
+def make_beryllium_copper_ingot():
+    """Beryllium copper ingot — warm copper with greenish tint."""
+    BL = (215, 148,  88, 255)  # highlight copper
+    BM = (175, 112,  58, 255)  # mid copper
+    BD = (118,  72,  32, 255)  # dark shadow
+    BE = ( 72,  42,  18, 255)  # edge
+    BG = (145, 138,  68, 255)  # green-copper tint streak
+    grid = [
+        [BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ],
+        [BE ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BE ],
+        [BE ,BL ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BM ,BG ,BM ,BM ,BG ,BM ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BG ,BM ,BM ,BM ,BM ,BG ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BM ,BM ,BG ,BG ,BM ,BM ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BM ,BM ,BG ,BG ,BM ,BM ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BG ,BM ,BM ,BM ,BM ,BG ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BL ,BM ,BG ,BM ,BM ,BG ,BM ,BL ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BD ,BM ,BL ,BE ],
+        [BE ,BL ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BM ,BL ,BE ],
+        [BE ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BL ,BE ],
+        [BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ],
+        [BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ,BE ],
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            img.putpixel((x, y), c)
+    save(img, os.path.join(ITEM, "beryllium_copper_ingot.png"))
+
+
+def make_neodymium_ore_block():
+    """Neodymium ore block — stone base with purple-silver veins."""
+    ST = (118, 118, 118, 255)  # stone base
+    SL = (140, 140, 140, 255)  # stone light
+    SD = ( 88,  88,  88, 255)  # stone dark
+    VL = (195, 185, 215, 255)  # vein light
+    VM = (155, 142, 185, 255)  # vein mid
+    VD = (105,  92, 138, 255)  # vein dark
+    img = px(16, 16)
+    import random
+    rng = random.Random(9842)
+    for y in range(16):
+        for x in range(16):
+            r = rng.random()
+            if r < 0.08:
+                img.putpixel((x, y), SL)
+            elif r < 0.18:
+                img.putpixel((x, y), SD)
+            else:
+                img.putpixel((x, y), ST)
+    # vein patches
+    for (cx, cy) in [(4,4),(11,6),(7,11),(3,12),(13,3)]:
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                nx, ny = cx+dx, cy+dy
+                if 0 <= nx < 16 and 0 <= ny < 16:
+                    d = abs(dx)+abs(dy)
+                    img.putpixel((nx, ny), VL if d == 0 else (VM if d == 1 else VD))
+    save(img, os.path.join(BLOCK, "neodymium_ore.png"))
+
+
 # ── main ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Generating Firearms mod textures...")
@@ -1540,5 +1885,20 @@ if __name__ == "__main__":
     # ── Match Grade Ammunition ────────────────────────────────────────────────
     make_match_grade_powder()
     make_match_grade_bullet()
+
+    # ── New Materials Tier ────────────────────────────────────────────────────
+    make_stainless_steel_ingot()
+    make_stainless_plate()
+    make_tool_steel_ingot()
+    make_carbon_fiber_sheet()
+    make_kevlar_weave()
+    make_kevlar_vest()
+    make_ceramic_plate()
+    make_gold_wire()
+    make_optical_fiber()
+    make_neodymium_ore_raw()
+    make_neodymium_ingot()
+    make_beryllium_copper_ingot()
+    make_neodymium_ore_block()
 
     print("Done.")

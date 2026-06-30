@@ -802,6 +802,15 @@ public class ModBlocks {
                             .noOcclusion()
                             .pushReaction(PushReaction.DESTROY)));
 
+    // ── New ore blocks ────────────────────────────────────────────────────────
+
+    public static final DeferredBlock<Block> NEODYMIUM_ORE =
+            BLOCKS.register("neodymium_ore",
+                    () -> new DropExperienceBlock(UniformInt.of(1, 2), BlockBehaviour.Properties.of()
+                            .strength(3.0f, 3.0f)
+                            .sound(SoundType.STONE)
+                            .requiresCorrectToolForDrops()));
+
     // ── Spent Fuel Storage ────────────────────────────────────────────────────
     public static final DeferredBlock<Block> SPENT_FUEL_STORAGE_BASE =
             BLOCKS.register("spent_fuel_storage_base",

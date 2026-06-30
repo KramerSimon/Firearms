@@ -136,6 +136,9 @@ public class AcidBathBlockEntity extends EnergyStorageBlock implements MenuProvi
         if (itemIs(input, "minecraft:iron_ingot") && canOutput(output, new ItemStack(ModItems.ETCHED_IRON.get())))
             return new AcidRecipe("minecraft:iron_ingot", new ItemStack(ModItems.ETCHED_IRON.get()));
 
+        if (itemIs(input, "firearms:stainless_steel_ingot") && canOutput(output, new ItemStack(ModItems.STAINLESS_PLATE.get())))
+            return new AcidRecipe("firearms:stainless_steel_ingot", new ItemStack(ModItems.STAINLESS_PLATE.get()));
+
         return null;
     }
 

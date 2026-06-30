@@ -9,6 +9,7 @@ import com.sio.firearms.item.BattlesuitItem;
 import com.sio.firearms.item.NapalmBombItem;
 import com.sio.firearms.item.ThermiteGrenadeItem;
 import com.sio.firearms.item.BulletproofVestItem;
+import com.sio.firearms.item.KevlarVestItem;
 import com.sio.firearms.item.CleaningKitItem;
 import com.sio.firearms.item.GrenadeItem;
 import com.sio.firearms.item.NightVisionGogglesItem;
@@ -577,4 +578,27 @@ public class ModItems {
     public static final DeferredItem<Item> AIRCRAFT_WINGS    = ITEMS.registerSimpleItem("aircraft_wings");
     public static final DeferredItem<Item> JET_ENGINE        = ITEMS.registerSimpleItem("jet_engine");
     public static final DeferredItem<Item> COCKPIT_AVIONICS  = ITEMS.registerSimpleItem("cockpit_avionics");
+
+    // ── New materials tier ────────────────────────────────────────────────────
+
+    public static final DeferredItem<Item> STAINLESS_STEEL_INGOT  = ITEMS.registerSimpleItem("stainless_steel_ingot");
+    public static final DeferredItem<Item> STAINLESS_PLATE        = ITEMS.registerSimpleItem("stainless_plate");
+    public static final DeferredItem<Item> TOOL_STEEL_INGOT       = ITEMS.registerSimpleItem("tool_steel_ingot");
+    public static final DeferredItem<Item> CARBON_FIBER_SHEET     = ITEMS.registerSimpleItem("carbon_fiber_sheet");
+    public static final DeferredItem<Item> KEVLAR_WEAVE           = ITEMS.registerSimpleItem("kevlar_weave");
+    public static final DeferredItem<Item> CERAMIC_PLATE          = ITEMS.registerSimpleItem("ceramic_plate");
+    public static final DeferredItem<Item> GOLD_WIRE              = ITEMS.registerSimpleItem("gold_wire");
+    public static final DeferredItem<Item> OPTICAL_FIBER          = ITEMS.registerSimpleItem("optical_fiber");
+    public static final DeferredItem<Item> NEODYMIUM_ORE_RAW      = ITEMS.registerSimpleItem("neodymium_ore_raw");
+    public static final DeferredItem<Item> NEODYMIUM_INGOT        = ITEMS.registerSimpleItem("neodymium_ingot");
+    public static final DeferredItem<Item> BERYLLIUM_COPPER_INGOT = ITEMS.registerSimpleItem("beryllium_copper_ingot");
+
+    public static final DeferredItem<Item> KEVLAR_VEST =
+            ITEMS.register("kevlar_vest",
+                    () -> new KevlarVestItem(ModArmorMaterials.KEVLAR_VEST.get(),
+                            ArmorItem.Type.CHESTPLATE,
+                            new Item.Properties().stacksTo(1)
+                                    .durability(ArmorItem.Type.CHESTPLATE.getDurability(30))));
+
+    public static final DeferredItem<BlockItem> NEODYMIUM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.NEODYMIUM_ORE);
 }

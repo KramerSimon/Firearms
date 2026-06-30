@@ -52,7 +52,9 @@ public class FirearmsJeiPlugin implements IModPlugin {
                 new VehicleGarageStructureCategory(gui),
                 new AircraftHangarStructureCategory(gui),
                 new VehicleGarageRecipeCategory(gui),
-                new HangarRecipeCategory(gui)
+                new HangarRecipeCategory(gui),
+                new AcidBathRecipeCategory(gui),
+                new HeatTreatmentRecipeCategory(gui)
         );
     }
 
@@ -88,6 +90,8 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipes(AircraftHangarStructureCategory.RECIPE_TYPE,  AircraftHangarStructureJeiRecipe.getAllRecipes());
         registration.addRecipes(VehicleGarageRecipeCategory.RECIPE_TYPE,      VehicleGarageJeiRecipe.getAllRecipes());
         registration.addRecipes(HangarRecipeCategory.RECIPE_TYPE,             HangarJeiRecipe.getAllRecipes());
+        registration.addRecipes(AcidBathRecipeCategory.RECIPE_TYPE,          AcidBathJeiRecipe.getAllRecipes());
+        registration.addRecipes(HeatTreatmentRecipeCategory.RECIPE_TYPE,     HeatTreatmentJeiRecipe.getAllRecipes());
     }
 
     @Override
@@ -161,5 +165,7 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_ROOF.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_CONTROLLER.get()), VehicleGarageRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_CONTROLLER.get()), HangarRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ACID_BATH.get()),              AcidBathRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HEAT_TREATMENT_FURNACE.get()), HeatTreatmentRecipeCategory.RECIPE_TYPE);
     }
 }

@@ -352,5 +352,19 @@
   "item.firearms.jet_engine": "Jet Engine",
   "item.firearms.cockpit_avionics": "Cockpit Avionics",
   "entity.firearms.aircraft": "Fighter Aircraft",
-  "container.firearms.hangar_controller": "Aircraft Hangar"
+  "container.firearms.hangar_controller": "Aircraft Hangar",
+
+  "item.firearms.stainless_steel_ingot": "Stainless Steel Ingot",
+  "item.firearms.stainless_plate": "Stainless Plate",
+  "item.firearms.tool_steel_ingot": "Tool Steel Ingot",
+  "item.firearms.carbon_fiber_sheet": "Carbon Fiber Sheet",
+  "item.firearms.kevlar_weave": "Kevlar Weave",
+  "item.firearms.kevlar_vest": "Kevlar Vest",
+  "item.firearms.ceramic_plate": "Ceramic Plate",
+  "item.firearms.gold_wire": "Gold Wire",
+  "item.firearms.optical_fiber": "Optical Fiber",
+  "item.firearms.neodymium_ore_raw": "Raw Neodymium",
+  "item.firearms.neodymium_ingot": "Neodymium Ingot",
+  "item.firearms.beryllium_copper_ingot": "Beryllium Copper Ingot",
+  "block.firearms.neodymium_ore": "Neodymium Ore"
 }

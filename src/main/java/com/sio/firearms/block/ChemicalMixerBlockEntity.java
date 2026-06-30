@@ -382,6 +382,14 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 new ItemStack(ModItems.NICHROME_ALLOY.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
         }
 
+        // 8b. coal + naphtha 500mB (tank2) → carbon_fiber_sheet×2  (tank1 must be empty to avoid photoresist conflict)
+        if (itemIs(slotA, "minecraft:coal", 1) && fluid2Is(ModFluids.NAPHTHA_STILL.get(), 500)
+                && fluidInputTank.isEmpty()
+                && canOutputItem(outSlot, new ItemStack(ModItems.CARBON_FIBER_SHEET.get(), 2))) {
+            return new RecipeResult("minecraft:coal", 1, null, 0, 0, 500,
+                new ItemStack(ModItems.CARBON_FIBER_SHEET.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
         // 9. naphtha 500mB (tank2) + nitric_acid 500mB (tank1) → photoresist 1000mB
         if (fluid2Is(ModFluids.NAPHTHA_STILL.get(), 500) && fluidIs(ModFluids.NITRIC_ACID_STILL.get(), 500)
                 && fluidOutputTank.getSpace() >= 1000) {
@@ -479,6 +487,14 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 && canOutputItem(outSlot, new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 2))) {
             return new RecipeResult("firearms:refined_gunpowder", 2, "firearms:nitrocellulose", 1, 0, 0,
                 new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
+        // 22. silicon_wafer + glass → 2x optical_fiber  (no fluid)
+        if (itemIs(slotA, "firearms:silicon_wafer", 1) && itemIs(slotB, "minecraft:glass", 1)
+                && fluidInputTank.isEmpty()
+                && canOutputItem(outSlot, new ItemStack(ModItems.OPTICAL_FIBER.get(), 2))) {
+            return new RecipeResult("firearms:silicon_wafer", 1, "minecraft:glass", 1, 0, 0,
+                new ItemStack(ModItems.OPTICAL_FIBER.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
         }
 
         return null;

@@ -81,7 +81,12 @@ public class LatheJeiRecipe {
             new LatheJeiRecipe(
                 new ItemStack(ModItems.IRIDIUM_ALLOY.get()),
                 ItemStack.EMPTY,
-                new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4))
+                new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4)),
+            // gold_ingot → gold_wire x2
+            new LatheJeiRecipe(
+                new ItemStack(net.minecraft.world.item.Items.GOLD_INGOT),
+                ItemStack.EMPTY,
+                new ItemStack(ModItems.GOLD_WIRE.get(), 2))
         );
     }
 }

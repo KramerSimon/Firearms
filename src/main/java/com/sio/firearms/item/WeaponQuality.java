@@ -5,7 +5,8 @@ import net.minecraft.ChatFormatting;
 public enum WeaponQuality {
     STANDARD("Standard", ChatFormatting.WHITE, 1.0f, 1.0f, 1.0f),
     REFINED("Refined", ChatFormatting.BLUE, 1.15f, 1.10f, 1.0f),
-    MILITARY_GRADE("Military Grade", ChatFormatting.GOLD, 1.30f, 1.25f, 0.8f);
+    MILITARY_GRADE("Military Grade", ChatFormatting.GOLD, 1.30f, 1.25f, 0.8f),
+    STAINLESS("Stainless", ChatFormatting.AQUA, 1.10f, 1.20f, 1.0f);
 
     private final String displayName;
     private final ChatFormatting color;
