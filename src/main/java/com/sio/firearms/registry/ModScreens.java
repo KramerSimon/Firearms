@@ -35,6 +35,7 @@ import com.sio.firearms.screen.HeatTreatmentFurnaceScreen;
 import com.sio.firearms.screen.LatheScreen;
 import com.sio.firearms.screen.GunModificationTableScreen;
 import com.sio.firearms.screen.VehicleGarageScreen;
+import com.sio.firearms.screen.CrateScreen;
 import com.sio.firearms.screen.MetalPressScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -79,6 +80,7 @@ public class ModScreens {
         event.register(ModMenuTypes.STEAM_TURBINE_MENU.get(), SteamTurbineScreen::new);
         event.register(ModMenuTypes.COOLING_TOWER_MENU.get(), CoolingTowerScreen::new);
         event.register(ModMenuTypes.VEHICLE_GARAGE_MENU.get(), VehicleGarageScreen::new);
+        event.register(ModMenuTypes.CRATE_MENU.get(), CrateScreen::new);
         event.register(ModMenuTypes.TRASH_CAN_MENU.get(), com.sio.firearms.screen.TrashCanScreen::new);
         event.register(ModMenuTypes.AMMO_BOX_MENU.get(), AmmoBoxScreen::new);
         event.register(ModMenuTypes.GUN_CASE_MENU.get(), GunCaseScreen::new);

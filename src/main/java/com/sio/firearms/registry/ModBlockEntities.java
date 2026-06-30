@@ -14,6 +14,7 @@ import com.sio.firearms.block.WaferTesterBlockEntity;
 import com.sio.firearms.block.DicingSawBlockEntity;
 import com.sio.firearms.block.ChipPackagingMachineBlockEntity;
 import com.sio.firearms.block.AssemblyBenchBlockEntity;
+import com.sio.firearms.block.CrateBlockEntity;
 import com.sio.firearms.block.ChemicalMixerBlockEntity;
 import com.sio.firearms.block.ChemicalMixerControllerBlockEntity;
 import com.sio.firearms.block.ElectrolysisMachineBlockEntity;
@@ -256,6 +257,11 @@ public class ModBlockEntities {
                             ModBlocks.GARAGE_CONTROLLER.get()).build(null));
 
     // ── Utility ───────────────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrateBlockEntity>> CRATE =
+            BLOCK_ENTITIES.register("crate",
+                    () -> BlockEntityType.Builder.of(CrateBlockEntity::new,
+                            ModBlocks.CRATE.get()).build(null));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.TrashCanBlockEntity>> TRASH_CAN =
             BLOCK_ENTITIES.register("trash_can",
                     () -> BlockEntityType.Builder.of(com.sio.firearms.block.TrashCanBlockEntity::new,

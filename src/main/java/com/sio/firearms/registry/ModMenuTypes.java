@@ -36,6 +36,7 @@ import com.sio.firearms.menu.LatheMenu;
 import com.sio.firearms.menu.GunModificationTableMenu;
 import com.sio.firearms.menu.VehicleGarageMenu;
 import com.sio.firearms.menu.MetalPressMenu;
+import com.sio.firearms.menu.CrateMenu;
 import com.sio.firearms.menu.SpentFuelStorageMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
@@ -179,6 +180,10 @@ public class ModMenuTypes {
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new VehicleGarageMenu(windowId, inv)));
 
     // ── Utility ───────────────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<CrateMenu>> CRATE_MENU =
+            MENU_TYPES.register("crate",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new CrateMenu(windowId, inv)));
+
     public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.TrashCanMenu>> TRASH_CAN_MENU =
             MENU_TYPES.register("trash_can",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new com.sio.firearms.menu.TrashCanMenu(windowId, inv)));

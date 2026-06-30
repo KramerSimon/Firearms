@@ -432,6 +432,7 @@ public class ModItems {
     public static final DeferredItem<Item> GEIGER_COUNTER =
             ITEMS.register("geiger_counter", GeigerCounterItem::new);
 
+    public static final DeferredItem<BlockItem> CRATE = ITEMS.registerSimpleBlockItem(ModBlocks.CRATE);
     public static final DeferredItem<BlockItem> TRASH_CAN = ITEMS.registerSimpleBlockItem(ModBlocks.TRASH_CAN);
 
     // ── Vehicle Garage ────────────────────────────────────────────────────────

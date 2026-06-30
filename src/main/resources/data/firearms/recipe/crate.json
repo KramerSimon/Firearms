@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SPS",
+    "PPP",
+    "SPS"
+  ],
+  "key": {
+    "P": {"item": "minecraft:oak_planks"},
+    "S": {"item": "firearms:steel_ingot"}
+  },
+  "result": {
+    "id": "firearms:crate",
+    "count": 1
+  }
+}

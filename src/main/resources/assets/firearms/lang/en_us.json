@@ -272,6 +272,7 @@
   "block.firearms.cooling_tower_vent": "Cooling Tower Vent",
   "block.firearms.cooling_tower_controller": "Cooling Tower Controller",
   "message.firearms.steam_turbine_part_of_tower": "This Steam Turbine is a structural component. Place it inside a Cooling Tower.",
+  "block.firearms.crate": "Crate",
   "block.firearms.trash_can": "Trash Can",
   "block.firearms.garage_floor": "Garage Floor",
   "block.firearms.garage_wall": "Garage Wall",

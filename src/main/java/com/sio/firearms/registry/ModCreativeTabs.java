@@ -260,6 +260,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.TANK_TURRET.get());
                         output.accept(ModItems.DIESEL_ENGINE.get());
                         output.accept(ModItems.TANK_CANNON.get());
+                        output.accept(ModItems.CRATE.get());
                         output.accept(ModItems.TRASH_CAN.get());
                         output.accept(ModItems.CHAINSAW.get());
                         output.accept(ModItems.MINIGUN.get());

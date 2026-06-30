@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "firearms:block/crate_top",
+    "side": "firearms:block/crate_side"
+  }
+}

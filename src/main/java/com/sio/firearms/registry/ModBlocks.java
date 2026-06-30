@@ -45,6 +45,7 @@ import com.sio.firearms.block.GunModificationTableBlock;
 import com.sio.firearms.block.MetalPressBlock;
 import com.sio.firearms.block.GarageDoorBlock;
 import com.sio.firearms.block.VehicleGarageControllerBlock;
+import com.sio.firearms.block.CrateBlock;
 import com.sio.firearms.block.PoppyPlantBlock;
 import com.sio.firearms.block.WireBlock;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -718,6 +719,12 @@ public class ModBlocks {
                             .requiresCorrectToolForDrops()));
 
     // ── Utility ───────────────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> CRATE =
+            BLOCKS.register("crate",
+                    () -> new CrateBlock(BlockBehaviour.Properties.of()
+                            .strength(2.5f)
+                            .sound(SoundType.WOOD)));
+
     public static final DeferredBlock<Block> TRASH_CAN =
             BLOCKS.register("trash_can",
                     () -> new com.sio.firearms.block.TrashCanBlock(BlockBehaviour.Properties.of()
