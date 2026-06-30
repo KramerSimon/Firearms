@@ -1,0 +1,16 @@
+{
+  "block.firearms.hangar_floor": "Hangar Floor",
+  "block.firearms.hangar_wall": "Hangar Wall",
+  "block.firearms.hangar_roof": "Hangar Roof",
+  "block.firearms.hangar_door": "Hangar Door",
+  "block.firearms.hangar_controller": "Aircraft Hangar Controller",
+
+  "item.firearms.aircraft_fuselage": "Aircraft Fuselage",
+  "item.firearms.aircraft_wings": "Aircraft Wings",
+  "item.firearms.jet_engine": "Jet Engine",
+  "item.firearms.cockpit_avionics": "Cockpit Avionics",
+
+  "entity.firearms.aircraft": "Fighter Aircraft",
+
+  "container.firearms.hangar_controller": "Aircraft Hangar"
+}

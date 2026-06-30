@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["SSS", "III"],
+  "key": {
+    "S": { "item": "firearms:steel_ingot" },
+    "I": { "item": "minecraft:iron_ingot" }
+  },
+  "result": { "id": "firearms:hangar_roof", "count": 6 }
+}
