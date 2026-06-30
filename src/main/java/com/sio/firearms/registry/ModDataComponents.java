@@ -133,6 +133,13 @@ public class ModDataComponents {
                     .networkSynchronized(ByteBufCodecs.INT)
                     .build());
 
+    // ── Weapon quality tier ───────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> QUALITY =
+            DATA_COMPONENTS.register("quality", () -> DataComponentType.<String>builder()
+                    .persistent(Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                    .build());
+
     // ── Containers ────────────────────────────────────────────────────────────
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> AMMO_BOX_ITEMS =
             DATA_COMPONENTS.register("ammo_box_items", () -> DataComponentType.<ItemContainerContents>builder()
