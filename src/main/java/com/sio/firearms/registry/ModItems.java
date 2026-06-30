@@ -491,6 +491,10 @@ public class ModItems {
     public static final DeferredItem<Item> CORDITE_BULLET   = ITEMS.registerSimpleItem("cordite_bullet");
     public static final DeferredItem<Item> EXPLOSIVE_BULLET = ITEMS.registerSimpleItem("explosive_bullet");
 
+    // ── Match Grade ammunition ────────────────────────────────────────────────
+    public static final DeferredItem<Item> MATCH_GRADE_POWDER = ITEMS.registerSimpleItem("match_grade_powder");
+    public static final DeferredItem<Item> MATCH_GRADE_BULLET = ITEMS.registerSimpleItem("match_grade_bullet");
+
     // ── Pharmaceutical system ─────────────────────────────────────────────────
     public static final DeferredItem<Item> POPPY_SEEDS      = ITEMS.registerSimpleItem("poppy_seeds");
     public static final DeferredItem<Item> RAW_OPIUM        = ITEMS.registerSimpleItem("raw_opium");
@@ -531,11 +535,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_BASE);
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_WALL);
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER);
-
-    // ── Titanium ──────────────────────────────────────────────────────────────
-    public static final DeferredItem<Item>      TITANIUM_ORE_RAW  = ITEMS.registerSimpleItem("titanium_ore_raw");
-    public static final DeferredItem<Item>      TITANIUM_INGOT    = ITEMS.registerSimpleItem("titanium_ingot");
-    public static final DeferredItem<BlockItem> TITANIUM_ORE      = ITEMS.registerSimpleBlockItem(ModBlocks.TITANIUM_ORE);
 
     // ── Modern Battlesuit ─────────────────────────────────────────────────────
     public static final DeferredItem<Item> BATTLESUIT_HELMET =

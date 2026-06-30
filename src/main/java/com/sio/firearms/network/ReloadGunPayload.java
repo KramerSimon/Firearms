@@ -36,6 +36,30 @@ public record ReloadGunPayload() implements CustomPacketPayload {
             int needed = maxAmmo - currentAmmo;
             if (needed <= 0) return;
 
+            // Priority: Match Grade > Refined > Standard
+            int availableMatchGrade = 0;
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                if (player.getInventory().getItem(i).is(ModItems.MATCH_GRADE_BULLET.get()))
+                    availableMatchGrade += player.getInventory().getItem(i).getCount();
+            }
+
+            if (availableMatchGrade > 0) {
+                int toLoad = Math.min(needed, availableMatchGrade);
+                int remaining = toLoad;
+                for (int i = 0; i < player.getInventory().getContainerSize() && remaining > 0; i++) {
+                    ItemStack slot = player.getInventory().getItem(i);
+                    if (slot.is(ModItems.MATCH_GRADE_BULLET.get())) {
+                        int take = Math.min(remaining, slot.getCount());
+                        if (!player.isCreative()) slot.shrink(take);
+                        remaining -= take;
+                    }
+                }
+                gunItem.setAmmo(held, currentAmmo + toLoad);
+                held.set(ModDataComponents.USING_MATCH_GRADE_AMMO.get(), true);
+                held.set(ModDataComponents.USING_REFINED_AMMO.get(), false);
+                return;
+            }
+
             // Prefer refined bullets over standard bullets
             int availableRefined = 0;
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
@@ -56,6 +80,7 @@ public record ReloadGunPayload() implements CustomPacketPayload {
                 }
                 gunItem.setAmmo(held, currentAmmo + toLoad);
                 held.set(ModDataComponents.USING_REFINED_AMMO.get(), true);
+                held.set(ModDataComponents.USING_MATCH_GRADE_AMMO.get(), false);
                 return;
             }
 
@@ -80,6 +105,7 @@ public record ReloadGunPayload() implements CustomPacketPayload {
             }
             gunItem.setAmmo(held, currentAmmo + toLoad);
             held.set(ModDataComponents.USING_REFINED_AMMO.get(), false);
+            held.set(ModDataComponents.USING_MATCH_GRADE_AMMO.get(), false);
         });
     }
 }

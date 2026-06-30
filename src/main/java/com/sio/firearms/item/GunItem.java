@@ -78,17 +78,20 @@ public class GunItem extends Item {
         setAmmo(stack, currentAmmo - 1);
 
         boolean ap = Boolean.TRUE.equals(stack.get(ModDataComponents.ARMOR_PIERCING.get()));
+        boolean matchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
         boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
         boolean cordite = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_CORDITE_AMMO.get()));
         boolean explosive = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_EXPLOSIVE_AMMO.get()));
         int actualDamage = (int) ((ap ? 20 : (cordite ? 14 : (refined ? 10 : damage))) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get());
+        float inaccuracy = matchGrade ? 0.0F : 0.0F; // match grade guarantees zero spread; base GunItem already fires straight
         BulletEntity bullet = new BulletEntity(level, player, actualDamage);
         bullet.setArmorPiercing(ap);
         bullet.setPartialArmorPiercing(cordite);
         bullet.setExplosive(explosive);
+        bullet.setMatchGrade(matchGrade);
         bullet.setShooterGun(stack);
         bullet.setPos(player.getEyePosition());
-        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 0.0F);
+        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, inaccuracy);
         level.addFreshEntity(bullet);
 
         level.playSound(null, player.blockPosition(), soundEvent, SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -103,10 +106,14 @@ public class GunItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        boolean matchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
         boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
         tooltipComponents.add(Component.literal("Damage: ").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(String.valueOf(damage)).withStyle(ChatFormatting.WHITE)));
-        if (refined) {
+        if (matchGrade) {
+            tooltipComponents.add(Component.literal("Ammo: ").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("Match Grade (Zero Spread)").withStyle(ChatFormatting.DARK_GREEN)));
+        } else if (refined) {
             tooltipComponents.add(Component.literal("Ammo: ").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("Refined (+2 dmg)").withStyle(ChatFormatting.AQUA)));
         }

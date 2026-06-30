@@ -1,6 +1,7 @@
 package com.sio.firearms.item;
 
 import com.sio.firearms.entity.BulletEntity;
+import com.sio.firearms.registry.ModDataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -31,10 +32,12 @@ public class SMGItem extends GunItem {
 
         setAmmo(stack, currentAmmo - 1);
 
+        boolean matchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
         BulletEntity bullet = new BulletEntity(level, player, 5);
         bullet.setShooterGun(stack);
+        bullet.setMatchGrade(matchGrade);
         bullet.setPos(player.getEyePosition());
-        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, SPREAD);
+        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, matchGrade ? 0.0F : SPREAD);
         level.addFreshEntity(bullet);
 
         level.playSound(null, player.blockPosition(), getSoundEvent(), SoundSource.PLAYERS, 0.7F, 1.0F + level.getRandom().nextFloat() * 0.2F);

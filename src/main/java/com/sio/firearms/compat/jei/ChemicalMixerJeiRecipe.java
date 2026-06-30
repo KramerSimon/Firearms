@@ -220,6 +220,15 @@ public class ChemicalMixerJeiRecipe {
                 new ItemStack(ModItems.SALTPETER.get()),
                 new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 100),
                 new ItemStack(ModItems.COAGULANT.get(), 2),
+                FluidStack.EMPTY),
+
+            // ── Match Grade Ammunition ────────────────────────────────────────
+            // refined_gunpowder×2 + nitrocellulose → 2x match_grade_powder (no fluid)
+            new ChemicalMixerJeiRecipe(
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 2),
+                new ItemStack(ModItems.NITROCELLULOSE.get()),
+                FluidStack.EMPTY,
+                new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 2),
                 FluidStack.EMPTY)
         );
     }

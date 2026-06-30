@@ -337,12 +337,6 @@ public class ModBlocks {
                             .strength(2.5f, 3.0f)
                             .sound(SoundType.STONE)));
 
-    public static final DeferredBlock<Block> TITANIUM_ORE =
-            BLOCKS.register("titanium_ore",
-                    () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.of()
-                            .strength(3.5f, 4.0f)
-                            .sound(SoundType.STONE)));
-
     // ── Coil blocks ──────────────────────────────────────────────────────────
 
     // Coil light levels rise with tier so the inner chamber glows hotter:

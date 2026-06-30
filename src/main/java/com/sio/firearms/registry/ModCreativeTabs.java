@@ -272,6 +272,9 @@ public class ModCreativeTabs {
                         output.accept(ModItems.CORDITE.get());
                         output.accept(ModItems.CORDITE_BULLET.get());
                         output.accept(ModItems.EXPLOSIVE_BULLET.get());
+                        // ── Match Grade Ammunition ────────────────────────────
+                        output.accept(ModItems.MATCH_GRADE_POWDER.get());
+                        output.accept(ModItems.MATCH_GRADE_BULLET.get());
                         // ── Pharmaceutical ────────────────────────────────────
                         output.accept(ModItems.POPPY_SEEDS.get());
                         output.accept(ModItems.RAW_OPIUM.get());

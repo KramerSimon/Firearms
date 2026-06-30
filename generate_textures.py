@@ -1407,6 +1407,72 @@ def make_thermite_grenade():
     img.save(os.path.join(ITEM, "thermite_grenade.png"))
 
 
+# ── Match Grade Powder item (16×16) ──────────────────────────────────────────
+def make_match_grade_powder():
+    """Fine golden precision propellant — small granules with amber/gold hue."""
+    PG = (210, 175,  80, 255)  # powder gold
+    PL = (240, 210, 110, 255)  # powder light
+    PD = (150, 120,  40, 255)  # powder dark
+    PS = (100,  78,  20, 255)  # powder shadow
+    GRID = [
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  PL, T,  T,  T,  PL, T,  T,  T,  PL, T,  T,  T,  T],
+        [T,  T,  PG, PD, T,  PL, PG, PD, T,  T,  PG, PD, PL, T,  T,  T],
+        [T,  PL, PG, PD, PG, PG, PL, PD, PG, PL, PG, PD, PG, T,  T,  T],
+        [T,  T,  PD, PG, PL, PG, PD, PG, PD, PG, PL, PG, PD, PL, T,  T],
+        [T,  T,  T,  PG, PG, PD, PG, PL, PG, PD, PG, PL, PG, T,  T,  T],
+        [T,  T,  PL, PD, PG, PG, PD, PG, PL, PD, PG, PD, PL, T,  T,  T],
+        [T,  T,  T,  PL, PD, PG, PD, PG, PD, PG, PD, PG, T,  T,  T,  T],
+        [T,  T,  T,  T,  PG, PD, PG, PL, PG, PD, PG, T,  T,  T,  T,  T],
+        [T,  T,  T,  PG, PD, PG, PL, PD, PG, PD, PG, PD, T,  T,  T,  T],
+        [T,  T,  T,  T,  PG, PD, PG, PD, PG, PD, PG, T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  PL, PD, PG, PD, PG, T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  PG, PD, PG, T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  PS, T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(GRID):
+        for x, c in enumerate(row):
+            img.putpixel((x, y), c)
+    save(img, os.path.join(ITEM, "match_grade_powder.png"))
+
+
+# ── Match Grade Bullet item (16×16) ──────────────────────────────────────────
+def make_match_grade_bullet():
+    """Precision bullet — polished silver body, brass case, green accuracy band."""
+    SL = (200, 210, 220, 255)  # silver light (polished tip)
+    SM = (165, 175, 185, 255)  # silver mid body
+    SD = (115, 125, 135, 255)  # silver dark shadow side
+    GB = (180, 145,  55, 255)  # brass case
+    GD = (115,  88,  25, 255)  # brass shadow
+    GN = ( 48, 160,  72, 255)  # match-grade green band
+    GNL = (80, 200, 105, 255)  # green highlight
+    layout = [
+        # (y, x_start, x_end, col)  — bullet centred at x=7..9
+        (2,  8,  8,  SL),   # polished tip 1px
+        (3,  7,  9,  SL),   # tip 3px
+        (4,  7,  9,  SM),   # transition to body
+        (5,  6, 10,  SM),   # body
+        (6,  6, 10,  SM),
+        (7,  6, 10,  GNL),  # green accuracy band highlight
+        (8,  6, 10,  GN),   # green accuracy band
+        (9,  6, 10,  GB),   # brass case
+        (10, 6, 10,  GB),
+        (11, 6, 10,  GD),   # case rim
+        (12, 6, 10,  GD),
+    ]
+    img = px(16, 16)
+    for (y, xs, xe, col) in layout:
+        for x in range(xs, xe + 1):
+            img.putpixel((x, y), col)
+    # shadow side (left edge of body)
+    for y in range(5, 9):
+        img.putpixel((6, y), SD)
+    save(img, os.path.join(ITEM, "match_grade_bullet.png"))
+
+
 # ── main ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Generating Firearms mod textures...")
@@ -1470,5 +1536,9 @@ if __name__ == "__main__":
     # ── Incendiary Weapons ────────────────────────────────────────────────────
     make_napalm_bomb()
     make_thermite_grenade()
+
+    # ── Match Grade Ammunition ────────────────────────────────────────────────
+    make_match_grade_powder()
+    make_match_grade_bullet()
 
     print("Done.")

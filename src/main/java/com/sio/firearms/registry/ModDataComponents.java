@@ -114,6 +114,12 @@ public class ModDataComponents {
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> USING_MATCH_GRADE_AMMO =
+            DATA_COMPONENTS.register("using_match_grade_ammo", () -> DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> USING_EXPLOSIVE_AMMO =
             DATA_COMPONENTS.register("using_explosive_ammo", () -> DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)

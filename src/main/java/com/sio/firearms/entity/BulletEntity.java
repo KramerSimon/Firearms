@@ -37,6 +37,7 @@ public class BulletEntity extends Projectile implements ItemSupplier {
     private boolean armorPiercing = false;
     private boolean partialArmorPiercing = false;
     private boolean explosive = false;
+    private boolean matchGrade = false;
     private final Set<UUID> playersFlybyPlayed = new HashSet<>();
     private final Set<UUID> piercedEntities = new HashSet<>();
     private ItemStack shooterGun = ItemStack.EMPTY;
@@ -67,6 +68,10 @@ public class BulletEntity extends Projectile implements ItemSupplier {
 
     public void setExplosive(boolean explosive) {
         this.explosive = explosive;
+    }
+
+    public void setMatchGrade(boolean matchGrade) {
+        this.matchGrade = matchGrade;
     }
 
     public void setShooterGun(ItemStack gun) {

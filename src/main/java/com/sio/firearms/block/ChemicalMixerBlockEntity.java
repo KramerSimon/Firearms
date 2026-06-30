@@ -473,6 +473,14 @@ public class ChemicalMixerBlockEntity extends EnergyStorageBlock implements Menu
                 new ItemStack(ModItems.COAGULANT.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
         }
 
+        // 21. refined_gunpowder×2 + nitrocellulose → 2x match_grade_powder
+        if (itemIs(slotA, "firearms:refined_gunpowder", 2) && itemIs(slotB, "firearms:nitrocellulose", 1)
+                && fluidInputTank.isEmpty()
+                && canOutputItem(outSlot, new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 2))) {
+            return new RecipeResult("firearms:refined_gunpowder", 2, "firearms:nitrocellulose", 1, 0, 0,
+                new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 2), FluidStack.EMPTY, PROCESS_TIME);
+        }
+
         return null;
     }
 
