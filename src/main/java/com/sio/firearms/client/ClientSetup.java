@@ -37,6 +37,15 @@ public class ClientSetup {
         event.registerEntityRenderer(ModEntities.TANK.get(), TankRenderer::new);
         event.registerEntityRenderer(ModEntities.MOLOTOV.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.NITROGLYCERIN.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.NAPALM_BOMB.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.THERMITE_GRENADE.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer((EntityType) ModEntities.NAPALM_FIRE_PATCH.get(),
+                ctx -> new net.minecraft.client.renderer.entity.EntityRenderer<>(ctx) {
+                    @Override public net.minecraft.resources.ResourceLocation getTextureLocation(
+                            net.minecraft.world.entity.Entity e) {
+                        return net.minecraft.resources.ResourceLocation.withDefaultNamespace("textures/misc/unknown_pack.png");
+                    }
+                });
         event.registerEntityRenderer((EntityType) ModEntities.FLAME.get(),
                 ctx -> new net.minecraft.client.renderer.entity.EntityRenderer<>(ctx) {
                     @Override public net.minecraft.resources.ResourceLocation getTextureLocation(

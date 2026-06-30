@@ -77,4 +77,20 @@ public class ModArmorMaterials {
                     0.0f,
                     0.0f
             ));
+
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> BATTLESUIT =
+            ARMOR_MATERIALS.register("battlesuit", () -> new ArmorMaterial(
+                    Map.of(
+                            ArmorItem.Type.HELMET,     12,
+                            ArmorItem.Type.CHESTPLATE, 12,
+                            ArmorItem.Type.LEGGINGS,   12,
+                            ArmorItem.Type.BOOTS,      12
+                    ),
+                    15,
+                    SoundEvents.ARMOR_EQUIP_NETHERITE,
+                    () -> Ingredient.of(ModItems.TITANIUM_INGOT.get()),
+                    List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Firearms.MOD_ID, "battlesuit"))),
+                    4.0f,
+                    0.1f
+            ));
 }

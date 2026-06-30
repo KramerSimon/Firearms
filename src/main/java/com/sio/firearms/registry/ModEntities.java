@@ -6,11 +6,14 @@ import com.sio.firearms.entity.FirePatchEntity;
 import com.sio.firearms.entity.FlameEntity;
 import com.sio.firearms.entity.GrenadeEntity;
 import com.sio.firearms.entity.MolotovEntity;
+import com.sio.firearms.entity.NapalmBombEntity;
+import com.sio.firearms.entity.NapalmFirePatchEntity;
 import com.sio.firearms.entity.NitroglycerinEntity;
 import com.sio.firearms.entity.SeaMineEntity;
 import com.sio.firearms.entity.SmokeGrenadeEntity;
 import com.sio.firearms.entity.TankCannonShellEntity;
 import com.sio.firearms.entity.TankEntity;
+import com.sio.firearms.entity.ThermiteGrenadeEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -83,4 +86,22 @@ public class ModEntities {
                     .sized(0.25F, 0.25F)
                     .clientTrackingRange(64)
                     .build(Firearms.MOD_ID + ":nitroglycerin"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<NapalmBombEntity>> NAPALM_BOMB =
+            ENTITY_TYPES.register("napalm_bomb", () -> EntityType.Builder.<NapalmBombEntity>of(NapalmBombEntity::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(64)
+                    .build(Firearms.MOD_ID + ":napalm_bomb"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<NapalmFirePatchEntity>> NAPALM_FIRE_PATCH =
+            ENTITY_TYPES.register("napalm_fire_patch", () -> EntityType.Builder.<NapalmFirePatchEntity>of(NapalmFirePatchEntity::new, MobCategory.MISC)
+                    .sized(3.0F, 1.5F)
+                    .clientTrackingRange(64)
+                    .build(Firearms.MOD_ID + ":napalm_fire_patch"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<ThermiteGrenadeEntity>> THERMITE_GRENADE =
+            ENTITY_TYPES.register("thermite_grenade", () -> EntityType.Builder.<ThermiteGrenadeEntity>of(ThermiteGrenadeEntity::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(64)
+                    .build(Firearms.MOD_ID + ":thermite_grenade"));
 }

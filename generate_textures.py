@@ -6,11 +6,12 @@ Run from the project root: python generate_textures.py
 from PIL import Image, ImageDraw
 import os
 
-ROOT = os.path.dirname(__file__)
-BLOCK  = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/block")
-ITEM   = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/item")
-FLUID  = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/fluid")
-GUI    = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/gui")
+ROOT  = os.path.dirname(__file__)
+BLOCK = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/block")
+ITEM  = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/item")
+FLUID = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/fluid")
+GUI   = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/gui")
+ARMOR = os.path.join(ROOT, "src/main/resources/assets/firearms/textures/models/armor")
 
 # ── palette ──────────────────────────────────────────────────────────────────
 T  = (0,   0,   0,   0)    # transparent
@@ -48,6 +49,23 @@ F2  = (210,255, 155, 200)   # fluorine – yellow-green
 CL  = (155,230, 100, 200)   # chlorine – vivid yellow-green
 NIT = (240,220, 110, 200)   # nitrate solution – pale amber
 PVC = (225,220, 215, 210)   # pvc resin – milky off-white
+
+# titanium ore
+TI_S  = (100, 100, 120, 255)   # stone shadow
+TI_B  = (122, 122, 138, 255)   # stone base
+TI_L  = (148, 148, 162, 255)   # stone light
+TI_V  = (128, 155, 205, 255)   # titanium vein
+TI_VH = (175, 198, 238, 255)   # titanium highlight
+TI_VD = (82,  108, 168, 255)   # titanium shadow
+
+# battlesuit (powered armor)
+BS_S  = (12,  18,  42,  255)   # suit shadow
+BS_D  = (22,  32,  62,  255)   # suit dark
+BS_B  = (36,  52,  98,  255)   # suit body
+BS_L  = (58,  80, 148,  255)   # suit light
+BS_H  = (90, 120, 205,  255)   # suit highlight
+BS_T  = (168, 185, 215, 255)   # titanium trim
+BS_E  = (80, 200, 255, 255)    # energy blue glow
 
 # bucket content mask – use the vanilla bucket fluid window (pixels 3-12, rows 2-11)
 BUCKET_ROWS = list(range(2, 12))
@@ -1156,6 +1174,239 @@ def make_iridium_wire():
     save(img, os.path.join(ITEM, "iridium_wire.png"))
 
 
+# ── battlesuit item icons (16×16) ────────────────────────────────────────────
+def make_battlesuit_helmet():
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    # Dome shape
+    d.ellipse([2, 1, 13, 10], fill=BS_B)
+    # Visor
+    d.rectangle([3, 5, 12, 9], fill=BS_E)
+    d.rectangle([3, 5, 12, 6], fill=(120, 220, 255, 255))
+    # Neck guard
+    d.rectangle([4, 10, 11, 12], fill=BS_D)
+    # Trim
+    d.rectangle([2, 1, 13, 2], fill=BS_T)
+    d.rectangle([2, 9, 13, 10], fill=BS_T)
+    # Chin guards
+    d.rectangle([3, 11, 5, 13], fill=BS_B)
+    d.rectangle([10, 11, 12, 13], fill=BS_B)
+    # Shadow side
+    d.rectangle([2, 2, 3, 9], fill=BS_S)
+    d.rectangle([12, 2, 13, 9], fill=BS_L)
+    save(img, os.path.join(ITEM, "battlesuit_helmet.png"))
+
+
+def make_battlesuit_chestplate():
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    # Main plate
+    d.rectangle([2, 1, 13, 13], fill=BS_B)
+    # Shoulder pauldrons
+    d.rectangle([0, 1, 2, 8],   fill=BS_L)
+    d.rectangle([13, 1, 15, 8], fill=BS_D)
+    # Central energy cell
+    d.rectangle([6, 4, 9, 9],   fill=BS_E)
+    d.rectangle([6, 4, 9, 5],   fill=(120, 220, 255, 255))
+    # Chest ridge lines
+    d.rectangle([3, 2, 5, 12],  fill=BS_D)
+    d.rectangle([10, 2, 12, 12],fill=BS_L)
+    # Collar
+    d.rectangle([4, 1, 11, 2],  fill=BS_T)
+    # Bottom trim
+    d.rectangle([2, 12, 13, 13],fill=BS_T)
+    # Shadow
+    d.rectangle([2, 1, 3, 13],  fill=BS_S)
+    save(img, os.path.join(ITEM, "battlesuit_chestplate.png"))
+
+
+def make_battlesuit_leggings():
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    # Waist band
+    d.rectangle([2, 1, 13, 4],  fill=BS_B)
+    d.rectangle([2, 1, 13, 2],  fill=BS_T)
+    # Left leg
+    d.rectangle([2, 4, 7, 15],  fill=BS_B)
+    d.rectangle([3, 5, 6, 14],  fill=BS_L)
+    d.rectangle([2, 4, 3, 15],  fill=BS_S)
+    d.rectangle([6, 10, 7, 15], fill=BS_D)
+    # Right leg
+    d.rectangle([8, 4, 13, 15], fill=BS_B)
+    d.rectangle([8, 5, 11, 14], fill=BS_D)
+    d.rectangle([12, 4, 13, 15],fill=BS_L)
+    d.rectangle([8, 10, 9, 15], fill=BS_S)
+    # Knee pads
+    d.rectangle([3, 8, 7, 11],  fill=BS_T)
+    d.rectangle([8, 8, 12, 11], fill=BS_T)
+    save(img, os.path.join(ITEM, "battlesuit_leggings.png"))
+
+
+def make_battlesuit_boots():
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    # Shin
+    d.rectangle([3, 1, 7, 10],  fill=BS_B)
+    d.rectangle([4, 2, 6, 9],   fill=BS_L)
+    d.rectangle([3, 1, 4, 10],  fill=BS_S)
+    # Ankle/boot
+    d.rectangle([2, 10, 8, 15], fill=BS_B)
+    d.rectangle([2, 10, 8, 11], fill=BS_T)
+    d.rectangle([2, 14, 8, 15], fill=BS_D)
+    # Toe cap
+    d.rectangle([1, 13, 9, 15], fill=BS_D)
+    d.rectangle([1, 13, 9, 14], fill=BS_S)
+    # Knee guard
+    d.rectangle([3, 7, 7, 10],  fill=BS_T)
+    # Shadow
+    d.rectangle([7, 10, 8, 15], fill=BS_L)
+    save(img, os.path.join(ITEM, "battlesuit_boots.png"))
+
+
+# ── battlesuit armor layer textures (64×32) ──────────────────────────────────
+def make_battlesuit_armor():
+    # Layer 1 – helmet, chestplate, boots (standard Minecraft UV layout)
+    img1 = px(64, 32, bg=T)
+    d1 = ImageDraw.Draw(img1)
+
+    # Fill all armor regions with body color
+    d1.rectangle([0, 0, 63, 31], fill=BS_B)
+
+    # Top highlight row
+    d1.line([(0, 0), (63, 0)], fill=BS_L)
+    # Bottom shadow row
+    d1.line([(0, 31), (63, 31)], fill=BS_S)
+    # Left shadow column
+    d1.line([(0, 0), (0, 31)], fill=BS_S)
+    # Right highlight
+    d1.line([(63, 0), (63, 31)], fill=BS_L)
+
+    # Energy cells (scattered blue glows based on armor UV regions)
+    for cx, cy in [(8, 8), (20, 14), (44, 8), (52, 20)]:
+        d1.rectangle([cx-1, cy-1, cx+1, cy+1], fill=BS_E)
+
+    # Titanium trim lines
+    for x in range(0, 64, 16):
+        d1.line([(x, 0), (x, 31)], fill=BS_T)
+    for y in range(0, 32, 8):
+        d1.line([(0, y), (63, y)], fill=BS_T)
+
+    # Darken seam regions
+    for region in [(0,0,7,7),(24,0,39,7),(56,0,63,7),(0,16,15,31),(48,16,63,31)]:
+        d1.rectangle(region, fill=BS_D)
+
+    save(img1, os.path.join(ARMOR, "battlesuit_layer_1.png"))
+
+    # Layer 2 – leggings
+    img2 = px(64, 32, bg=T)
+    d2 = ImageDraw.Draw(img2)
+    d2.rectangle([0, 0, 63, 31], fill=BS_D)
+    d2.line([(0, 0), (63, 0)], fill=BS_L)
+    d2.line([(0, 31), (63, 31)], fill=BS_S)
+    for x in range(0, 64, 16):
+        d2.line([(x, 0), (x, 31)], fill=BS_T)
+    for y in range(0, 32, 8):
+        d2.line([(0, y), (63, y)], fill=BS_B)
+    # Knee pad highlights
+    for cx, cy in [(4, 20), (20, 20)]:
+        d2.rectangle([cx, cy, cx+5, cy+3], fill=BS_T)
+    save(img2, os.path.join(ARMOR, "battlesuit_layer_2.png"))
+
+
+# ── Incendiary weapon textures ───────────────────────────────────────────────
+
+def make_napalm_bomb():
+    """Orange incendiary bomb with dark metal caps and red warning band."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    p = img.load()
+
+    ORANGE   = (210,  88,  18, 255)  # main body
+    ORANGE_H = (238, 126,  48, 255)  # highlight side
+    ORANGE_D = (138,  52,   8, 255)  # shadow side
+    METAL    = ( 72,  72,  82, 255)  # dark cap
+    METAL_H  = ( 96,  96, 108, 255)  # cap highlight
+    RED      = (188,  20,  20, 255)  # warning band
+    RED_D    = (140,  10,  10, 255)  # warning shadow edge
+    FUSE     = ( 52,  36,  16, 255)  # brown cord fuse
+
+    # Fuse tip (row 0, offset left of center for slight angle)
+    p[7, 0] = FUSE
+    # Top cap (rows 1–3, cols 4–11)
+    for x in range(5, 11):
+        p[x, 1] = METAL_H
+    for x in range(4, 12):
+        p[x, 2] = METAL
+        p[x, 3] = METAL
+    # Body (rows 4–12, cols 4–11)
+    for y in range(4, 12):
+        for x in range(4, 12):
+            if y in (7, 8):
+                p[x, y] = RED_D if (x == 4 or x == 11) else RED
+            elif x == 4 or x == 11:
+                p[x, y] = ORANGE_D
+            elif x in (5, 6):
+                p[x, y] = ORANGE_H
+            else:
+                p[x, y] = ORANGE
+    # Bottom cap (rows 12–14, cols 4–11)
+    for x in range(4, 12):
+        p[x, 12] = METAL
+        p[x, 13] = METAL
+    for x in range(5, 11):
+        p[x, 14] = METAL_H
+
+    img.save(os.path.join(ITEM, "napalm_bomb.png"))
+
+
+def make_thermite_grenade():
+    """Silver metallic grenade with a bright orange thermite band."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    p = img.load()
+
+    SILVER   = (178, 184, 190, 255)  # body
+    SILVER_H = (212, 218, 224, 255)  # highlight
+    SILVER_D = (118, 124, 130, 255)  # shadow
+    CAP      = ( 88,  90, 100, 255)  # metal end-cap
+    CAP_H    = (112, 114, 124, 255)  # cap highlight
+    ORANGE   = (220, 108,   0, 255)  # thermite band
+    ORANGE_H = (248, 148,  20, 255)  # band highlight
+    ORANGE_D = (160,  72,   0, 255)  # band shadow
+    SPARK    = (255, 248, 160, 255)  # detonator tip
+
+    # Detonator pin (rows 0–1, col 8)
+    p[8, 0] = SPARK
+    p[8, 1] = CAP
+    # Top cap (rows 2–3, cols 4–11)
+    for x in range(5, 11):
+        p[x, 2] = CAP_H
+    for x in range(4, 12):
+        p[x, 3] = CAP
+    # Body (rows 4–12, cols 4–11)
+    for y in range(4, 12):
+        for x in range(4, 12):
+            if y in (7, 8):
+                if x == 4 or x == 11:
+                    p[x, y] = ORANGE_D
+                elif x in (5, 6):
+                    p[x, y] = ORANGE_H
+                else:
+                    p[x, y] = ORANGE
+            elif x == 4 or x == 11:
+                p[x, y] = SILVER_D
+            elif x in (5, 6):
+                p[x, y] = SILVER_H
+            else:
+                p[x, y] = SILVER
+    # Bottom cap (rows 12–14, cols 4–11)
+    for x in range(4, 12):
+        p[x, 12] = CAP
+        p[x, 13] = CAP
+    for x in range(5, 11):
+        p[x, 14] = CAP_H
+
+    img.save(os.path.join(ITEM, "thermite_grenade.png"))
+
+
 # ── main ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Generating Firearms mod textures...")
@@ -1209,5 +1460,15 @@ if __name__ == "__main__":
     make_osmium_ingot()
     make_iridium_alloy()
     make_iridium_wire()
+
+    make_battlesuit_helmet()
+    make_battlesuit_chestplate()
+    make_battlesuit_leggings()
+    make_battlesuit_boots()
+    make_battlesuit_armor()
+
+    # ── Incendiary Weapons ────────────────────────────────────────────────────
+    make_napalm_bomb()
+    make_thermite_grenade()
 
     print("Done.")

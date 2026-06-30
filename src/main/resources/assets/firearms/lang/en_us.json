@@ -322,5 +322,13 @@
   "item.firearms.iridium_ingot": "Iridium Ingot",
   "item.firearms.osmium_ingot": "Osmium Ingot",
   "item.firearms.iridium_alloy": "Iridium Alloy",
-  "item.firearms.iridium_wire": "Iridium Wire"
+  "item.firearms.iridium_wire": "Iridium Wire",
+  "item.firearms.battlesuit_helmet": "Battlesuit Helmet",
+  "item.firearms.battlesuit_chestplate": "Battlesuit Chestplate",
+  "item.firearms.battlesuit_leggings": "Battlesuit Leggings",
+  "item.firearms.battlesuit_boots": "Battlesuit Boots",
+  "item.firearms.napalm_bomb": "Napalm Bomb",
+  "item.firearms.thermite_grenade": "Thermite Grenade",
+  "item.firearms.match_grade_powder": "Match Grade Powder",
+  "item.firearms.match_grade_bullet": "Match Grade Bullet"
 }

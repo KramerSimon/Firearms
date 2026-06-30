@@ -300,6 +300,17 @@ public class ModCreativeTabs {
                         output.accept(ModItems.SPENT_FUEL_STORAGE_BASE.get());
                         output.accept(ModItems.SPENT_FUEL_STORAGE_WALL.get());
                         output.accept(ModItems.SPENT_FUEL_STORAGE_CONTROLLER.get());
+                        // ── Titanium & Battlesuit ─────────────────────────────
+                        output.accept(ModItems.TITANIUM_ORE.get());
+                        output.accept(ModItems.TITANIUM_ORE_RAW.get());
+                        output.accept(ModItems.TITANIUM_INGOT.get());
+                        output.accept(ModItems.BATTLESUIT_HELMET.get());
+                        output.accept(ModItems.BATTLESUIT_CHESTPLATE.get());
+                        output.accept(ModItems.BATTLESUIT_LEGGINGS.get());
+                        output.accept(ModItems.BATTLESUIT_BOOTS.get());
+                        // ── Incendiary Weapons ────────────────────────────────
+                        output.accept(ModItems.NAPALM_BOMB.get());
+                        output.accept(ModItems.THERMITE_GRENADE.get());
                     })
                     .build());
 }

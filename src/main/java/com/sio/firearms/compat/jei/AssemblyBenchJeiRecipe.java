@@ -70,6 +70,8 @@ public class AssemblyBenchJeiRecipe {
                 // ── Incendiary / NBC ──────────────────────────────────────────
                 createFlamethrowerRecipe(),
                 createGasMaskRecipe(),
+                createNapalmBombRecipe(),
+                createThermiteGrenadeRecipe(),
                 // ── Equipment ─────────────────────────────────────────────────
                 createRubberBootsRecipe(),
                 createRiotShieldRecipe(),
@@ -83,7 +85,9 @@ public class AssemblyBenchJeiRecipe {
                 createAdrenalineSyringeRecipe(),
                 createCoagulantSyringeRecipe(),
                 // ── Iridium chain ─────────────────────────────────────────────
-                createIridiumCoilRecipe()
+                createIridiumCoilRecipe(),
+                // ── Match Grade Ammunition ────────────────────────────────────
+                createMatchGradeBulletRecipe()
         );
     }
 
@@ -483,5 +487,30 @@ public class AssemblyBenchJeiRecipe {
         return of(new ItemStack[]{
                 new ItemStack(ModItems.IRIDIUM_WIRE.get(), 4)
         }, new ItemStack(ModBlocks.IRIDIUM_COIL.get().asItem()));
+    }
+
+    private static AssemblyBenchJeiRecipe createNapalmBombRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.RESIDUAL_FUEL_OIL_BUCKET.get()),
+                new ItemStack(ModItems.GASOLINE_BUCKET.get()),
+                new ItemStack(Items.TNT),
+                new ItemStack(Items.GLASS_BOTTLE)
+        }, new ItemStack(ModItems.NAPALM_BOMB.get(), 2));
+    }
+
+    private static AssemblyBenchJeiRecipe createThermiteGrenadeRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2),
+                new ItemStack(Items.RAW_IRON),
+                new ItemStack(Items.GUNPOWDER, 2)
+        }, new ItemStack(ModItems.THERMITE_GRENADE.get(), 2));
+    }
+
+    private static AssemblyBenchJeiRecipe createMatchGradeBulletRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.BULLET_CASING.get(), 4),
+                new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 4),
+                new ItemStack(ModItems.TUNGSTEN_ROD.get())
+        }, new ItemStack(ModItems.MATCH_GRADE_BULLET.get(), 8));
     }
 }
