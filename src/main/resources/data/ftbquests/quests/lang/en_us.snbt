@@ -1,2 +1,142 @@
 {
+	chapter.0000000000000002.title: "Power"
+	chapter.0000000000000003.title: "Oil \& Refining"
+	chapter.0000000000000004.title: "Advanced Machining"
+	chapter.0000000000000005.title: "Nuclear Power"
+	chapter.0000000000000006.title: "Vehicles"
+	chapter.3D531D2592EA4898.title: "Getting Started"
+	quest.0000000000000101.quest_desc: [
+		"Iron ore is the foundation of the firearms industry."
+		"Mine raw iron to begin your journey."
+	]
+	quest.0000000000000101.quest_subtitle: "The raw material for steel"
+	quest.0000000000000101.title: "Mine Iron"
+	quest.0000000000000102.quest_desc: [
+		"Use the Coke Oven to produce coal coke, then smelt iron into steel."
+		"Steel is the backbone of all firearms production."
+	]
+	quest.0000000000000102.quest_subtitle: "Iron + coal coke = steel"
+	quest.0000000000000102.title: "Smelt Steel Ingots"
+	quest.0000000000000103.quest_desc: [
+		"The Assembly Bench is required to craft all weapons and machines."
+		"Build one as soon as you have the materials."
+	]
+	quest.0000000000000103.quest_subtitle: "Your primary crafting station"
+	quest.0000000000000103.title: "Build an Assembly Bench"
+	quest.0000000000000104.quest_desc: [
+		"Use the Assembly Bench to craft a Pistol."
+		"Load it with bullets and keep it close - this world is dangerous."
+		"Tip: press R to reload, right-click to aim."
+	]
+	quest.0000000000000104.quest_subtitle: "A sidearm for self-defence"
+	quest.0000000000000104.title: "Craft Your First Pistol"
+	quest.0000000000000201.quest_desc: [
+		"The Coal Generator burns solid fuels (coal, coal coke) to produce FE."
+		"Almost every machine in this mod requires power - build one now."
+	]
+	quest.0000000000000201.quest_subtitle: "Your first source of Forge Energy"
+	quest.0000000000000201.title: "Build a Coal Generator"
+	quest.0000000000000202.quest_desc: [
+		"Copper Wire blocks transfer Forge Energy between machines."
+		"Place them between your generator and machines to distribute power."
+	]
+	quest.0000000000000202.quest_subtitle: "Connect your machines"
+	quest.0000000000000202.title: "Lay Copper Wire"
+	quest.0000000000000203.quest_desc: [
+		"The Energy Pylon broadcasts stored FE wirelessly to nearby machines."
+		"Pair it with a Battery for portable power storage."
+	]
+	quest.0000000000000203.quest_subtitle: "Wireless power distribution"
+	quest.0000000000000203.title: "Build an Energy Pylon"
+	quest.0000000000000301.quest_desc: [
+		"Oil can be found underground as fluid-filled deposits."
+		"Use a Fluid Tank and a bucket to collect crude oil."
+		"Tip: search for large caverns deep underground."
+	]
+	quest.0000000000000301.quest_subtitle: "Black gold awaits underground"
+	quest.0000000000000301.title: "Strike Oil"
+	quest.0000000000000302.quest_desc: [
+		"The Oil Derrick is a multiblock structure that pumps oil automatically."
+		"Build it: place the Derrick Base, stack Pillars, then place the Controller on top."
+		"Connect power and a Fluid Tank to collect the output."
+	]
+	quest.0000000000000302.quest_subtitle: "Automated oil extraction"
+	quest.0000000000000302.title: "Build an Oil Derrick"
+	quest.0000000000000303.quest_desc: [
+		"The Refinery is a multiblock that cracks crude oil into useful products:"
+		"gasoline, kerosene, diesel, and more."
+		"Build it from Refinery Base, Refinery Walls, Refinery Top, and a Controller."
+		"Outputs are used in the Fuel Generator and incendiary weapons."
+	]
+	quest.0000000000000303.quest_subtitle: "Turn crude oil into fuel"
+	quest.0000000000000303.title: "Build the Refinery"
+	quest.0000000000000401.quest_desc: [
+		"The EBF smelts exotic ores (tungsten, chromium, nickel, titanium) that a regular furnace cannot."
+		"It is a multiblock: arrange Blast Furnace Casings, Coils, Import/Output Buses, a Muffler Hatch, and the Controller."
+		"Start with Kanthal Coils - they unlock the first processing tier."
+	]
+	quest.0000000000000401.quest_subtitle: "High-temperature smelting"
+	quest.0000000000000401.title: "Build the Electric Blast Furnace"
+	quest.0000000000000402.quest_desc: [
+		"Kanthal Coils are the basic heating element for the EBF."
+		"Craft Kanthal Alloy (chromium + iron + aluminum) first, then draw it into wire,"
+		"then wind 4 wires into a coil in the Assembly Bench."
+	]
+	quest.0000000000000402.quest_subtitle: "First-tier EBF heating element"
+	quest.0000000000000402.title: "Craft a Kanthal Coil"
+	quest.0000000000000403.quest_desc: [
+		"The Advanced Microchip is required for sniper rifles, the minigun, and many machines."
+		"It requires a lengthy silicon wafer fabrication chain through the semiconductor machines."
+		"Work your way through the fab line: Wafer Cutter -> Deposition -> Plasma Etcher -> Ion Implanter -> Metallization -> Tester -> Dicing Saw -> Chip Packager."
+	]
+	quest.0000000000000403.quest_subtitle: "The heart of high-end weapons"
+	quest.0000000000000403.title: "Craft an Advanced Microchip"
+	quest.0000000000000501.quest_desc: [
+		"Uranium Ore spawns deep underground and emits radiation."
+		"Wear a Hazmat Suit before handling raw uranium ore or processed products."
+		"Use a Geiger Counter to detect nearby radiation sources."
+	]
+	quest.0000000000000501.quest_subtitle: "Handle with care"
+	quest.0000000000000501.title: "Mine Uranium"
+	quest.0000000000000502.quest_desc: [
+		"Fuel Rods are assembled from Uranium Dioxide Pellets packed into Zirconium cladding."
+		"The enrichment chain: Uranium Ore -> UF6 -> Gas Centrifuge (enrichment) -> UO2 Powder -> Pellets -> Fuel Rod."
+		"Combine 4 Fuel Rods in the Assembly Bench to make a Fuel Rod Assembly."
+	]
+	quest.0000000000000502.quest_subtitle: "The reactor's fuel source"
+	quest.0000000000000502.title: "Assemble a Fuel Rod"
+	quest.0000000000000503.quest_desc: [
+		"The Reactor is a large multiblock: Reactor Base, Walls, Top, Control Rod Housings, and a Controller."
+		"Insert Fuel Rod Assemblies and Control Rods, then activate to generate massive amounts of FE."
+		"Build a Cooling Tower nearby - the reactor generates heat that must be dissipated."
+		"WARNING: keep a Hazmat Suit equipped at all times near an active reactor."
+	]
+	quest.0000000000000503.quest_subtitle: "Unlimited (radioactive) power"
+	quest.0000000000000503.title: "Build the Nuclear Reactor"
+	quest.0000000000000601.quest_desc: [
+		"The Vehicle Garage is a multiblock built from Garage Floor, Wall, Roof, Door, and a Controller."
+		"It assembles vehicles from their component parts."
+		"Ensure you have enough space - the structure is large."
+	]
+	quest.0000000000000601.quest_subtitle: "Where tanks are born"
+	quest.0000000000000601.title: "Build the Vehicle Garage"
+	quest.0000000000000602.quest_desc: [
+		"The Tank Hull is the main body of the vehicle."
+		"Craft it in the Assembly Bench from Steel Plates and Hardened Steel Ingots."
+		"It defines the tank's armour rating and weight."
+	]
+	quest.0000000000000602.quest_subtitle: "Armoured chassis"
+	quest.0000000000000602.title: "Craft a Tank Hull"
+	quest.0000000000000603.quest_desc: [
+		"Bring all tank components to the Vehicle Garage Controller:"
+		"  - Tank Hull"
+		"  - Tank Tracks (x2)"
+		"  - Tank Turret"
+		"  - Diesel Engine"
+		"  - Tank Cannon"
+		"Insert them and activate the garage to assemble your tank."
+		"Fill the diesel engine with diesel fuel from the Refinery to drive."
+	]
+	quest.0000000000000603.quest_subtitle: "The ultimate weapon"
+	quest.0000000000000603.title: "Assemble the Tank"
 }

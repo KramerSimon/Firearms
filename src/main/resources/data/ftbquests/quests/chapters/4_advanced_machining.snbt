@@ -15,7 +15,7 @@
 			description: [
 				"The EBF smelts exotic ores (tungsten, chromium, nickel, titanium) that a regular furnace cannot.",
 				"It is a multiblock: arrange Blast Furnace Casings, Coils, Import/Output Buses, a Muffler Hatch, and the Controller.",
-				"Start with Kanthal Coils — they unlock the first processing tier."
+				"Start with Kanthal Coils - they unlock the first processing tier."
 			],
 			x: 0.0d,
 			y: 0.0d,

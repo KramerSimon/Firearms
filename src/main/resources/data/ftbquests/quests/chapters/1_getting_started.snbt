@@ -103,7 +103,7 @@
 			subtitle: "A sidearm for self-defence",
 			description: [
 				"Use the Assembly Bench to craft a Pistol.",
-				"Load it with bullets and keep it close — this world is dangerous.",
+				"Load it with bullets and keep it close - this world is dangerous.",
 				"Tip: press R to reload, right-click to aim."
 			],
 			x: 6.0d,

@@ -76,7 +76,7 @@
 			description: [
 				"The Reactor is a large multiblock: Reactor Base, Walls, Top, Control Rod Housings, and a Controller.",
 				"Insert Fuel Rod Assemblies and Control Rods, then activate to generate massive amounts of FE.",
-				"Build a Cooling Tower nearby — the reactor generates heat that must be dissipated.",
+				"Build a Cooling Tower nearby - the reactor generates heat that must be dissipated.",
 				"WARNING: keep a Hazmat Suit equipped at all times near an active reactor."
 			],
 			x: 4.0d,

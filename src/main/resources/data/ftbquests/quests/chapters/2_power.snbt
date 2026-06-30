@@ -14,7 +14,7 @@
 			subtitle: "Your first source of Forge Energy",
 			description: [
 				"The Coal Generator burns solid fuels (coal, coal coke) to produce FE.",
-				"Almost every machine in this mod requires power — build one now."
+				"Almost every machine in this mod requires power - build one now."
 			],
 			x: 0.0d,
 			y: 0.0d,

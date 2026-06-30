@@ -15,7 +15,7 @@
 			description: [
 				"The Vehicle Garage is a multiblock built from Garage Floor, Wall, Roof, Door, and a Controller.",
 				"It assembles vehicles from their component parts.",
-				"Ensure you have enough space — the structure is large."
+				"Ensure you have enough space - the structure is large."
 			],
 			x: 0.0d,
 			y: 0.0d,
@@ -76,7 +76,7 @@
 			description: [
 				"Bring all tank components to the Vehicle Garage Controller:",
 				"  - Tank Hull",
-				"  - Tank Tracks (×2)",
+				"  - Tank Tracks (x2)",
 				"  - Tank Turret",
 				"  - Diesel Engine",
 				"  - Tank Cannon",

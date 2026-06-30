@@ -3,7 +3,7 @@
 	group: "",
 	order_index: 2,
 	filename: "3_oil_and_refining",
-	title: "Oil & Refining",
+	title: "Oil \& Refining",
 	icon: "firearms:oil_derrick_controller",
 	default_quest_shape: "",
 	default_hide_dependency_lines: 0B,
