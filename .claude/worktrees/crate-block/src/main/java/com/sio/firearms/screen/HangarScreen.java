@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class HangarScreen extends AbstractContainerScreen<HangarMenu> {
 
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath("firearms", "textures/gui/hangar_controller.png");
+            ResourceLocation.fromNamespaceAndPath("firearms", "textures/gui/hangar_gui.png");
 
     public HangarScreen(HangarMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
