@@ -88,5 +88,7 @@ public class ModScreens {
         event.register(ModMenuTypes.FLUID_PORT_CONFIG_MENU.get(), com.sio.firearms.screen.FluidPortConfigScreen::new);
         event.register(ModMenuTypes.FLUID_PIPE_CONFIG_MENU.get(), com.sio.firearms.screen.FluidPipeConfigScreen::new);
         event.register(ModMenuTypes.ITEM_PIPE_FILTER_MENU.get(), com.sio.firearms.screen.ItemPipeFilterScreen::new);
+        event.register(ModMenuTypes.FLUID_PIPE_UNIFIED_MENU.get(), com.sio.firearms.screen.FluidPipeUnifiedScreen::new);
+        event.register(ModMenuTypes.ITEM_PIPE_UNIFIED_MENU.get(), com.sio.firearms.screen.ItemPipeUnifiedScreen::new);
     }
 }

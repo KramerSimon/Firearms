@@ -78,6 +78,9 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addGhostIngredientHandler(
                 com.sio.firearms.screen.FluidPipeConfigScreen.class,
                 new FluidPipeGhostHandler());
+        registration.addGhostIngredientHandler(
+                com.sio.firearms.screen.FluidPipeUnifiedScreen.class,
+                new FluidPipeUnifiedGhostHandler());
     }
 
     @Override

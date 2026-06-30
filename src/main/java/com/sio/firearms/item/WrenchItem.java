@@ -8,8 +8,8 @@ import com.sio.firearms.block.FluidPortBlockEntity;
 import com.sio.firearms.block.ItemPipeBlock;
 import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.WireBlock;
-import com.sio.firearms.menu.FluidPipeConfigMenu;
-import com.sio.firearms.menu.ItemPipeFilterMenu;
+import com.sio.firearms.menu.FluidPipeUnifiedMenu;
+import com.sio.firearms.menu.ItemPipeUnifiedMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -40,7 +40,6 @@ public class WrenchItem extends Item {
         Direction face = ctx.getClickedFace();
         Block block = level.getBlockState(pos).getBlock();
 
-        // Log on BOTH sides so we can confirm the method is being called and detect the block correctly
         LOGGER.info("[Wrench] useOn: pos={} face={} block={} isClient={}",
                 pos, face.getSerializedName(), block.getClass().getSimpleName(), level.isClientSide());
 
@@ -50,38 +49,34 @@ public class WrenchItem extends Item {
 
         // ── Item Pipe ──────────────────────────────────────────────────────────
         if (block instanceof ItemPipeBlock) {
-            LOGGER.info("[Wrench] Detected ItemPipeBlock at {} — looking up BE and player", pos);
+            LOGGER.info("[Wrench] ItemPipeBlock at {} → opening unified GUI", pos);
             if (level.getBlockEntity(pos) instanceof ItemPipeBlockEntity pipe
                     && ctx.getPlayer() instanceof ServerPlayer sp) {
-                LOGGER.info("[Wrench] Opening ItemPipe filter GUI for face {} at {}", face.getSerializedName(), pos);
-                String dirName = capitalize(face.getSerializedName());
                 sp.openMenu(
                         new SimpleMenuProvider(
-                                (id, inv, pl) -> ItemPipeFilterMenu.openFor(id, inv, pos, face, pipe),
-                                Component.literal("Item Pipe — " + dirName)
+                                (id, inv, pl) -> ItemPipeUnifiedMenu.openFor(id, inv, pos, pipe),
+                                Component.literal("Item Pipe")
                         ),
-                        buf -> {
-                            buf.writeBlockPos(pos);
-                            buf.writeByte(face.ordinal());
-                        }
+                        buf -> buf.writeBlockPos(pos)
                 );
             } else {
                 LOGGER.warn("[Wrench] ItemPipeBlock at {} — BE={} player={}",
                         pos,
-                        level.getBlockEntity(pos) == null ? "null" : level.getBlockEntity(pos).getClass().getSimpleName(),
-                        ctx.getPlayer() == null ? "null" : ctx.getPlayer().getClass().getSimpleName());
+                        level.getBlockEntity(pos) == null ? "null"
+                                : level.getBlockEntity(pos).getClass().getSimpleName(),
+                        ctx.getPlayer() == null ? "null"
+                                : ctx.getPlayer().getClass().getSimpleName());
             }
             return InteractionResult.SUCCESS;
         }
 
         // ── Fluid Pipe ─────────────────────────────────────────────────────────
         if (block instanceof FluidPipeBlock) {
-            LOGGER.info("[Wrench] Detected FluidPipeBlock at {} — face={}", pos, face.getSerializedName());
             if (level.getBlockEntity(pos) instanceof FluidPipeBlockEntity pipe
                     && ctx.getPlayer() instanceof ServerPlayer sp) {
 
                 if (sp.isShiftKeyDown()) {
-                    // Shift+right-click → toggle face blocked
+                    // Shift+right-click → toggle this face's blocked state
                     BooleanProperty blockedProp = FluidPipeBlock.blockedPropFor(face);
                     boolean wasBlocked = state.getValue(blockedProp);
                     BlockState withToggle = state.setValue(blockedProp, !wasBlocked);
@@ -94,21 +89,20 @@ public class WrenchItem extends Item {
                             : "Pipe " + face.getSerializedName() + ": open";
                     sp.displayClientMessage(Component.literal(msg), true);
                 } else {
-                    // Normal right-click → open per-face filter GUI
-                    LOGGER.info("[Wrench] Opening FluidPipe filter GUI for face {} at {}", face.getSerializedName(), pos);
-                    String dirName = capitalize(face.getSerializedName());
-                    ResourceLocation filter = pipe.getFilterFluid(face);
+                    // Normal right-click → open unified GUI for all 6 faces
+                    LOGGER.info("[Wrench] FluidPipeBlock at {} → opening unified GUI", pos);
                     sp.openMenu(
                             new SimpleMenuProvider(
-                                    (id, inv, pl) -> new FluidPipeConfigMenu(id, inv, pos, face, filter),
-                                    Component.literal("Fluid Pipe — " + dirName)
+                                    (id, inv, pl) -> FluidPipeUnifiedMenu.openFor(id, inv, pos, pipe),
+                                    Component.literal("Fluid Pipe")
                             ),
                             buf -> {
                                 buf.writeBlockPos(pos);
-                                buf.writeByte(face.ordinal());
-                                ResourceLocation f = pipe.getFilterFluid(face);
-                                buf.writeBoolean(f != null);
-                                if (f != null) buf.writeResourceLocation(f);
+                                for (Direction d : Direction.values()) {
+                                    ResourceLocation f = pipe.getFilterFluid(d);
+                                    buf.writeBoolean(f != null);
+                                    if (f != null) buf.writeResourceLocation(f);
+                                }
                             }
                     );
                 }
@@ -143,10 +137,5 @@ public class WrenchItem extends Item {
         }
 
         return InteractionResult.PASS;
-    }
-
-    private static String capitalize(String s) {
-        if (s == null || s.isEmpty()) return s;
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }
