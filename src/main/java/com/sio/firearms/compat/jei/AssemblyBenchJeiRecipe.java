@@ -70,6 +70,8 @@ public class AssemblyBenchJeiRecipe {
                 // ── Incendiary / NBC ──────────────────────────────────────────
                 createFlamethrowerRecipe(),
                 createGasMaskRecipe(),
+                createNapalmBombRecipe(),
+                createThermiteGrenadeRecipe(),
                 // ── Equipment ─────────────────────────────────────────────────
                 createRubberBootsRecipe(),
                 createRiotShieldRecipe(),
@@ -450,5 +452,22 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(Items.STONE, 4),
                 new ItemStack(Items.IRON_BARS)
         }, new ItemStack(ModItems.SPENT_FUEL_STORAGE_BASE.get(), 4));
+    }
+
+    private static AssemblyBenchJeiRecipe createNapalmBombRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.RESIDUAL_FUEL_OIL_BUCKET.get()),
+                new ItemStack(ModItems.GASOLINE_BUCKET.get()),
+                new ItemStack(Items.TNT),
+                new ItemStack(Items.GLASS_BOTTLE)
+        }, new ItemStack(ModItems.NAPALM_BOMB.get(), 2));
+    }
+
+    private static AssemblyBenchJeiRecipe createThermiteGrenadeRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.ALUMINUM_INGOT.get(), 2),
+                new ItemStack(Items.RAW_IRON),
+                new ItemStack(Items.GUNPOWDER, 2)
+        }, new ItemStack(ModItems.THERMITE_GRENADE.get(), 2));
     }
 }

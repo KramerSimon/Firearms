@@ -292,5 +292,14 @@
   "item.firearms.explosive_bullet": "Explosive Bullet",
   "block.firearms.spent_fuel_storage_base": "Spent Fuel Storage Base",
   "block.firearms.spent_fuel_storage_wall": "Spent Fuel Storage Wall",
-  "block.firearms.spent_fuel_storage_controller": "Spent Fuel Storage Controller"
+  "block.firearms.spent_fuel_storage_controller": "Spent Fuel Storage Controller",
+  "block.firearms.titanium_ore": "Titanium Ore",
+  "item.firearms.titanium_ore_raw": "Raw Titanium Ore",
+  "item.firearms.titanium_ingot": "Titanium Ingot",
+  "item.firearms.battlesuit_helmet": "Battlesuit Helmet",
+  "item.firearms.battlesuit_chestplate": "Battlesuit Chestplate",
+  "item.firearms.battlesuit_leggings": "Battlesuit Leggings",
+  "item.firearms.battlesuit_boots": "Battlesuit Boots",
+  "item.firearms.napalm_bomb": "Napalm Bomb",
+  "item.firearms.thermite_grenade": "Thermite Grenade"
 }

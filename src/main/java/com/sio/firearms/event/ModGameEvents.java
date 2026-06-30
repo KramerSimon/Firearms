@@ -4,6 +4,7 @@ import com.sio.firearms.Firearms;
 import com.sio.firearms.config.FirearmsConfig;
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.item.BatteryItem;
+import com.sio.firearms.item.BattlesuitItem;
 import com.sio.firearms.item.BulletproofVestItem;
 import com.sio.firearms.item.ChainsawItem;
 import com.sio.firearms.item.NightVisionGogglesItem;
@@ -71,6 +72,13 @@ public class ModGameEvents {
                 event.setAmount(event.getAmount() * 0.5f);
             }
         }
+
+        // Battlesuit: 50% damage reduction when full set + energy
+        if (entity instanceof Player bsPlayer
+                && BattlesuitItem.hasFullSet(bsPlayer)
+                && BattlesuitItem.getTotalEnergy(bsPlayer) > 0) {
+            event.setAmount(event.getAmount() * 0.5f);
+        }
     }
 
     @SubscribeEvent
@@ -125,6 +133,23 @@ public class ModGameEvents {
             player.removeEffect(MobEffects.BLINDNESS);
             player.removeEffect(MobEffects.CONFUSION);
         }
+
+        // Battlesuit: active effects + energy drain
+        if (BattlesuitItem.hasFullSet(player) && BattlesuitItem.getTotalEnergy(player) > 0) {
+            MobEffectInstance spd = player.getEffect(MobEffects.MOVEMENT_SPEED);
+            if (spd == null || spd.getDuration() <= 200)
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300, 0, false, false));
+
+            MobEffectInstance jmp = player.getEffect(MobEffects.JUMP);
+            if (jmp == null || jmp.getDuration() <= 200)
+                player.addEffect(new MobEffectInstance(MobEffects.JUMP, 300, 0, false, false));
+
+            MobEffectInstance nv = player.getEffect(MobEffects.NIGHT_VISION);
+            if (nv == null || nv.getDuration() <= 200)
+                player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0, false, false));
+
+            BattlesuitItem.drainEnergy(player, 1);
+        }
     }
 
     @SubscribeEvent
@@ -142,6 +167,12 @@ public class ModGameEvents {
 
         // Rubber Boots: immunity to fall damage
         if (player.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof RubberBootsItem) {
+            event.setCanceled(true);
+            return;
+        }
+
+        // Battlesuit: immunity to fall damage when full set + energy
+        if (BattlesuitItem.hasFullSet(player) && BattlesuitItem.getTotalEnergy(player) > 0) {
             event.setCanceled(true);
             return;
         }

@@ -125,6 +125,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         if (stackIs(in0, "minecraft:raw_gold"))         return new ItemStack(Items.GOLD_INGOT, 2);
         if (stackIs(in0, "minecraft:copper_ingot"))     return new ItemStack(ModItems.CARBON_STEEL.get(), 1);
         if (stackIs(in0, "firearms:tungsten_ore_raw"))  return new ItemStack(ModItems.TUNGSTEN_INGOT.get(), 1);
+        if (stackIs(in0, "firearms:titanium_ore_raw")) return new ItemStack(ModItems.TITANIUM_INGOT.get(), 1);
         if (stackIs(in0, "firearms:uranium_ore_raw"))   return new ItemStack(ModItems.URANIUM_INGOT.get(), 1);
         if (stackIs(in0, "minecraft:coal"))             return new ItemStack(ModItems.GRAPHITE_BLOCK_ITEM.get(), 2);
         if (stackIs(in0, "firearms:zirconium_ore_raw")) return new ItemStack(ModItems.ZIRCONIUM_INGOT.get(), 1);
@@ -133,8 +134,9 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     }
 
     private int getRequiredTemperature(ItemStack in0) {
-        if (stackIs(in0, "firearms:uranium_ore_raw"))  return 2000;
-        if (stackIs(in0, "firearms:tungsten_ore_raw")) return 1200;
+        if (stackIs(in0, "firearms:uranium_ore_raw"))   return 2000;
+        if (stackIs(in0, "firearms:tungsten_ore_raw"))  return 1200;
+        if (stackIs(in0, "firearms:titanium_ore_raw")) return 1200;
         return getRecipeOutput(in0).isEmpty() ? 0 : 800;
     }
 

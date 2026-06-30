@@ -5,6 +5,9 @@ import com.sio.firearms.attachment.AttachmentType;
 import com.sio.firearms.item.AttachmentItem;
 import com.sio.firearms.item.BandageItem;
 import com.sio.firearms.item.BatteryItem;
+import com.sio.firearms.item.BattlesuitItem;
+import com.sio.firearms.item.NapalmBombItem;
+import com.sio.firearms.item.ThermiteGrenadeItem;
 import com.sio.firearms.item.BulletproofVestItem;
 import com.sio.firearms.item.CleaningKitItem;
 import com.sio.firearms.item.GrenadeItem;
@@ -478,4 +481,37 @@ public class ModItems {
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_BASE       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_BASE);
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_WALL);
     public static final DeferredItem<BlockItem> SPENT_FUEL_STORAGE_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER);
+
+    // ── Titanium ──────────────────────────────────────────────────────────────
+    public static final DeferredItem<Item>      TITANIUM_ORE_RAW  = ITEMS.registerSimpleItem("titanium_ore_raw");
+    public static final DeferredItem<Item>      TITANIUM_INGOT    = ITEMS.registerSimpleItem("titanium_ingot");
+    public static final DeferredItem<BlockItem> TITANIUM_ORE      = ITEMS.registerSimpleBlockItem(ModBlocks.TITANIUM_ORE);
+
+    // ── Modern Battlesuit ─────────────────────────────────────────────────────
+    public static final DeferredItem<Item> BATTLESUIT_HELMET =
+            ITEMS.register("battlesuit_helmet",
+                    () -> new BattlesuitItem(ModArmorMaterials.BATTLESUIT, ArmorItem.Type.HELMET,
+                            new Item.Properties().stacksTo(1).durability(ArmorItem.Type.HELMET.getDurability(40))));
+
+    public static final DeferredItem<Item> BATTLESUIT_CHESTPLATE =
+            ITEMS.register("battlesuit_chestplate",
+                    () -> new BattlesuitItem(ModArmorMaterials.BATTLESUIT, ArmorItem.Type.CHESTPLATE,
+                            new Item.Properties().stacksTo(1).durability(ArmorItem.Type.CHESTPLATE.getDurability(40))));
+
+    public static final DeferredItem<Item> BATTLESUIT_LEGGINGS =
+            ITEMS.register("battlesuit_leggings",
+                    () -> new BattlesuitItem(ModArmorMaterials.BATTLESUIT, ArmorItem.Type.LEGGINGS,
+                            new Item.Properties().stacksTo(1).durability(ArmorItem.Type.LEGGINGS.getDurability(40))));
+
+    public static final DeferredItem<Item> BATTLESUIT_BOOTS =
+            ITEMS.register("battlesuit_boots",
+                    () -> new BattlesuitItem(ModArmorMaterials.BATTLESUIT, ArmorItem.Type.BOOTS,
+                            new Item.Properties().stacksTo(1).durability(ArmorItem.Type.BOOTS.getDurability(40))));
+
+    // ── Incendiary Weapons ────────────────────────────────────────────────────
+    public static final DeferredItem<Item> NAPALM_BOMB = ITEMS.register("napalm_bomb",
+            () -> new NapalmBombItem(new Item.Properties().stacksTo(4)));
+
+    public static final DeferredItem<Item> THERMITE_GRENADE = ITEMS.register("thermite_grenade",
+            () -> new ThermiteGrenadeItem(new Item.Properties().stacksTo(4)));
 }

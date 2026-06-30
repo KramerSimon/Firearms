@@ -31,6 +31,7 @@ import com.sio.firearms.block.VehicleGarageControllerBlockEntity;
 import com.sio.firearms.block.WaterPumpBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import com.sio.firearms.item.BatteryItem;
+import com.sio.firearms.item.BattlesuitItem;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -280,6 +281,17 @@ public class ModCapabilities {
                         stack, ModDataComponents.ENERGY.get(),
                         BatteryItem.CAPACITY, BatteryItem.MAX_TRANSFER, BatteryItem.MAX_TRANSFER),
                 ModItems.BATTERY.get()
+        );
+
+        event.registerItem(
+                Capabilities.EnergyStorage.ITEM,
+                (stack, ctx) -> new ComponentEnergyStorage(
+                        stack, ModDataComponents.BATTLESUIT_ENERGY.get(),
+                        BattlesuitItem.CAPACITY, BattlesuitItem.MAX_TRANSFER, BattlesuitItem.MAX_TRANSFER),
+                ModItems.BATTLESUIT_HELMET.get(),
+                ModItems.BATTLESUIT_CHESTPLATE.get(),
+                ModItems.BATTLESUIT_LEGGINGS.get(),
+                ModItems.BATTLESUIT_BOOTS.get()
         );
 
         // ── Stage 2 machines: energy storage ────────────────────────────────────

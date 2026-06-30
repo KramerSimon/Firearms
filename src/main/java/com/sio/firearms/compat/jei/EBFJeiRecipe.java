@@ -49,6 +49,8 @@ public class EBFJeiRecipe {
             // ── @1200°C ───────────────────────────────────────────────────────
             new EBFJeiRecipe(new ItemStack(ModItems.TUNGSTEN_ORE_RAW.get()),
                     new ItemStack(ModItems.TUNGSTEN_INGOT.get()), 1200),
+            new EBFJeiRecipe(new ItemStack(ModItems.TITANIUM_ORE_RAW.get()),
+                    new ItemStack(ModItems.TITANIUM_INGOT.get()), 1200),
             // ── @2000°C ───────────────────────────────────────────────────────
             new EBFJeiRecipe(new ItemStack(ModItems.URANIUM_ORE_RAW.get()),
                     new ItemStack(ModItems.URANIUM_INGOT.get()), 2000)

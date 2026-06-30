@@ -433,6 +433,56 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
 
         // ── Equipment ─────────────────────────────────────────────────────────
 
+        // Battlesuit Helmet: titanium×6 + adv_microchip×2 + circuit×2 + hardened×4 + glass×2
+        // glass(visor) uniquely identifies helmet; checked before chestplate/leggings/boots.
+        if (hasAtLeast(in, "firearms:titanium_ingot", 6)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "minecraft:glass", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.BATTLESUIT_HELMET.get()),
+                    Map.of("firearms:titanium_ingot", 6, "firearms:advanced_microchip", 2,
+                            "firearms:circuit_board", 2, "firearms:hardened_steel_ingot", 4,
+                            "minecraft:glass", 2));
+        }
+
+        // Battlesuit Chestplate: titanium×6 + adv_microchip×2 + circuit×2 + hardened×4 + iron_bars×2
+        // iron_bars uniquely identifies chestplate.
+        if (hasAtLeast(in, "firearms:titanium_ingot", 6)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "minecraft:iron_bars", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.BATTLESUIT_CHESTPLATE.get()),
+                    Map.of("firearms:titanium_ingot", 6, "firearms:advanced_microchip", 2,
+                            "firearms:circuit_board", 2, "firearms:hardened_steel_ingot", 4,
+                            "minecraft:iron_bars", 2));
+        }
+
+        // Battlesuit Leggings: titanium×6 + adv_microchip×2 + circuit×2 + hardened×4 + leather×2
+        // leather uniquely identifies leggings.
+        if (hasAtLeast(in, "firearms:titanium_ingot", 6)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "minecraft:leather", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.BATTLESUIT_LEGGINGS.get()),
+                    Map.of("firearms:titanium_ingot", 6, "firearms:advanced_microchip", 2,
+                            "firearms:circuit_board", 2, "firearms:hardened_steel_ingot", 4,
+                            "minecraft:leather", 2));
+        }
+
+        // Battlesuit Boots: titanium×6 + adv_microchip×2 + circuit×2 + hardened×4
+        // No extra distinguishing ingredient; only matched when glass/iron_bars/leather are absent.
+        if (hasAtLeast(in, "firearms:titanium_ingot", 6)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.BATTLESUIT_BOOTS.get()),
+                    Map.of("firearms:titanium_ingot", 6, "firearms:advanced_microchip", 2,
+                            "firearms:circuit_board", 2, "firearms:hardened_steel_ingot", 4));
+        }
+
         // Riot Shield: steel_plate×4 + rubber_sheet×2 + hardened_steel_ingot×2 → riot_shield
         // steel_plate is a unique ingredient in Assembly Bench; no conflict risk.
         if (hasAtLeast(in, "firearms:steel_plate", 4)
@@ -466,6 +516,27 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
             return new RecipeMatch(new ItemStack(ModItems.SPENT_FUEL_STORAGE_BASE.get(), 4),
                     Map.of("firearms:lead_ingot", 4, "minecraft:stone", 4,
                             "minecraft:iron_bars", 1));
+        }
+
+        // ── Incendiary Weapons ────────────────────────────────────────────────
+
+        // Napalm Bomb: residual_fuel_oil_bucket + gasoline_bucket + tnt + glass_bottle → 2x napalm_bomb
+        if (hasAtLeast(in, "firearms:residual_fuel_oil_bucket", 1)
+                && hasAtLeast(in, "firearms:gasoline_bucket", 1)
+                && hasAtLeast(in, "minecraft:tnt", 1)
+                && hasAtLeast(in, "minecraft:glass_bottle", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.NAPALM_BOMB.get(), 2),
+                    Map.of("firearms:residual_fuel_oil_bucket", 1, "firearms:gasoline_bucket", 1,
+                            "minecraft:tnt", 1, "minecraft:glass_bottle", 1));
+        }
+
+        // Thermite Grenade: aluminum_ingot×2 + raw_iron + gunpowder×2 → 2x thermite_grenade
+        if (hasAtLeast(in, "firearms:aluminum_ingot", 2)
+                && hasAtLeast(in, "minecraft:raw_iron", 1)
+                && hasAtLeast(in, "minecraft:gunpowder", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.THERMITE_GRENADE.get(), 2),
+                    Map.of("firearms:aluminum_ingot", 2, "minecraft:raw_iron", 1,
+                            "minecraft:gunpowder", 2));
         }
 
         return null;

@@ -120,6 +120,13 @@ public class ModDataComponents {
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
 
+    // ── Battlesuit ────────────────────────────────────────────────────────────
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> BATTLESUIT_ENERGY =
+            DATA_COMPONENTS.register("battlesuit_energy", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+
     // ── Containers ────────────────────────────────────────────────────────────
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> AMMO_BOX_ITEMS =
             DATA_COMPONENTS.register("ammo_box_items", () -> DataComponentType.<ItemContainerContents>builder()
