@@ -97,16 +97,16 @@ public class WrenchItem extends Item {
                     // Normal right-click → open per-face filter GUI
                     LOGGER.info("[Wrench] Opening FluidPipe filter GUI for face {} at {}", face.getSerializedName(), pos);
                     String dirName = capitalize(face.getSerializedName());
-                    ResourceLocation filter = pipe.getFilterFluid();
+                    ResourceLocation filter = pipe.getFilterFluid(face);
                     sp.openMenu(
                             new SimpleMenuProvider(
-                                    (id, inv, pl) -> new FluidPipeConfigMenu(id, inv, pos, filter),
+                                    (id, inv, pl) -> new FluidPipeConfigMenu(id, inv, pos, face, filter),
                                     Component.literal("Fluid Pipe — " + dirName)
                             ),
                             buf -> {
                                 buf.writeBlockPos(pos);
                                 buf.writeByte(face.ordinal());
-                                ResourceLocation f = pipe.getFilterFluid();
+                                ResourceLocation f = pipe.getFilterFluid(face);
                                 buf.writeBoolean(f != null);
                                 if (f != null) buf.writeResourceLocation(f);
                             }
