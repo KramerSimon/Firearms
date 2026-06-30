@@ -1,6 +1,7 @@
 package com.sio.firearms.registry;
 
 import com.sio.firearms.Firearms;
+import com.sio.firearms.entity.AircraftEntity;
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.entity.FirePatchEntity;
 import com.sio.firearms.entity.FlameEntity;
@@ -104,4 +105,12 @@ public class ModEntities {
                     .sized(0.25F, 0.25F)
                     .clientTrackingRange(64)
                     .build(Firearms.MOD_ID + ":thermite_grenade"));
+
+    // ── Aircraft ──────────────────────────────────────────────────────────────
+    public static final DeferredHolder<EntityType<?>, EntityType<AircraftEntity>> AIRCRAFT =
+            ENTITY_TYPES.register("aircraft", () -> EntityType.Builder.<AircraftEntity>of(AircraftEntity::new, MobCategory.MISC)
+                    .sized(5.0F, 2.0F)
+                    .clientTrackingRange(128)
+                    .updateInterval(1)
+                    .build(Firearms.MOD_ID + ":aircraft"));
 }

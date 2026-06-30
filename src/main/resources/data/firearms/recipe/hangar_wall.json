@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["ISI", "ISI", "ISI"],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "S": { "item": "firearms:steel_ingot" }
+  },
+  "result": { "id": "firearms:hangar_wall", "count": 6 }
+}

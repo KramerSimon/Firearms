@@ -564,4 +564,17 @@ public class ModItems {
 
     public static final DeferredItem<Item> THERMITE_GRENADE = ITEMS.register("thermite_grenade",
             () -> new ThermiteGrenadeItem(new Item.Properties().stacksTo(4)));
+
+    // ── Aircraft Hangar ────────────────────────────────────────────────────────
+    public static final DeferredItem<BlockItem> HANGAR_FLOOR      = ITEMS.registerSimpleBlockItem(ModBlocks.HANGAR_FLOOR);
+    public static final DeferredItem<BlockItem> HANGAR_WALL       = ITEMS.registerSimpleBlockItem(ModBlocks.HANGAR_WALL);
+    public static final DeferredItem<BlockItem> HANGAR_ROOF       = ITEMS.registerSimpleBlockItem(ModBlocks.HANGAR_ROOF);
+    public static final DeferredItem<BlockItem> HANGAR_DOOR       = ITEMS.registerSimpleBlockItem(ModBlocks.HANGAR_DOOR);
+    public static final DeferredItem<BlockItem> HANGAR_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.HANGAR_CONTROLLER);
+
+    // ── Aircraft Components ────────────────────────────────────────────────────
+    public static final DeferredItem<Item> AIRCRAFT_FUSELAGE = ITEMS.registerSimpleItem("aircraft_fuselage");
+    public static final DeferredItem<Item> AIRCRAFT_WINGS    = ITEMS.registerSimpleItem("aircraft_wings");
+    public static final DeferredItem<Item> JET_ENGINE        = ITEMS.registerSimpleItem("jet_engine");
+    public static final DeferredItem<Item> COCKPIT_AVIONICS  = ITEMS.registerSimpleItem("cockpit_avionics");
 }

@@ -45,6 +45,8 @@ import com.sio.firearms.block.GunModificationTableBlock;
 import com.sio.firearms.block.MetalPressBlock;
 import com.sio.firearms.block.GarageDoorBlock;
 import com.sio.firearms.block.VehicleGarageControllerBlock;
+import com.sio.firearms.block.HangarDoorBlock;
+import com.sio.firearms.block.HangarControllerBlock;
 import com.sio.firearms.block.CrateBlock;
 import com.sio.firearms.block.PoppyPlantBlock;
 import com.sio.firearms.block.WireBlock;
@@ -715,6 +717,34 @@ public class ModBlocks {
     public static final DeferredBlock<Block> GARAGE_CONTROLLER =
             BLOCKS.register("garage_controller",
                     () -> new VehicleGarageControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(6.0f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── Aircraft Hangar ───────────────────────────────────────────────────────
+    public static final DeferredBlock<Block> HANGAR_FLOOR =
+            BLOCKS.register("hangar_floor",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(8.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> HANGAR_WALL =
+            BLOCKS.register("hangar_wall",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(7.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> HANGAR_ROOF =
+            BLOCKS.register("hangar_roof",
+                    () -> new Block(BlockBehaviour.Properties.of()
+                            .strength(7.0f)
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> HANGAR_DOOR =
+            BLOCKS.register("hangar_door",
+                    () -> new HangarDoorBlock(BlockBehaviour.Properties.of()
+                            .strength(7.0f)
+                            .noOcclusion()
+                            .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<Block> HANGAR_CONTROLLER =
+            BLOCKS.register("hangar_controller",
+                    () -> new HangarControllerBlock(BlockBehaviour.Properties.of()
                             .strength(6.0f)
                             .requiresCorrectToolForDrops()));
 

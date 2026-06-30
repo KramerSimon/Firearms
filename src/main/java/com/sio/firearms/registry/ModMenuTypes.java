@@ -35,6 +35,7 @@ import com.sio.firearms.menu.HeatTreatmentFurnaceMenu;
 import com.sio.firearms.menu.LatheMenu;
 import com.sio.firearms.menu.GunModificationTableMenu;
 import com.sio.firearms.menu.VehicleGarageMenu;
+import com.sio.firearms.menu.HangarMenu;
 import com.sio.firearms.menu.MetalPressMenu;
 import com.sio.firearms.menu.CrateMenu;
 import com.sio.firearms.menu.SpentFuelStorageMenu;
@@ -179,6 +180,11 @@ public class ModMenuTypes {
             MENU_TYPES.register("vehicle_garage_controller",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new VehicleGarageMenu(windowId, inv)));
 
+    // ── Aircraft Hangar ───────────────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<HangarMenu>> HANGAR_MENU =
+            MENU_TYPES.register("hangar_controller",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new HangarMenu(windowId, inv)));
+
     // ── Utility ───────────────────────────────────────────────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<CrateMenu>> CRATE_MENU =
             MENU_TYPES.register("crate",
@@ -231,7 +237,6 @@ public class ModMenuTypes {
                         net.minecraft.resources.ResourceLocation filter = hasFilter ? data.readResourceLocation() : null;
                         return new com.sio.firearms.menu.FluidPipeConfigMenu(windowId, inv, pos, face, filter);
                     }));
-
     // ── Unified pipe config (all 6 faces in one screen) ───────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.FluidPipeUnifiedMenu>> FLUID_PIPE_UNIFIED_MENU =
             MENU_TYPES.register("fluid_pipe_unified",
@@ -250,4 +255,5 @@ public class ModMenuTypes {
             MENU_TYPES.register("item_pipe_unified",
                     () -> IMenuTypeExtension.create((windowId, inv, data) ->
                             new com.sio.firearms.menu.ItemPipeUnifiedMenu(windowId, inv, data.readBlockPos())));
+
 }

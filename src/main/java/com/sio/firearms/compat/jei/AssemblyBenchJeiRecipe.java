@@ -113,7 +113,12 @@ public class AssemblyBenchJeiRecipe {
                 // ── Iridium chain ─────────────────────────────────────────────
                 createIridiumCoilRecipe(),
                 // ── Match Grade Ammunition ────────────────────────────────────
-                createMatchGradeBulletRecipe()
+                createMatchGradeBulletRecipe(),
+                // ── Aircraft Components ───────────────────────────────────────
+                createAircraftFuselageRecipe(),
+                createAircraftWingsRecipe(),
+                createJetEngineRecipe(),
+                createCockpitAvionicsRecipe()
         );
     }
 
@@ -538,6 +543,39 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 4),
                 new ItemStack(ModItems.TUNGSTEN_ROD.get())
         }, new ItemStack(ModItems.MATCH_GRADE_BULLET.get(), 8));
+    }
+
+    // ── Aircraft Components ───────────────────────────────────────────────────
+
+    private static AssemblyBenchJeiRecipe createAircraftFuselageRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_PLATE.get(), 9),
+                new ItemStack(ModItems.STEEL_PLATE.get(), 1),
+                new ItemStack(ModItems.TITANIUM_INGOT.get(), 6)
+        }, new ItemStack(ModItems.AIRCRAFT_FUSELAGE.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createAircraftWingsRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_PLATE.get(), 8),
+                new ItemStack(ModItems.TITANIUM_INGOT.get(), 4)
+        }, new ItemStack(ModItems.AIRCRAFT_WINGS.get(), 2));
+    }
+
+    private static AssemblyBenchJeiRecipe createJetEngineRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.TITANIUM_INGOT.get(), 6),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get(), 2)
+        }, new ItemStack(ModItems.JET_ENGINE.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createCockpitAvionicsRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get(), 3),
+                new ItemStack(Items.GLASS, 2)
+        }, new ItemStack(ModItems.COCKPIT_AVIONICS.get()));
     }
 
     // ── Quality tier helpers ──────────────────────────────────────────────────

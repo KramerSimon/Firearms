@@ -315,6 +315,17 @@ public class ModCreativeTabs {
                         // ── Incendiary Weapons ────────────────────────────────
                         output.accept(ModItems.NAPALM_BOMB.get());
                         output.accept(ModItems.THERMITE_GRENADE.get());
+                        // ── Aircraft Hangar ───────────────────────────────────
+                        output.accept(ModItems.HANGAR_FLOOR.get());
+                        output.accept(ModItems.HANGAR_WALL.get());
+                        output.accept(ModItems.HANGAR_ROOF.get());
+                        output.accept(ModItems.HANGAR_DOOR.get());
+                        output.accept(ModItems.HANGAR_CONTROLLER.get());
+                        // ── Aircraft Components ───────────────────────────────
+                        output.accept(ModItems.AIRCRAFT_FUSELAGE.get());
+                        output.accept(ModItems.AIRCRAFT_WINGS.get());
+                        output.accept(ModItems.JET_ENGINE.get());
+                        output.accept(ModItems.COCKPIT_AVIONICS.get());
                     })
                     .build());
 }

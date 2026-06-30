@@ -736,6 +736,45 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:tungsten_rod", 1));
         }
 
+        // ── Aircraft Components ───────────────────────────────────────────────
+        // Fuselage: steel_plate×10 + titanium_ingot×6 → 1
+        // Checked first: steel_plate×10 is a superset of wings check (×8), so fuselage must precede wings.
+        if (hasAtLeast(in, "firearms:steel_plate", 10)
+                && hasAtLeast(in, "firearms:titanium_ingot", 6)) {
+            return new RecipeMatch(new ItemStack(ModItems.AIRCRAFT_FUSELAGE.get()),
+                    Map.of("firearms:steel_plate", 10, "firearms:titanium_ingot", 6));
+        }
+
+        // Aircraft Wings: steel_plate×8 + titanium_ingot×4 → 2
+        // Checked after fuselage (steel_plate≥10 would have matched fuselage first).
+        if (hasAtLeast(in, "firearms:steel_plate", 8)
+                && hasAtLeast(in, "firearms:titanium_ingot", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.AIRCRAFT_WINGS.get(), 2),
+                    Map.of("firearms:steel_plate", 8, "firearms:titanium_ingot", 4));
+        }
+
+        // Jet Engine: titanium_ingot×6 + advanced_microchip×2 + circuit_board×2 → 1
+        // After all Battlesuit checks — Boots also needs titanium×6+adv_microchip×2+circuit×2 but also hardened×4;
+        // pure Jet Engine inputs have no hardened so Boots check fails first, then this matches.
+        if (hasAtLeast(in, "firearms:titanium_ingot", 6)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.JET_ENGINE.get()),
+                    Map.of("firearms:titanium_ingot", 6, "firearms:advanced_microchip", 2,
+                            "firearms:circuit_board", 2));
+        }
+
+        // Cockpit Avionics: advanced_microchip×2 + circuit_board×3 + glass×2 → 1
+        // circuit_board×3 distinguishes from Battlesuit Helmet (circuit×2); glass×2 differentiates from
+        // Chemical Mixer (no adv_microchip) and Jet Engine (no glass).
+        if (hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 3)
+                && hasAtLeast(in, "minecraft:glass", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.COCKPIT_AVIONICS.get()),
+                    Map.of("firearms:advanced_microchip", 2, "firearms:circuit_board", 3,
+                            "minecraft:glass", 2));
+        }
+
         return null;
     }
 

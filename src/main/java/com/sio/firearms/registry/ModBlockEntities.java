@@ -42,6 +42,7 @@ import com.sio.firearms.block.ReactorControllerBlockEntity;
 import com.sio.firearms.block.CoolingTowerControllerBlockEntity;
 import com.sio.firearms.block.SteamTurbineBlockEntity;
 import com.sio.firearms.block.VehicleGarageControllerBlockEntity;
+import com.sio.firearms.block.HangarControllerBlockEntity;
 import com.sio.firearms.block.WireBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -255,6 +256,12 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("vehicle_garage_controller",
                     () -> BlockEntityType.Builder.of(VehicleGarageControllerBlockEntity::new,
                             ModBlocks.GARAGE_CONTROLLER.get()).build(null));
+
+    // ── Aircraft Hangar ───────────────────────────────────────────────────────
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HangarControllerBlockEntity>> HANGAR_CONTROLLER =
+            BLOCK_ENTITIES.register("hangar_controller",
+                    () -> BlockEntityType.Builder.of(HangarControllerBlockEntity::new,
+                            ModBlocks.HANGAR_CONTROLLER.get()).build(null));
 
     // ── Utility ───────────────────────────────────────────────────────────────
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrateBlockEntity>> CRATE =

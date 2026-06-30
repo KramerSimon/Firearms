@@ -39,6 +39,7 @@ public class ClientSetup {
         event.registerEntityRenderer(ModEntities.NITROGLYCERIN.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.NAPALM_BOMB.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.THERMITE_GRENADE.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntities.AIRCRAFT.get(), AircraftRenderer::new);
         event.registerEntityRenderer((EntityType) ModEntities.NAPALM_FIRE_PATCH.get(),
                 ctx -> new net.minecraft.client.renderer.entity.EntityRenderer<>(ctx) {
                     @Override public net.minecraft.resources.ResourceLocation getTextureLocation(
