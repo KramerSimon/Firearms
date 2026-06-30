@@ -204,6 +204,12 @@ public class ModMenuTypes {
             MENU_TYPES.register("spent_fuel_storage",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new SpentFuelStorageMenu(windowId, inv)));
 
+    // ── Item pipe filter screen ───────────────────────────────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.ItemPipeFilterMenu>> ITEM_PIPE_FILTER_MENU =
+            MENU_TYPES.register("item_pipe_filter",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) ->
+                            new com.sio.firearms.menu.ItemPipeFilterMenu(windowId, inv, data)));
+
     // ── Fluid routing config screens ──────────────────────────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.FluidPortConfigMenu>> FLUID_PORT_CONFIG_MENU =
             MENU_TYPES.register("fluid_port_config",

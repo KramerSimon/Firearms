@@ -9,13 +9,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -53,21 +53,31 @@ public class ItemPipeBlockEntity extends BlockEntity {
     };
 
     private final EnumMap<Direction, SideMode> sideModes = new EnumMap<>(Direction.class);
+    private final EnumMap<Direction, ItemStackHandler> sideFilters = new EnumMap<>(Direction.class);
     private int tickCount = 0;
 
     public ItemPipeBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ITEM_PIPE.get(), pos, state);
         for (Direction dir : Direction.values()) {
             sideModes.put(dir, SideMode.NONE);
+            sideFilters.put(dir, new ItemStackHandler(9) {
+                @Override
+                protected void onContentsChanged(int slot) {
+                    setChanged();
+                }
+            });
         }
     }
 
-    public ItemStackHandler getBuffer() {
-        return buffer;
-    }
+    public ItemStackHandler getBuffer() { return buffer; }
 
     public SideMode getSideMode(Direction dir) {
         return sideModes.getOrDefault(dir, SideMode.NONE);
+    }
+
+    public void setSideMode(Direction dir, SideMode mode) {
+        sideModes.put(dir, mode);
+        setChanged();
     }
 
     public SideMode cycleSideMode(Direction dir) {
@@ -75,6 +85,24 @@ public class ItemPipeBlockEntity extends BlockEntity {
         sideModes.put(dir, next);
         setChanged();
         return next;
+    }
+
+    public ItemStackHandler getFilterHandler(Direction dir) {
+        return sideFilters.get(dir);
+    }
+
+    /** Empty filter = pass all. Non-empty filter = only items matching at least one slot pass. */
+    public boolean matchesFilter(Direction dir, ItemStack stack) {
+        ItemStackHandler filter = sideFilters.get(dir);
+        boolean hasAnyFilter = false;
+        for (int i = 0; i < 9; i++) {
+            ItemStack f = filter.getStackInSlot(i);
+            if (!f.isEmpty()) {
+                hasAnyFilter = true;
+                if (ItemStack.isSameItem(f, stack)) return true;
+            }
+        }
+        return !hasAnyFilter;
     }
 
     public void dropBuffer(Level level, BlockPos pos) {
@@ -90,10 +118,8 @@ public class ItemPipeBlockEntity extends BlockEntity {
         if (++tickCount % 4 != 0) return;
 
         boolean changed = false;
-
         boolean doLog = (tickCount % 20 == 0);
 
-        // ── DEBUG: log state every 20 ticks ──────────────────────────────────
         if (doLog) {
             LOGGER.info("[ItemPipe] @ {} | buffer={}", worldPosition, buffer.getStackInSlot(0));
             for (Direction dir : Direction.values()) {
@@ -123,7 +149,6 @@ public class ItemPipeBlockEntity extends BlockEntity {
 
                 if (be == null || be instanceof ItemPipeBlockEntity) continue;
 
-                // Try NeoForge capability first; fall back to InvWrapper for vanilla containers
                 IItemHandler capHandler = level.getCapability(
                         Capabilities.ItemHandler.BLOCK, neighborPos, dir.getOpposite());
                 boolean isContainer = be instanceof Container;
@@ -147,9 +172,8 @@ public class ItemPipeBlockEntity extends BlockEntity {
                 if (inv == null) continue;
 
                 for (int slot = 0; slot < inv.getSlots(); slot++) {
-                    // Simulate first; only execute if the slot is non-empty
                     ItemStack sim = inv.extractItem(slot, 1, true);
-                    if (!sim.isEmpty()) {
+                    if (!sim.isEmpty() && matchesFilter(dir, sim)) {
                         ItemStack extracted = inv.extractItem(slot, 1, false);
                         if (!extracted.isEmpty()) {
                             buffer.setStackInSlot(0, extracted);
@@ -166,6 +190,8 @@ public class ItemPipeBlockEntity extends BlockEntity {
         if (!buffer.getStackInSlot(0).isEmpty()) {
             for (Direction dir : Direction.values()) {
                 if (sideModes.get(dir) != SideMode.INSERT) continue;
+
+                if (!matchesFilter(dir, buffer.getStackInSlot(0))) continue;
 
                 BlockPos neighborPos = worldPosition.relative(dir);
                 BlockEntity be = level.getBlockEntity(neighborPos);
@@ -188,10 +214,8 @@ public class ItemPipeBlockEntity extends BlockEntity {
                 if (inv == null) continue;
 
                 ItemStack toInsert = buffer.getStackInSlot(0).copy();
-                // ItemHandlerHelper.insertItem tries all slots and returns whatever it couldn't insert
                 ItemStack remainder = ItemHandlerHelper.insertItem(inv, toInsert, false);
                 if (remainder.isEmpty()) {
-                    // All items were accepted — clear the pipe buffer
                     buffer.setStackInSlot(0, ItemStack.EMPTY);
                     changed = true;
                     break;
@@ -199,7 +223,7 @@ public class ItemPipeBlockEntity extends BlockEntity {
             }
         }
 
-        // Pipe-to-pipe propagation: pass buffer to any adjacent pipe that has space
+        // Pipe-to-pipe propagation
         if (!buffer.getStackInSlot(0).isEmpty()) {
             for (Direction dir : Direction.values()) {
                 BlockPos neighborPos = worldPosition.relative(dir);
@@ -231,11 +255,18 @@ public class ItemPipeBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Buffer", buffer.serializeNBT(registries));
+
         CompoundTag modes = new CompoundTag();
         for (Direction dir : Direction.values()) {
             modes.putString(dir.getSerializedName(), sideModes.get(dir).name());
         }
         tag.put("SideModes", modes);
+
+        CompoundTag filters = new CompoundTag();
+        for (Direction dir : Direction.values()) {
+            filters.put(dir.getSerializedName(), sideFilters.get(dir).serializeNBT(registries));
+        }
+        tag.put("SideFilters", filters);
     }
 
     @Override
@@ -259,8 +290,15 @@ public class ItemPipeBlockEntity extends BlockEntity {
                     sideModes.get(Direction.WEST).name(),
                     sideModes.get(Direction.EAST).name());
         } else {
-            LOGGER.info("[ItemPipe] loadAdditional @ {} | no SideModes tag found, all modes defaulting to NONE",
-                    worldPosition);
+            LOGGER.info("[ItemPipe] loadAdditional @ {} | no SideModes tag, all defaulting to NONE", worldPosition);
+        }
+        if (tag.contains("SideFilters")) {
+            CompoundTag filters = tag.getCompound("SideFilters");
+            for (Direction dir : Direction.values()) {
+                if (filters.contains(dir.getSerializedName())) {
+                    sideFilters.get(dir).deserializeNBT(registries, filters.getCompound(dir.getSerializedName()));
+                }
+            }
         }
     }
 }
