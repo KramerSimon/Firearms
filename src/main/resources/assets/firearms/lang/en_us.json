@@ -100,6 +100,8 @@
   "jei.firearms.spent_fuel_storage_structure": "Spent Fuel Storage (Structure)",
   "jei.firearms.vehicle_garage_structure": "Vehicle Garage (Structure)",
   "jei.firearms.aircraft_hangar_structure": "Aircraft Hangar (Structure)",
+  "jei.firearms.vehicle_garage": "Vehicle Garage (Build Tank)",
+  "jei.firearms.aircraft_hangar": "Aircraft Hangar (Build Aircraft)",
   "gui.firearms.ebf_bus.hint": "Pipes only — view only",
   "block.firearms.chemical_mixer": "Chemical Mixer",
   "block.firearms.chemical_mixer_base": "Chemical Mixer Base",

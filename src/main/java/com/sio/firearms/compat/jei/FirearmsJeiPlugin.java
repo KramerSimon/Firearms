@@ -50,7 +50,9 @@ public class FirearmsJeiPlugin implements IModPlugin {
                 new CoolingTowerStructureCategory(gui),
                 new SpentFuelStorageStructureCategory(gui),
                 new VehicleGarageStructureCategory(gui),
-                new AircraftHangarStructureCategory(gui)
+                new AircraftHangarStructureCategory(gui),
+                new VehicleGarageRecipeCategory(gui),
+                new HangarRecipeCategory(gui)
         );
     }
 
@@ -84,6 +86,8 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipes(SpentFuelStorageStructureCategory.RECIPE_TYPE, SpentFuelStorageStructureJeiRecipe.getAllRecipes());
         registration.addRecipes(VehicleGarageStructureCategory.RECIPE_TYPE,   VehicleGarageStructureJeiRecipe.getAllRecipes());
         registration.addRecipes(AircraftHangarStructureCategory.RECIPE_TYPE,  AircraftHangarStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(VehicleGarageRecipeCategory.RECIPE_TYPE,      VehicleGarageJeiRecipe.getAllRecipes());
+        registration.addRecipes(HangarRecipeCategory.RECIPE_TYPE,             HangarJeiRecipe.getAllRecipes());
     }
 
     @Override
@@ -155,5 +159,7 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_WALL.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_DOOR.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_ROOF.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_CONTROLLER.get()), VehicleGarageRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_CONTROLLER.get()), HangarRecipeCategory.RECIPE_TYPE);
     }
 }
