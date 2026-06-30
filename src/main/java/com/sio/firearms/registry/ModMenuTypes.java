@@ -231,4 +231,23 @@ public class ModMenuTypes {
                         net.minecraft.resources.ResourceLocation filter = hasFilter ? data.readResourceLocation() : null;
                         return new com.sio.firearms.menu.FluidPipeConfigMenu(windowId, inv, pos, face, filter);
                     }));
+
+    // ── Unified pipe config (all 6 faces in one screen) ───────────────────────
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.FluidPipeUnifiedMenu>> FLUID_PIPE_UNIFIED_MENU =
+            MENU_TYPES.register("fluid_pipe_unified",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> {
+                        net.minecraft.core.BlockPos pos = data.readBlockPos();
+                        net.minecraft.resources.ResourceLocation[] filters =
+                                new net.minecraft.resources.ResourceLocation[6];
+                        for (int i = 0; i < 6; i++) {
+                            boolean has = data.readBoolean();
+                            filters[i] = has ? data.readResourceLocation() : null;
+                        }
+                        return new com.sio.firearms.menu.FluidPipeUnifiedMenu(windowId, inv, pos, filters);
+                    }));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.ItemPipeUnifiedMenu>> ITEM_PIPE_UNIFIED_MENU =
+            MENU_TYPES.register("item_pipe_unified",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) ->
+                            new com.sio.firearms.menu.ItemPipeUnifiedMenu(windowId, inv, data.readBlockPos())));
 }
