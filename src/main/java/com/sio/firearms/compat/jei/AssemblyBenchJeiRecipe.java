@@ -1,7 +1,11 @@
 package com.sio.firearms.compat.jei;
 
+import com.sio.firearms.item.WeaponQuality;
 import com.sio.firearms.registry.ModBlocks;
+import com.sio.firearms.registry.ModDataComponents;
 import com.sio.firearms.registry.ModItems;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
@@ -12,10 +16,16 @@ public class AssemblyBenchJeiRecipe {
 
     private final NonNullList<ItemStack> inputs;
     private final ItemStack output;
+    private final List<Component> description;
 
     public AssemblyBenchJeiRecipe(NonNullList<ItemStack> inputs, ItemStack output) {
+        this(inputs, output, List.of());
+    }
+
+    public AssemblyBenchJeiRecipe(NonNullList<ItemStack> inputs, ItemStack output, List<Component> description) {
         this.inputs = inputs;
         this.output = output;
+        this.description = description;
     }
 
     public NonNullList<ItemStack> getInputs() {
@@ -26,11 +36,15 @@ public class AssemblyBenchJeiRecipe {
         return output;
     }
 
+    public List<Component> getDescription() {
+        return description;
+    }
+
     public static List<AssemblyBenchJeiRecipe> getAllRecipes() {
         return List.of(
                 createGunBarrelRecipe(),
                 createTriggerAssemblyRecipe(),
-                // ── Weapons (resource-intensive) ──────────────────────────────
+                // ── Weapons — Standard tier ───────────────────────────────────
                 createPistolRecipe(),
                 createShotgunRecipe(),
                 createRifleRecipe(),
@@ -38,6 +52,18 @@ public class AssemblyBenchJeiRecipe {
                 createSniperRifleRecipe(),
                 createChainsawRecipe(),
                 createMinigunRecipe(),
+                // ── Weapons — Refined tier ────────────────────────────────────
+                createRefinedPistolRecipe(),
+                createRefinedShotgunRecipe(),
+                createRefinedRifleRecipe(),
+                createRefinedSMGRecipe(),
+                createRefinedSniperRifleRecipe(),
+                // ── Weapons — Military Grade tier ─────────────────────────────
+                createMilitaryGradePistolRecipe(),
+                createMilitaryGradeShotgunRecipe(),
+                createMilitaryGradeRifleRecipe(),
+                createMilitaryGradeSMGRecipe(),
+                createMilitaryGradeSniperRifleRecipe(),
                 createAmmoBoxRecipe(),
                 createGunCaseRecipe(),
                 createAPBulletRecipe(),
@@ -512,5 +538,155 @@ public class AssemblyBenchJeiRecipe {
                 new ItemStack(ModItems.MATCH_GRADE_POWDER.get(), 4),
                 new ItemStack(ModItems.TUNGSTEN_ROD.get())
         }, new ItemStack(ModItems.MATCH_GRADE_BULLET.get(), 8));
+    }
+
+    // ── Quality tier helpers ──────────────────────────────────────────────────
+
+    private static ItemStack makeQualityWeapon(net.minecraft.world.item.Item item, WeaponQuality quality) {
+        ItemStack stack = new ItemStack(item);
+        stack.set(ModDataComponents.QUALITY.get(), quality.name());
+        return stack;
+    }
+
+    private static List<Component> qualityDescription(WeaponQuality quality) {
+        return switch (quality) {
+            case REFINED -> List.of(
+                    Component.literal("Quality: ").withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal("Refined").withStyle(ChatFormatting.BLUE)),
+                    Component.literal("+15% Damage  +10% Durability").withStyle(ChatFormatting.GRAY));
+            case MILITARY_GRADE -> List.of(
+                    Component.literal("Quality: ").withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal("Military Grade").withStyle(ChatFormatting.GOLD)),
+                    Component.literal("+30% Damage  +25% Durability  -20% Reload").withStyle(ChatFormatting.GRAY));
+            default -> List.of();
+        };
+    }
+
+    // ── Refined tier ─────────────────────────────────────────────────────────
+
+    private static AssemblyBenchJeiRecipe createRefinedPistolRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.BULLET_CASING.get(), 8),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4)
+        }), makeQualityWeapon(ModItems.PISTOL.get(), WeaponQuality.REFINED),
+                qualityDescription(WeaponQuality.REFINED));
+    }
+
+    private static AssemblyBenchJeiRecipe createRefinedShotgunRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 5),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4)
+        }), makeQualityWeapon(ModItems.SHOTGUN.get(), WeaponQuality.REFINED),
+                qualityDescription(WeaponQuality.REFINED));
+    }
+
+    private static AssemblyBenchJeiRecipe createRefinedRifleRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.BULLET_CASING.get(), 16),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4)
+        }), makeQualityWeapon(ModItems.RIFLE.get(), WeaponQuality.REFINED),
+                qualityDescription(WeaponQuality.REFINED));
+    }
+
+    private static AssemblyBenchJeiRecipe createRefinedSMGRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4)
+        }), makeQualityWeapon(ModItems.SMG.get(), WeaponQuality.REFINED),
+                qualityDescription(WeaponQuality.REFINED));
+    }
+
+    private static AssemblyBenchJeiRecipe createRefinedSniperRifleRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get()),
+                new ItemStack(ModItems.REFINED_GUNPOWDER.get(), 4)
+        }), makeQualityWeapon(ModItems.SNIPER_RIFLE.get(), WeaponQuality.REFINED),
+                qualityDescription(WeaponQuality.REFINED));
+    }
+
+    // ── Military Grade tier ───────────────────────────────────────────────────
+
+    private static AssemblyBenchJeiRecipe createMilitaryGradePistolRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.BULLET_CASING.get(), 8),
+                new ItemStack(ModItems.CORDITE.get(), 4),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get())
+        }), makeQualityWeapon(ModItems.PISTOL.get(), WeaponQuality.MILITARY_GRADE),
+                qualityDescription(WeaponQuality.MILITARY_GRADE));
+    }
+
+    private static AssemblyBenchJeiRecipe createMilitaryGradeShotgunRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 5),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.CORDITE.get(), 4),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get())
+        }), makeQualityWeapon(ModItems.SHOTGUN.get(), WeaponQuality.MILITARY_GRADE),
+                qualityDescription(WeaponQuality.MILITARY_GRADE));
+    }
+
+    private static AssemblyBenchJeiRecipe createMilitaryGradeRifleRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.BULLET_CASING.get(), 16),
+                new ItemStack(ModItems.CORDITE.get(), 4),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get())
+        }), makeQualityWeapon(ModItems.RIFLE.get(), WeaponQuality.MILITARY_GRADE),
+                qualityDescription(WeaponQuality.MILITARY_GRADE));
+    }
+
+    private static AssemblyBenchJeiRecipe createMilitaryGradeSMGRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.CORDITE.get(), 4),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get())
+        }), makeQualityWeapon(ModItems.SMG.get(), WeaponQuality.MILITARY_GRADE),
+                qualityDescription(WeaponQuality.MILITARY_GRADE));
+    }
+
+    private static AssemblyBenchJeiRecipe createMilitaryGradeSniperRifleRecipe() {
+        return new AssemblyBenchJeiRecipe(buildInputs(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 4),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get()),
+                new ItemStack(ModItems.CORDITE.get(), 4)
+        }), makeQualityWeapon(ModItems.SNIPER_RIFLE.get(), WeaponQuality.MILITARY_GRADE),
+                qualityDescription(WeaponQuality.MILITARY_GRADE));
+    }
+
+    private static NonNullList<ItemStack> buildInputs(ItemStack[] items) {
+        NonNullList<ItemStack> inputs = NonNullList.withSize(9, ItemStack.EMPTY);
+        for (int i = 0; i < items.length && i < 9; i++) {
+            inputs.set(i, items[i]);
+        }
+        return inputs;
     }
 }

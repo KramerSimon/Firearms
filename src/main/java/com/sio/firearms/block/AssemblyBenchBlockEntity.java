@@ -2,9 +2,11 @@ package com.sio.firearms.block;
 
 import com.mojang.logging.LogUtils;
 import com.sio.firearms.energy.EnergyStorageBlock;
+import com.sio.firearms.item.WeaponQuality;
 import com.sio.firearms.menu.AssemblyBenchMenu;
 import com.sio.firearms.registry.ModBlockEntities;
 import com.sio.firearms.registry.ModBlocks;
+import com.sio.firearms.registry.ModDataComponents;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -124,10 +126,183 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // ── Weapons ──────────────────────────────────────────────────────────
-        // Checked most-specific first to prevent partial-overlap false matches.
+        // Order: Minigun first (adv_microchip×2 guard), then Military Grade tier (cordite unique),
+        // then Refined tier (refined_gunpowder unique), then Standard tier.
+        // Sniper quality variants follow Minigun (adv_microchip×1 vs ×2 ambiguity resolved by Minigun guard).
+        // Within each tier, check higher steel counts before lower to prevent superset matches.
+
+        // Minigun: steel×6 + hardened×4 + advanced_microchip×2 + circuit×2 + copper×4
+        // First — adv_microchip×2 uniquely identifies it; must precede all Sniper variants.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.MINIGUN.get()),
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
+                            "firearms:advanced_microchip", 2, "firearms:circuit_board", 2,
+                            "firearms:copper_wire", 4));
+        }
+
+        // ── Military Grade tier (cordite×4 + adv_microchip×1 distinguishes from Standard) ──
+
+        // Military Grade Sniper: base sniper + cordite×4
+        // Checked after Minigun — Minigun guard already handles the Minigun+cordite edge case.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)
+                && hasAtLeast(in, "firearms:cordite", 4)) {
+            ItemStack result = new ItemStack(ModItems.SNIPER_RIFLE.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.MILITARY_GRADE.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
+                            "firearms:copper_wire", 3, "firearms:advanced_microchip", 1,
+                            "firearms:cordite", 4));
+        }
+
+        // Military Grade Rifle: base rifle + cordite×4 + adv_microchip×1
+        // bullet_casing×16 uniquely identifies Rifle among quality variants.
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 16)
+                && hasAtLeast(in, "firearms:cordite", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
+            ItemStack result = new ItemStack(ModItems.RIFLE.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.MILITARY_GRADE.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 3, "firearms:circuit_board", 1,
+                            "firearms:bullet_casing", 16, "firearms:cordite", 4,
+                            "firearms:advanced_microchip", 1));
+        }
+
+        // Military Grade Shotgun: base shotgun + cordite×4 + adv_microchip×1
+        // steel×5 checked before SMG (steel×4) to prevent superset match.
+        if (hasAtLeast(in, "firearms:steel_ingot", 5)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:cordite", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
+            ItemStack result = new ItemStack(ModItems.SHOTGUN.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.MILITARY_GRADE.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 5, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 2, "firearms:circuit_board", 1,
+                            "firearms:cordite", 4, "firearms:advanced_microchip", 1));
+        }
+
+        // Military Grade SMG: base SMG + cordite×4 + adv_microchip×1
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:cordite", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
+            ItemStack result = new ItemStack(ModItems.SMG.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.MILITARY_GRADE.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 4, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 2, "firearms:circuit_board", 1,
+                            "firearms:cordite", 4, "firearms:advanced_microchip", 1));
+        }
+
+        // Military Grade Pistol: base pistol + cordite×4 + adv_microchip×1
+        // bullet_casing×8 distinguishes from MG SMG (no casing).
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 8)
+                && hasAtLeast(in, "firearms:cordite", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
+            ItemStack result = new ItemStack(ModItems.PISTOL.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.MILITARY_GRADE.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 4, "firearms:copper_wire", 2,
+                            "firearms:circuit_board", 1, "firearms:bullet_casing", 8,
+                            "firearms:cordite", 4, "firearms:advanced_microchip", 1));
+        }
+
+        // ── Refined tier (refined_gunpowder×4 distinguishes from Standard) ──
+
+        // Refined Sniper: base sniper + refined_gunpowder×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 4)) {
+            ItemStack result = new ItemStack(ModItems.SNIPER_RIFLE.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.REFINED.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
+                            "firearms:copper_wire", 3, "firearms:advanced_microchip", 1,
+                            "firearms:refined_gunpowder", 4));
+        }
+
+        // Refined Rifle: base rifle + refined_gunpowder×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 6)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 16)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 4)) {
+            ItemStack result = new ItemStack(ModItems.RIFLE.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.REFINED.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 3, "firearms:circuit_board", 1,
+                            "firearms:bullet_casing", 16, "firearms:refined_gunpowder", 4));
+        }
+
+        // Refined Shotgun: base shotgun + refined_gunpowder×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 5)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 4)) {
+            ItemStack result = new ItemStack(ModItems.SHOTGUN.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.REFINED.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 5, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 2, "firearms:circuit_board", 1,
+                            "firearms:refined_gunpowder", 4));
+        }
+
+        // Refined SMG: base SMG + refined_gunpowder×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 4)) {
+            ItemStack result = new ItemStack(ModItems.SMG.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.REFINED.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 4, "firearms:hardened_steel_ingot", 2,
+                            "firearms:copper_wire", 2, "firearms:circuit_board", 1,
+                            "firearms:refined_gunpowder", 4));
+        }
+
+        // Refined Pistol: propellant×4 replaced with refined_gunpowder×4
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:bullet_casing", 8)
+                && hasAtLeast(in, "firearms:refined_gunpowder", 4)) {
+            ItemStack result = new ItemStack(ModItems.PISTOL.get());
+            result.set(ModDataComponents.QUALITY.get(), WeaponQuality.REFINED.name());
+            return new RecipeMatch(result,
+                    Map.of("firearms:steel_ingot", 4, "firearms:copper_wire", 2,
+                            "firearms:circuit_board", 1, "firearms:bullet_casing", 8,
+                            "firearms:refined_gunpowder", 4));
+        }
+
+        // ── Standard tier ────────────────────────────────────────────────────
 
         // Rifle: steel×6 + hardened×2 + copper×3 + circuit×1 + bullet_casing×16
-        // Must come before Pistol — if the bench also has propellant, Pistol would fire first otherwise.
+        // Must come before Pistol — if propellant is also present, Pistol would fire first otherwise.
         if (hasAtLeast(in, "firearms:steel_ingot", 6)
                 && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
                 && hasAtLeast(in, "firearms:copper_wire", 3)
@@ -151,22 +326,8 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:propellant_powder", 4));
         }
 
-        // Minigun: steel×6 + hardened×4 + advanced_microchip×2 + circuit×2 + copper×4
-        // Must come before Sniper Rifle — Sniper satisfies steel≥6, hardened≥4, copper≥3, adv≥1,
-        // which would all match when the bench holds minigun ingredients.
-        if (hasAtLeast(in, "firearms:steel_ingot", 6)
-                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
-                && hasAtLeast(in, "firearms:advanced_microchip", 2)
-                && hasAtLeast(in, "firearms:circuit_board", 2)
-                && hasAtLeast(in, "firearms:copper_wire", 4)) {
-            return new RecipeMatch(new ItemStack(ModItems.MINIGUN.get()),
-                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
-                            "firearms:advanced_microchip", 2, "firearms:circuit_board", 2,
-                            "firearms:copper_wire", 4));
-        }
-
         // Sniper Rifle: steel×6 + hardened×4 + copper×3 + advanced_microchip×1
-        // advanced_microchip is a unique ingredient — no overlap risk with other weapons.
+        // Minigun already handled above; this safely matches only standard Sniper ingredients.
         if (hasAtLeast(in, "firearms:steel_ingot", 6)
                 && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
                 && hasAtLeast(in, "firearms:copper_wire", 3)

@@ -3,6 +3,7 @@ package com.sio.firearms.compat.jei;
 import com.sio.firearms.Firearms;
 import com.sio.firearms.registry.ModBlocks;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -70,7 +71,10 @@ public class AssemblyBenchRecipeCategory implements IRecipeCategory<AssemblyBenc
         }
 
         // Output slot: texture at (116,35); JEI relative = (96, 27)
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 27)
+        var outputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 27)
                 .addItemStack(recipe.getOutput());
+        if (!recipe.getDescription().isEmpty()) {
+            outputSlot.addRichTooltipCallback((slot, tooltip) -> tooltip.addAll(recipe.getDescription()));
+        }
     }
 }

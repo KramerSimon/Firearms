@@ -34,6 +34,21 @@ public class GunItem extends Item {
         this.soundEvent = soundEvent;
     }
 
+    public WeaponQuality getQuality(ItemStack stack) {
+        String q = stack.get(ModDataComponents.QUALITY.get());
+        return q != null ? WeaponQuality.fromString(q) : WeaponQuality.STANDARD;
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return (int) (super.getMaxDamage(stack) * getQuality(stack).getDurabilityMultiplier());
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return getQuality(stack) == WeaponQuality.MILITARY_GRADE;
+    }
+
     public int getMaxAmmo() {
         return maxAmmo;
     }
@@ -82,7 +97,8 @@ public class GunItem extends Item {
         boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
         boolean cordite = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_CORDITE_AMMO.get()));
         boolean explosive = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_EXPLOSIVE_AMMO.get()));
-        int actualDamage = (int) ((ap ? 20 : (cordite ? 14 : (refined ? 10 : damage))) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get());
+        WeaponQuality quality = getQuality(stack);
+        int actualDamage = (int) ((ap ? 20 : (cordite ? 14 : (refined ? 10 : damage))) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get() * quality.getDamageMultiplier());
         float inaccuracy = matchGrade ? 0.0F : 0.0F; // match grade guarantees zero spread; base GunItem already fires straight
         BulletEntity bullet = new BulletEntity(level, player, actualDamage);
         bullet.setArmorPiercing(ap);
@@ -101,13 +117,16 @@ public class GunItem extends Item {
                     item -> serverPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND));
         }
 
-        player.getCooldowns().addCooldown(this, fireRate);
+        player.getCooldowns().addCooldown(this, (int) (fireRate * quality.getFireRateMultiplier()));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         boolean matchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
         boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
+        WeaponQuality quality = getQuality(stack);
+        tooltipComponents.add(Component.literal("Quality: ").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(quality.getDisplayName()).withStyle(quality.getColor())));
         tooltipComponents.add(Component.literal("Damage: ").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(String.valueOf(damage)).withStyle(ChatFormatting.WHITE)));
         if (matchGrade) {
