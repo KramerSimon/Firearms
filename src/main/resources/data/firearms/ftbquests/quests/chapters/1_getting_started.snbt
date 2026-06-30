@@ -1,0 +1,140 @@
+{
+	id: "0000000000000001",
+	group: "",
+	order_index: 0,
+	filename: "1_getting_started",
+	title: "Getting Started",
+	icon: "firearms:pistol",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Mine Iron",
+			subtitle: "The raw material for steel",
+			description: [
+				"Iron ore is the foundation of the firearms industry.",
+				"Mine raw iron to begin your journey."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "0000000000000101",
+			tasks: [
+				{
+					id: "0000000000001101",
+					type: "item",
+					item: "minecraft:raw_iron",
+					count: 16L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002101",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Smelt Steel Ingots",
+			subtitle: "Iron + coal coke = steel",
+			description: [
+				"Use the Coke Oven to produce coal coke, then smelt iron into steel.",
+				"Steel is the backbone of all firearms production."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000101"],
+			id: "0000000000000102",
+			tasks: [
+				{
+					id: "0000000000001102",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002102",
+					type: "item",
+					item: "firearms:copper_wire",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build an Assembly Bench",
+			subtitle: "Your primary crafting station",
+			description: [
+				"The Assembly Bench is required to craft all weapons and machines.",
+				"Build one as soon as you have the materials."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000102"],
+			id: "0000000000000103",
+			tasks: [
+				{
+					id: "0000000000001103",
+					type: "item",
+					item: "firearms:assembly_bench",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002103",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft Your First Pistol",
+			subtitle: "A sidearm for self-defence",
+			description: [
+				"Use the Assembly Bench to craft a Pistol.",
+				"Load it with bullets and keep it close — this world is dangerous.",
+				"Tip: press R to reload, right-click to aim."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000103"],
+			id: "0000000000000104",
+			tasks: [
+				{
+					id: "0000000000001104",
+					type: "item",
+					item: "firearms:pistol",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002104",
+					type: "item",
+					item: "firearms:bullet_casing",
+					count: 16
+				},
+				{
+					id: "0000000000002105",
+					type: "item",
+					item: "firearms:propellant_powder",
+					count: 8
+				}
+			]
+		}
+	],
+	quest_links: []
+}

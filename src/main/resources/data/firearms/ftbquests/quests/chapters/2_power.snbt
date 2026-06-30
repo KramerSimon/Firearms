@@ -1,0 +1,103 @@
+{
+	id: "0000000000000002",
+	group: "",
+	order_index: 1,
+	filename: "2_power",
+	title: "Power",
+	icon: "firearms:coal_generator",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Build a Coal Generator",
+			subtitle: "Your first source of Forge Energy",
+			description: [
+				"The Coal Generator burns solid fuels (coal, coal coke) to produce FE.",
+				"Almost every machine in this mod requires power — build one now."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "0000000000000201",
+			tasks: [
+				{
+					id: "0000000000001201",
+					type: "item",
+					item: "firearms:coal_generator",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002201",
+					type: "item",
+					item: "firearms:copper_wire",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Lay Copper Wire",
+			subtitle: "Connect your machines",
+			description: [
+				"Copper Wire blocks transfer Forge Energy between machines.",
+				"Place them between your generator and machines to distribute power."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000201"],
+			id: "0000000000000202",
+			tasks: [
+				{
+					id: "0000000000001202",
+					type: "item",
+					item: "firearms:copper_wire",
+					count: 8L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002202",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Build an Energy Pylon",
+			subtitle: "Wireless power distribution",
+			description: [
+				"The Energy Pylon broadcasts stored FE wirelessly to nearby machines.",
+				"Pair it with a Battery for portable power storage."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000202"],
+			id: "0000000000000203",
+			tasks: [
+				{
+					id: "0000000000001203",
+					type: "item",
+					item: "firearms:energy_pylon",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002203",
+					type: "item",
+					item: "firearms:battery",
+					count: 1
+				}
+			]
+		}
+	],
+	quest_links: []
+}

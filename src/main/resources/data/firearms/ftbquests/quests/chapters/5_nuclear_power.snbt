@@ -1,0 +1,107 @@
+{
+	id: "0000000000000005",
+	group: "",
+	order_index: 4,
+	filename: "5_nuclear_power",
+	title: "Nuclear Power",
+	icon: "firearms:reactor_controller",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Mine Uranium",
+			subtitle: "Handle with care",
+			description: [
+				"Uranium Ore spawns deep underground and emits radiation.",
+				"Wear a Hazmat Suit before handling raw uranium ore or processed products.",
+				"Use a Geiger Counter to detect nearby radiation sources."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "0000000000000501",
+			tasks: [
+				{
+					id: "0000000000001501",
+					type: "item",
+					item: "firearms:uranium_ore_raw",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002501",
+					type: "item",
+					item: "firearms:lead_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Assemble a Fuel Rod",
+			subtitle: "The reactor's fuel source",
+			description: [
+				"Fuel Rods are assembled from Uranium Dioxide Pellets packed into Zirconium cladding.",
+				"The enrichment chain: Uranium Ore → UF6 → Gas Centrifuge (enrichment) → UO2 Powder → Pellets → Fuel Rod.",
+				"Combine 4 Fuel Rods in the Assembly Bench to make a Fuel Rod Assembly."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000501"],
+			id: "0000000000000502",
+			tasks: [
+				{
+					id: "0000000000001502",
+					type: "item",
+					item: "firearms:fuel_rod",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002502",
+					type: "item",
+					item: "firearms:uranium_dioxide_pellet",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build the Nuclear Reactor",
+			subtitle: "Unlimited (radioactive) power",
+			description: [
+				"The Reactor is a large multiblock: Reactor Base, Walls, Top, Control Rod Housings, and a Controller.",
+				"Insert Fuel Rod Assemblies and Control Rods, then activate to generate massive amounts of FE.",
+				"Build a Cooling Tower nearby — the reactor generates heat that must be dissipated.",
+				"WARNING: keep a Hazmat Suit equipped at all times near an active reactor."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["0000000000000502"],
+			id: "0000000000000503",
+			tasks: [
+				{
+					id: "0000000000001503",
+					type: "item",
+					item: "firearms:reactor_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "0000000000002503",
+					type: "item",
+					item: "firearms:battery",
+					count: 4
+				}
+			]
+		}
+	],
+	quest_links: []
+}
