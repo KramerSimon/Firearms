@@ -42,7 +42,15 @@ public class FirearmsJeiPlugin implements IModPlugin {
                 new ChipPackagingMachineRecipeCategory(gui),
                 new CrystalGrowthRecipeCategory(gui),
                 new EuvLithographyRecipeCategory(gui),
-                new GasCentrifugeRecipeCategory(gui)
+                new GasCentrifugeRecipeCategory(gui),
+                // Multiblock structure guides
+                new RefineryStructureCategory(gui),
+                new OilDerrickStructureCategory(gui),
+                new NuclearReactorStructureCategory(gui),
+                new CoolingTowerStructureCategory(gui),
+                new SpentFuelStorageStructureCategory(gui),
+                new VehicleGarageStructureCategory(gui),
+                new AircraftHangarStructureCategory(gui)
         );
     }
 
@@ -68,6 +76,14 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipes(CrystalGrowthRecipeCategory.RECIPE_TYPE,       CrystalGrowthJeiRecipe.getAllRecipes());
         registration.addRecipes(EuvLithographyRecipeCategory.RECIPE_TYPE,      EuvLithographyJeiRecipe.getAllRecipes());
         registration.addRecipes(GasCentrifugeRecipeCategory.RECIPE_TYPE,      GasCentrifugeJeiRecipe.getAllRecipes());
+        // Multiblock structure guides
+        registration.addRecipes(RefineryStructureCategory.RECIPE_TYPE,        RefineryStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(OilDerrickStructureCategory.RECIPE_TYPE,      OilDerrickStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(NuclearReactorStructureCategory.RECIPE_TYPE,  NuclearReactorStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(CoolingTowerStructureCategory.RECIPE_TYPE,    CoolingTowerStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(SpentFuelStorageStructureCategory.RECIPE_TYPE, SpentFuelStorageStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(VehicleGarageStructureCategory.RECIPE_TYPE,   VehicleGarageStructureJeiRecipe.getAllRecipes());
+        registration.addRecipes(AircraftHangarStructureCategory.RECIPE_TYPE,  AircraftHangarStructureJeiRecipe.getAllRecipes());
     }
 
     @Override
@@ -110,5 +126,34 @@ public class FirearmsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get()),   CrystalGrowthRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get()),  EuvLithographyRecipeCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.GAS_CENTRIFUGE.get()),             GasCentrifugeRecipeCategory.RECIPE_TYPE);
+        // Multiblock structure guides
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REFINERY_CONTROLLER.get()), RefineryStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REFINERY_BASE.get()),       RefineryStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REFINERY_WALL.get()),       RefineryStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REFINERY_TOP.get()),        RefineryStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.OIL_DERRICK_CONTROLLER.get()), OilDerrickStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.OIL_DERRICK_BASE.get()),       OilDerrickStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.OIL_DERRICK_PILLAR.get()),     OilDerrickStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REACTOR_CONTROLLER.get()),  NuclearReactorStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REACTOR_BASE.get()),        NuclearReactorStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REACTOR_WALL.get()),        NuclearReactorStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REACTOR_TOP.get()),         NuclearReactorStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.COOLING_TOWER_CONTROLLER.get()), CoolingTowerStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.COOLING_TOWER_BASE.get()),       CoolingTowerStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.COOLING_TOWER_WALL.get()),       CoolingTowerStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.COOLING_TOWER_VENT.get()),       CoolingTowerStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER.get()), SpentFuelStorageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPENT_FUEL_STORAGE_BASE.get()),       SpentFuelStorageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPENT_FUEL_STORAGE_WALL.get()),       SpentFuelStorageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_CONTROLLER.get()), VehicleGarageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_FLOOR.get()),      VehicleGarageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_WALL.get()),       VehicleGarageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_DOOR.get()),       VehicleGarageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GARAGE_ROOF.get()),       VehicleGarageStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_CONTROLLER.get()), AircraftHangarStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_FLOOR.get()),      AircraftHangarStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_WALL.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_DOOR.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HANGAR_ROOF.get()),       AircraftHangarStructureCategory.RECIPE_TYPE);
     }
 }
