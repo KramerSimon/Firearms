@@ -30,7 +30,7 @@ public class HangarMenu extends AbstractContainerMenu {
             }
         }
 
-        // Player main inventory (3 rows × 9)
+        // Player main inventory (3 rows x 9)
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 104 + row * 18));
@@ -45,9 +45,9 @@ public class HangarMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
-    public int getEnergyStored()  { return data.get(0); }
-    public int getMaxEnergy()     { return data.get(1); }
-    public int getBuildProgress() { return data.get(2); }
+    public int getEnergyStored()      { return data.get(0); }
+    public int getMaxEnergy()         { return data.get(1); }
+    public int getBuildProgress()     { return data.get(2); }
     public boolean isStructureValid() { return data.get(3) == 1; }
 
     @Override

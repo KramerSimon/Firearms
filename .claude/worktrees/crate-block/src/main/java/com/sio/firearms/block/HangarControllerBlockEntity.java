@@ -140,14 +140,14 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         if (level == null || structureOrigin == null) return;
         if (!hasRequiredItems()) return;
 
-        // Spawn at centre of 9×9×4 interior (origin + 1 offset, interior at y=1-4)
+        // Spawn at centre of 9x9x4 interior (origin + 1 offset, interior at y=1-4)
         double cx = structureOrigin.getX() + 5.5;
         double cy = structureOrigin.getY() + 2.0;
         double cz = structureOrigin.getZ() + 5.5;
 
         AircraftEntity aircraft = new AircraftEntity(ModEntities.AIRCRAFT.get(), level);
         aircraft.setPos(cx, cy, cz);
-        aircraft.setFuel(1000);  // initial fuel from kerosene bucket
+        aircraft.setFuel(1000);
 
         level.addFreshEntity(aircraft);
 
@@ -156,7 +156,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         inputSlots.removeItem(1, 2);  // wings
         inputSlots.removeItem(2, 2);  // jet engines
         inputSlots.removeItem(3, 1);  // avionics
-        inputSlots.removeItem(4, 1);  // kerosene bucket — return empty bucket
+        inputSlots.removeItem(4, 1);  // kerosene bucket - return empty bucket
         Block.popResource(level, worldPosition, new ItemStack(Items.BUCKET));
         setChanged();
 
@@ -164,13 +164,12 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
                 worldPosition.toShortString(), (int) cx, (int) cy, (int) cz);
     }
 
-    // ── Structure validation: 11×11×6 ────────────────────────────────────────
+    // --- Structure validation: 11x11x6 ---
 
     public boolean checkStructure() {
         if (level == null) return false;
 
-        // Try controller at any position on the outer border of the 11×11 floor.
-        // Outer border: x=0 or x=10, OR z=0 or z=10 (controller at y=0).
+        // Try controller at any position on the outer border of the 11x11 floor.
         for (int dz = 0; dz <= 10; dz++) {
             BlockPos o;
             String fail;
@@ -219,7 +218,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
     }
 
     private String validateAt(BlockPos origin) {
-        // Layer 0: full 11×11 hangar_floor (controller and doors count as floor on border)
+        // Layer 0: full 11x11 hangar_floor (controller and doors count as floor on border)
         for (int x = 0; x < 11; x++) {
             for (int z = 0; z < 11; z++) {
                 BlockPos fp = origin.offset(x, 0, z);
@@ -230,7 +229,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
             }
         }
 
-        // Layers 1-4: 11×11 outer border = wall/door/controller, 9×9 interior = air/port
+        // Layers 1-4: 11x11 outer border = wall/door/controller, 9x9 interior = air/port
         for (int y = 1; y <= 4; y++) {
             for (int x = 0; x < 11; x++) {
                 for (int z = 0; z < 11; z++) {
@@ -250,7 +249,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
             }
         }
 
-        // Layer 5: full 11×11 hangar_roof
+        // Layer 5: full 11x11 hangar_roof
         for (int x = 0; x < 11; x++) {
             for (int z = 0; z < 11; z++) {
                 BlockPos rp = origin.offset(x, 5, z);
@@ -290,7 +289,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         return BuiltInRegistries.BLOCK.getKey(b).toString();
     }
 
-    // ── Door toggle ───────────────────────────────────────────────────────────
+    // --- Door toggle ---
 
     public void toggleDoors() {
         if (level == null || structureOrigin == null || !structureValid) return;
@@ -323,7 +322,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
     }
 
-    // ── NBT ──────────────────────────────────────────────────────────────────
+    // --- NBT ---
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
