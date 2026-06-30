@@ -4,6 +4,7 @@ import com.sio.firearms.Firearms;
 import com.sio.firearms.block.FluidPipeBlockEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -14,7 +15,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Optional;
 
-public record SetFluidPipeFilterPayload(BlockPos pos, Optional<ResourceLocation> filterFluid)
+public record SetFluidPipeFilterPayload(BlockPos pos, int faceOrdinal, Optional<ResourceLocation> filterFluid)
         implements CustomPacketPayload {
 
     public static final Type<SetFluidPipeFilterPayload> TYPE =
@@ -23,6 +24,7 @@ public record SetFluidPipeFilterPayload(BlockPos pos, Optional<ResourceLocation>
     public static final StreamCodec<ByteBuf, SetFluidPipeFilterPayload> STREAM_CODEC =
             StreamCodec.composite(
                     BlockPos.STREAM_CODEC, SetFluidPipeFilterPayload::pos,
+                    ByteBufCodecs.INT, SetFluidPipeFilterPayload::faceOrdinal,
                     ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), SetFluidPipeFilterPayload::filterFluid,
                     SetFluidPipeFilterPayload::new
             );
@@ -35,7 +37,8 @@ public record SetFluidPipeFilterPayload(BlockPos pos, Optional<ResourceLocation>
             if (!(context.player() instanceof ServerPlayer player)) return;
             ServerLevel level = player.serverLevel();
             if (level.getBlockEntity(payload.pos()) instanceof FluidPipeBlockEntity pipe) {
-                pipe.setFilterFluid(payload.filterFluid().orElse(null));
+                Direction face = Direction.values()[payload.faceOrdinal()];
+                pipe.setFilterFluid(face, payload.filterFluid().orElse(null));
                 pipe.setChanged();
                 level.sendBlockUpdated(payload.pos(),
                         level.getBlockState(payload.pos()),

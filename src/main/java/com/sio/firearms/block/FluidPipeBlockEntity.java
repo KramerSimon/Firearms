@@ -9,7 +9,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Nullable;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -21,6 +20,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class FluidPipeBlockEntity extends BlockEntity {
@@ -30,8 +30,9 @@ public class FluidPipeBlockEntity extends BlockEntity {
     private static final int MAX_TRANSFER = 100;
 
     private final FluidTank tank = new FluidTank(CAPACITY);
-    private ResourceLocation lockedFluid = null; // null = accepts any fluid; set on first fill, cleared on empty
-    private ResourceLocation filterFluid = null; // null = no filter; set by wrench+fluid-bucket interaction
+    private ResourceLocation lockedFluid = null;
+    // Per-face fluid filter: absent = no filter (pass all); set per-face via wrench GUI.
+    private final EnumMap<Direction, ResourceLocation> faceFilters = new EnumMap<>(Direction.class);
 
     public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FLUID_PIPE.get(), pos, state);
@@ -39,8 +40,19 @@ public class FluidPipeBlockEntity extends BlockEntity {
 
     public FluidTank getFluidTank() { return tank; }
     public ResourceLocation getLockedFluid() { return lockedFluid; }
-    public ResourceLocation getFilterFluid() { return filterFluid; }
-    public void setFilterFluid(ResourceLocation filter) { this.filterFluid = filter; }
+
+    public @Nullable ResourceLocation getFilterFluid(Direction dir) {
+        return faceFilters.get(dir);
+    }
+
+    public void setFilterFluid(Direction dir, @Nullable ResourceLocation filter) {
+        if (filter == null) {
+            faceFilters.remove(dir);
+        } else {
+            faceFilters.put(dir, filter);
+        }
+        setChanged();
+    }
 
     private int tickCount = 0;
 
@@ -88,10 +100,11 @@ public class FluidPipeBlockEntity extends BlockEntity {
                 }
                 continue;
             }
-            if (filterFluid != null && !filterFluid.equals(incomingKey)) {
+            ResourceLocation faceFilter = faceFilters.get(dir);
+            if (faceFilter != null && !faceFilter.equals(incomingKey)) {
                 if (shouldLog) {
-                    LOGGER.info("Pipe@{} PULL {}: SKIP — filter set to {} but source offers {}",
-                            worldPosition.toShortString(), dir, filterFluid, incomingKey);
+                    LOGGER.info("Pipe@{} PULL {}: SKIP — face filter {} but source offers {}",
+                            worldPosition.toShortString(), dir, faceFilter, incomingKey);
                 }
                 continue;
             }
@@ -104,8 +117,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
             }
             if (accepted <= 0) continue;
 
-            // Use copyWithAmount to preserve fluid components — new FluidStack() drops them
-            // and FluidTank.drain(FluidStack) fails the equality check if components differ.
+            // copyWithAmount preserves fluid components — new FluidStack() drops them
             FluidStack toExecute = simDrain.copyWithAmount(accepted);
             if (shouldLog) {
                 LOGGER.info("Pipe@{} PULL {} EXECUTE: calling drain({} mB of {})",
@@ -167,10 +179,11 @@ public class FluidPipeBlockEntity extends BlockEntity {
             FluidStack inTank = tank.getFluid();
             if (inTank.isEmpty()) break;
 
-            // Skip push if this pipe has a filter and the carried fluid doesn't match
-            if (filterFluid != null) {
+            // Skip push if this face has a filter and the carried fluid doesn't match
+            ResourceLocation pushFaceFilter = faceFilters.get(dir);
+            if (pushFaceFilter != null) {
                 ResourceLocation carriedKey = BuiltInRegistries.FLUID.getKey(inTank.getFluid());
-                if (!filterFluid.equals(carriedKey)) continue;
+                if (!pushFaceFilter.equals(carriedKey)) continue;
             }
 
             // copyWithAmount preserves fluid components for correct fill() matching
@@ -214,10 +227,8 @@ public class FluidPipeBlockEntity extends BlockEntity {
             FluidStack myFluid = tank.getFluid();
             if (myFluid.isEmpty()) break;
 
-            // Skip if neighbor tank already holds a different fluid
             if (!pipeNeighbor.tank.isEmpty()
                     && !pipeNeighbor.tank.getFluid().getFluid().isSame(myFluid.getFluid())) continue;
-            // Skip if neighbor is locked to a different fluid type
             if (pipeNeighbor.lockedFluid != null && !pipeNeighbor.lockedFluid.equals(lockedFluid)) continue;
 
             int diff = (myAmount - theirAmount) / 2;
@@ -233,7 +244,6 @@ public class FluidPipeBlockEntity extends BlockEntity {
             }
         }
 
-        // Clear lock once pipe drains empty
         if (tank.isEmpty() && lockedFluid != null) {
             lockedFluid = null;
             changed = true;
@@ -250,7 +260,7 @@ public class FluidPipeBlockEntity extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         tag.put("FluidTank", tank.writeToNBT(registries, new CompoundTag()));
         if (lockedFluid != null) tag.putString("LockedFluid", lockedFluid.toString());
-        if (filterFluid != null) tag.putString("FilterFluid", filterFluid.toString());
+        writeFaceFilters(tag);
         return tag;
     }
 
@@ -264,7 +274,15 @@ public class FluidPipeBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         tag.put("FluidTank", tank.writeToNBT(registries, new CompoundTag()));
         if (lockedFluid != null) tag.putString("LockedFluid", lockedFluid.toString());
-        if (filterFluid != null) tag.putString("FilterFluid", filterFluid.toString());
+        writeFaceFilters(tag);
+    }
+
+    private void writeFaceFilters(CompoundTag tag) {
+        if (!faceFilters.isEmpty()) {
+            CompoundTag filters = new CompoundTag();
+            faceFilters.forEach((dir, rl) -> filters.putString(dir.getSerializedName(), rl.toString()));
+            tag.put("FaceFilters", filters);
+        }
     }
 
     @Override
@@ -272,6 +290,16 @@ public class FluidPipeBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         if (tag.contains("FluidTank")) tank.readFromNBT(registries, tag.getCompound("FluidTank"));
         if (tag.contains("LockedFluid")) lockedFluid = ResourceLocation.parse(tag.getString("LockedFluid"));
-        if (tag.contains("FilterFluid")) filterFluid = ResourceLocation.parse(tag.getString("FilterFluid"));
+        faceFilters.clear();
+        if (tag.contains("FaceFilters")) {
+            CompoundTag filters = tag.getCompound("FaceFilters");
+            for (Direction dir : Direction.values()) {
+                String key = dir.getSerializedName();
+                if (filters.contains(key)) {
+                    faceFilters.put(dir, ResourceLocation.parse(filters.getString(key)));
+                }
+            }
+        }
+        // Legacy single "FilterFluid" key silently dropped — cannot assign to one face
     }
 }
