@@ -595,7 +595,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> KEVLAR_VEST =
             ITEMS.register("kevlar_vest",
-                    () -> new KevlarVestItem(ModArmorMaterials.KEVLAR_VEST.get(),
+                    () -> new KevlarVestItem(ModArmorMaterials.KEVLAR_VEST,
                             ArmorItem.Type.CHESTPLATE,
                             new Item.Properties().stacksTo(1)
                                     .durability(ArmorItem.Type.CHESTPLATE.getDurability(30))));
