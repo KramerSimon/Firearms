@@ -226,8 +226,9 @@ public class ModMenuTypes {
             MENU_TYPES.register("fluid_pipe_config",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> {
                         net.minecraft.core.BlockPos pos = data.readBlockPos();
+                        net.minecraft.core.Direction face = net.minecraft.core.Direction.values()[data.readByte()];
                         boolean hasFilter = data.readBoolean();
                         net.minecraft.resources.ResourceLocation filter = hasFilter ? data.readResourceLocation() : null;
-                        return new com.sio.firearms.menu.FluidPipeConfigMenu(windowId, inv, pos, filter);
+                        return new com.sio.firearms.menu.FluidPipeConfigMenu(windowId, inv, pos, face, filter);
                     }));
 }

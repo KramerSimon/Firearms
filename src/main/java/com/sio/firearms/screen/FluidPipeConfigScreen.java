@@ -32,7 +32,7 @@ public class FluidPipeConfigScreen extends AbstractContainerScreen<FluidPipeConf
                 Component.literal("Clear Filter"),
                 btn -> {
                     PacketDistributor.sendToServer(
-                            new SetFluidPipeFilterPayload(menu.pos, Optional.empty()));
+                            new SetFluidPipeFilterPayload(menu.pos, menu.face.ordinal(), Optional.empty()));
                     menu.filterFluid = null;
                 }
         ).bounds(leftPos + 8, topPos + 76, 100, 18).build());
@@ -52,7 +52,8 @@ public class FluidPipeConfigScreen extends AbstractContainerScreen<FluidPipeConf
 
     @Override
     protected void renderLabels(GuiGraphics g, int mx, int my) {
-        g.drawString(font, "Fluid Pipe Filter", 8, 8, 0xFFCCCCDD, false);
+        String title = "Fluid Pipe — " + capitalize(menu.face.getSerializedName());
+        g.drawString(font, title, 8, 8, 0xFFCCCCDD, false);
         g.drawString(font, "Filter Fluid (drag from JEI):", 8, 26, 0xFF999999, false);
 
         String label = menu.filterFluid != null ? menu.filterFluid.getPath() : "None (pass all)";
@@ -64,5 +65,10 @@ public class FluidPipeConfigScreen extends AbstractContainerScreen<FluidPipeConf
     public void render(GuiGraphics g, int mx, int my, float partial) {
         super.render(g, mx, my, partial);
         renderTooltip(g, mx, my);
+    }
+
+    private static String capitalize(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }

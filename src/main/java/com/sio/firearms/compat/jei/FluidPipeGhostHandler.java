@@ -36,7 +36,10 @@ public class FluidPipeGhostHandler implements IGhostIngredientHandler<FluidPipeC
             public void accept(FluidStack fluid) {
                 ResourceLocation key = BuiltInRegistries.FLUID.getKey(fluid.getFluid());
                 PacketDistributor.sendToServer(
-                        new SetFluidPipeFilterPayload(screen.getMenu().pos, Optional.ofNullable(key)));
+                        new SetFluidPipeFilterPayload(
+                                screen.getMenu().pos,
+                                screen.getMenu().face.ordinal(),
+                                Optional.ofNullable(key)));
                 // Update local menu state so label refreshes without reopening
                 screen.getMenu().filterFluid = key;
             }
