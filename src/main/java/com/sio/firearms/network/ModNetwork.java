@@ -19,5 +19,6 @@ public class ModNetwork {
         registrar.playToServer(SetFluidPortTargetPayload.TYPE, SetFluidPortTargetPayload.STREAM_CODEC, SetFluidPortTargetPayload::handle);
         registrar.playToServer(SetFluidPortModePayload.TYPE, SetFluidPortModePayload.STREAM_CODEC, SetFluidPortModePayload::handle);
         registrar.playToServer(SetFluidPipeFilterPayload.TYPE, SetFluidPipeFilterPayload.STREAM_CODEC, SetFluidPipeFilterPayload::handle);
+        registrar.playToServer(SetItemPipeModePayload.TYPE, SetItemPipeModePayload.STREAM_CODEC, SetItemPipeModePayload::handle);
     }
 }

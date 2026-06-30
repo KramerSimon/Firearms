@@ -1,5 +1,6 @@
 package com.sio.firearms.item;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.block.FluidPipeBlock;
 import com.sio.firearms.block.FluidPipeBlockEntity;
 import com.sio.firearms.block.FluidPortBlock;
@@ -8,25 +9,25 @@ import com.sio.firearms.block.ItemPipeBlock;
 import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.WireBlock;
 import com.sio.firearms.menu.FluidPipeConfigMenu;
+import com.sio.firearms.menu.ItemPipeFilterMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import org.slf4j.Logger;
 
 public class WrenchItem extends Item {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public WrenchItem() {
         super(new Item.Properties().stacksTo(1));
@@ -35,97 +36,87 @@ public class WrenchItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext ctx) {
         Level level = ctx.getLevel();
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
-
         BlockPos pos = ctx.getClickedPos();
         Direction face = ctx.getClickedFace();
+        Block block = level.getBlockState(pos).getBlock();
+
+        // Log on BOTH sides so we can confirm the method is being called and detect the block correctly
+        LOGGER.info("[Wrench] useOn: pos={} face={} block={} isClient={}",
+                pos, face.getSerializedName(), block.getClass().getSimpleName(), level.isClientSide());
+
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+
         BlockState state = level.getBlockState(pos);
-        Block block = state.getBlock();
 
+        // ── Item Pipe ──────────────────────────────────────────────────────────
         if (block instanceof ItemPipeBlock) {
-            if (level.getBlockEntity(pos) instanceof ItemPipeBlockEntity pipe) {
-                ItemPipeBlockEntity.SideMode newMode = pipe.cycleSideMode(face);
-                pipe.setChanged();
-                level.sendBlockUpdated(pos, state, state, 3);
-                String msg = switch (newMode) {
-                    case EXTRACT -> "Extract from " + face.getSerializedName();
-                    case INSERT  -> "Insert into "  + face.getSerializedName();
-                    case NONE    -> face.getSerializedName() + ": None";
-                };
-                ctx.getPlayer().displayClientMessage(Component.literal(msg), true);
+            LOGGER.info("[Wrench] Detected ItemPipeBlock at {} — looking up BE and player", pos);
+            if (level.getBlockEntity(pos) instanceof ItemPipeBlockEntity pipe
+                    && ctx.getPlayer() instanceof ServerPlayer sp) {
+                LOGGER.info("[Wrench] Opening ItemPipe filter GUI for face {} at {}", face.getSerializedName(), pos);
+                String dirName = capitalize(face.getSerializedName());
+                sp.openMenu(
+                        new SimpleMenuProvider(
+                                (id, inv, pl) -> ItemPipeFilterMenu.openFor(id, inv, pos, face, pipe),
+                                Component.literal("Item Pipe — " + dirName)
+                        ),
+                        buf -> {
+                            buf.writeBlockPos(pos);
+                            buf.writeByte(face.ordinal());
+                        }
+                );
+            } else {
+                LOGGER.warn("[Wrench] ItemPipeBlock at {} — BE={} player={}",
+                        pos,
+                        level.getBlockEntity(pos) == null ? "null" : level.getBlockEntity(pos).getClass().getSimpleName(),
+                        ctx.getPlayer() == null ? "null" : ctx.getPlayer().getClass().getSimpleName());
             }
             return InteractionResult.SUCCESS;
         }
 
+        // ── Fluid Pipe ─────────────────────────────────────────────────────────
         if (block instanceof FluidPipeBlock) {
-            if (level.getBlockEntity(pos) instanceof FluidPipeBlockEntity pipe) {
-                // Offhand fluid bucket → set filter; offhand empty bucket → clear filter
-                var player = ctx.getPlayer();
-                if (player != null) {
-                    var offhand = player.getOffhandItem();
-                    java.util.Optional<FluidStack> contained = FluidUtil.getFluidContained(offhand);
-                    if (contained.isPresent() && !contained.get().isEmpty()) {
-                        ResourceLocation newFilter = BuiltInRegistries.FLUID.getKey(contained.get().getFluid());
-                        pipe.setFilterFluid(newFilter);
-                        pipe.setChanged();
-                        level.sendBlockUpdated(pos, state, state, 3);
-                        ResourceLocation lf = pipe.getLockedFluid();
-                        String status = "Pipe: " + (lf != null ? lf.getPath() : "any")
-                                + " | Filter: " + newFilter.getPath()
-                                + " | " + pipe.getFluidTank().getFluidAmount() + "/" + pipe.getFluidTank().getCapacity() + " mB";
-                        player.displayClientMessage(Component.literal(status), true);
-                        return InteractionResult.SUCCESS;
-                    } else if (offhand.getItem() == Items.BUCKET) {
-                        pipe.setFilterFluid(null);
-                        pipe.setChanged();
-                        level.sendBlockUpdated(pos, state, state, 3);
-                        ResourceLocation lf = pipe.getLockedFluid();
-                        String status = "Pipe: " + (lf != null ? lf.getPath() : "any")
-                                + " | Filter: none"
-                                + " | " + pipe.getFluidTank().getFluidAmount() + "/" + pipe.getFluidTank().getCapacity() + " mB";
-                        player.displayClientMessage(Component.literal(status), true);
-                        return InteractionResult.SUCCESS;
-                    } else if (player.isShiftKeyDown() && player instanceof ServerPlayer sp) {
-                        // Sneak + wrench (no special offhand) → open filter config screen
-                        ResourceLocation filter = pipe.getFilterFluid();
-                        sp.openMenu(
-                                new SimpleMenuProvider(
-                                        (id, inv, pl) -> new FluidPipeConfigMenu(id, inv, pos, filter),
-                                        Component.literal("Fluid Pipe Filter")
-                                ),
-                                buf -> {
-                                    buf.writeBlockPos(pos);
-                                    buf.writeBoolean(filter != null);
-                                    if (filter != null) buf.writeResourceLocation(filter);
-                                }
-                        );
-                        return InteractionResult.SUCCESS;
-                    }
+            LOGGER.info("[Wrench] Detected FluidPipeBlock at {} — face={}", pos, face.getSerializedName());
+            if (level.getBlockEntity(pos) instanceof FluidPipeBlockEntity pipe
+                    && ctx.getPlayer() instanceof ServerPlayer sp) {
+
+                if (sp.isShiftKeyDown()) {
+                    // Shift+right-click → toggle face blocked
+                    BooleanProperty blockedProp = FluidPipeBlock.blockedPropFor(face);
+                    boolean wasBlocked = state.getValue(blockedProp);
+                    BlockState withToggle = state.setValue(blockedProp, !wasBlocked);
+                    level.setBlock(pos, withToggle, 3);
+                    BlockState recomputed = withToggle.updateShape(face,
+                            level.getBlockState(pos.relative(face)), level, pos, pos.relative(face));
+                    if (recomputed != withToggle) level.setBlock(pos, recomputed, 3);
+                    String msg = !wasBlocked
+                            ? "Pipe " + face.getSerializedName() + ": blocked"
+                            : "Pipe " + face.getSerializedName() + ": open";
+                    sp.displayClientMessage(Component.literal(msg), true);
+                } else {
+                    // Normal right-click → open per-face filter GUI
+                    LOGGER.info("[Wrench] Opening FluidPipe filter GUI for face {} at {}", face.getSerializedName(), pos);
+                    String dirName = capitalize(face.getSerializedName());
+                    ResourceLocation filter = pipe.getFilterFluid(face);
+                    sp.openMenu(
+                            new SimpleMenuProvider(
+                                    (id, inv, pl) -> new FluidPipeConfigMenu(id, inv, pos, face, filter),
+                                    Component.literal("Fluid Pipe — " + dirName)
+                            ),
+                            buf -> {
+                                buf.writeBlockPos(pos);
+                                buf.writeByte(face.ordinal());
+                                ResourceLocation f = pipe.getFilterFluid(face);
+                                buf.writeBoolean(f != null);
+                                if (f != null) buf.writeResourceLocation(f);
+                            }
+                    );
                 }
-
-                // Normal: toggle face blocked
-                BooleanProperty blockedProp = FluidPipeBlock.blockedPropFor(face);
-                boolean wasBlocked = state.getValue(blockedProp);
-                BlockState withToggle = state.setValue(blockedProp, !wasBlocked);
-                level.setBlock(pos, withToggle, 3);
-                BlockState recomputed = withToggle.updateShape(face,
-                        level.getBlockState(pos.relative(face)), level, pos, pos.relative(face));
-                if (recomputed != withToggle) level.setBlock(pos, recomputed, 3);
-
-                String faceMsg = !wasBlocked
-                        ? "Pipe " + face.getSerializedName() + ": blocked"
-                        : "Pipe " + face.getSerializedName() + ": open";
-                ResourceLocation lf = pipe.getLockedFluid();
-                ResourceLocation ff = pipe.getFilterFluid();
-                String status = faceMsg
-                        + " | Pipe: " + (lf != null ? lf.getPath() : "any")
-                        + " | Filter: " + (ff != null ? ff.getPath() : "none")
-                        + " | " + pipe.getFluidTank().getFluidAmount() + "/" + pipe.getFluidTank().getCapacity() + " mB";
-                if (player != null) player.displayClientMessage(Component.literal(status), true);
             }
             return InteractionResult.SUCCESS;
         }
 
+        // ── Wire ───────────────────────────────────────────────────────────────
         if (block instanceof WireBlock) {
             BooleanProperty blockedProp = WireBlock.blockedPropFor(face);
             boolean wasBlocked = state.getValue(blockedProp);
@@ -141,6 +132,7 @@ public class WrenchItem extends Item {
             return InteractionResult.SUCCESS;
         }
 
+        // ── Fluid Port ─────────────────────────────────────────────────────────
         if (block instanceof FluidPortBlock && ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()) {
             if (level.getBlockEntity(pos) instanceof FluidPortBlockEntity port) {
                 port.cycleTargetFluid();
@@ -151,5 +143,10 @@ public class WrenchItem extends Item {
         }
 
         return InteractionResult.PASS;
+    }
+
+    private static String capitalize(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }
