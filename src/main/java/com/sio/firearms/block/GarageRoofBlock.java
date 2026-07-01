@@ -5,11 +5,11 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
-/** Wall of the Aircraft Hangar multiblock; swaps to a seamless texture once the
+/** Roof of the Vehicle Garage multiblock; swaps to a seamless texture once the
  *  controller validates the structure (see {@link ModBlockStateProperties#CONNECTED}). */
-public class HangarWallBlock extends Block {
+public class GarageRoofBlock extends Block {
 
-    public HangarWallBlock(BlockBehaviour.Properties properties) {
+    public GarageRoofBlock(BlockBehaviour.Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(ModBlockStateProperties.CONNECTED, false));
     }

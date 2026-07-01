@@ -1,5 +1,10 @@
 {
   "variants": {
-    "": { "model": "firearms:block/chemical_mixer_wall" }
+    "connected=false": {
+      "model": "firearms:block/chemical_mixer_wall"
+    },
+    "connected=true": {
+      "model": "firearms:block/chemical_mixer_wall_connected"
+    }
   }
 }

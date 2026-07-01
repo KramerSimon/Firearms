@@ -1,5 +1,10 @@
 {
   "variants": {
-    "": { "model": "firearms:block/hangar_floor" }
+    "connected=false": {
+      "model": "firearms:block/hangar_floor"
+    },
+    "connected=true": {
+      "model": "firearms:block/hangar_floor_connected"
+    }
   }
 }

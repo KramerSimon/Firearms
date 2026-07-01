@@ -5,11 +5,11 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
-/** Wall of the Aircraft Hangar multiblock; swaps to a seamless texture once the
+/** Base of the Nuclear Reactor multiblock; swaps to a seamless texture once the
  *  controller validates the structure (see {@link ModBlockStateProperties#CONNECTED}). */
-public class HangarWallBlock extends Block {
+public class ReactorBaseBlock extends Block {
 
-    public HangarWallBlock(BlockBehaviour.Properties properties) {
+    public ReactorBaseBlock(BlockBehaviour.Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(ModBlockStateProperties.CONNECTED, false));
     }

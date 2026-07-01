@@ -32,7 +32,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
@@ -57,6 +59,9 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
     private int buildProgress       = 0;   // 0 = idle, 1-200 = building
     private int scanTick            = 0;
     private Boolean lastValidState  = null;
+    // Positions currently rendered with CONNECTED=true, so we can un-connect exactly the
+    // right blocks if the structure re-forms at a different origin (or stops forming).
+    private Set<BlockPos> connectedBlocks = new HashSet<>();
 
     private final ContainerData data = new ContainerData() {
         @Override public int get(int i) {
@@ -276,6 +281,7 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
                     firstFail != null ? firstFail : "no valid origin found");
             lastValidState = false;
         }
+        connectedBlocks = ConnectedStructureHelper.clear(level, connectedBlocks);
         return false;
     }
 
@@ -286,7 +292,27 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
                     worldPosition.toShortString(), origin.toShortString());
             lastValidState = true;
         }
+        connectedBlocks = ConnectedStructureHelper.apply(level, connectedBlocks, collectStructurePositions(origin));
         return true;
+    }
+
+    /** Every floor/wall/roof position of the 9×9×6 shell for a given origin. */
+    private Set<BlockPos> collectStructurePositions(BlockPos origin) {
+        Set<BlockPos> positions = new HashSet<>();
+        for (int y = 0; y <= 1; y++)
+            for (int x = 0; x < 9; x++)
+                for (int z = 0; z < 9; z++)
+                    positions.add(origin.offset(x, y, z));
+        for (int y = 2; y <= 4; y++)
+            for (int x = 0; x < 9; x++)
+                for (int z = 0; z < 9; z++) {
+                    boolean border = x == 0 || x == 8 || z == 0 || z == 8;
+                    if (border) positions.add(origin.offset(x, y, z));
+                }
+        for (int x = 0; x < 9; x++)
+            for (int z = 0; z < 9; z++)
+                positions.add(origin.offset(x, 5, z));
+        return positions;
     }
 
     public void toggleDoors() {
@@ -487,6 +513,7 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         tag.putInt("BuildProgress", buildProgress);
         tag.putBoolean("StructureValid", structureValid);
         tag.putBoolean("PreviewActive", previewActive);
+        ConnectedStructureHelper.writePositions(tag, "ConnectedBlocks", connectedBlocks);
     }
 
     @Override
@@ -504,5 +531,6 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         buildProgress  = tag.getInt("BuildProgress");
         structureValid = tag.getBoolean("StructureValid");
         previewActive  = tag.getBoolean("PreviewActive");
+        connectedBlocks = ConnectedStructureHelper.readPositions(tag, "ConnectedBlocks");
     }
 }

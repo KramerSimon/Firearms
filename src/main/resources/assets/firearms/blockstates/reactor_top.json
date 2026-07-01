@@ -1,1 +1,10 @@
-{"variants": {"": {"model": "firearms:block/reactor_top"}}}
+{
+  "variants": {
+    "connected=false": {
+      "model": "firearms:block/reactor_top"
+    },
+    "connected=true": {
+      "model": "firearms:block/reactor_top_connected"
+    }
+  }
+}

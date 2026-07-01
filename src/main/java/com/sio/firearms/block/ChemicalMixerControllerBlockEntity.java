@@ -35,7 +35,9 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
@@ -267,10 +269,15 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
 
     // ── Structure validation ──────────────────────────────────────────────────
 
+    // Positions currently rendered with CONNECTED=true, so we can un-connect exactly the
+    // right blocks if the structure re-forms at a different corner (or stops forming).
+    private Set<BlockPos> connectedBlocks = new HashSet<>();
+
     private void checkStructure() {
         if (level == null || level.isClientSide()) return;
         LOGGER.info("[ChemicalMixerController] checkStructure() called, controller at {}", worldPosition);
         boolean valid = false;
+        BlockPos validCorner = null;
         for (int offX = -2; offX <= 0 && !valid; offX++) {
             for (int offZ = -2; offZ <= 0 && !valid; offZ++) {
                 BlockPos corner = worldPosition.offset(offX, 0, offZ);
@@ -278,18 +285,39 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
                 if (validateAt(corner)) {
                     LOGGER.info("[ChemicalMixerController]   PASS corner {}", corner);
                     valid = true;
+                    validCorner = corner;
                 }
             }
         }
         if (!valid) {
             LOGGER.info("[ChemicalMixerController] Structure INVALID — no valid corner found");
+            connectedBlocks = ConnectedStructureHelper.clear(level, connectedBlocks);
         } else {
             LOGGER.info("[ChemicalMixerController] Structure VALID");
+            connectedBlocks = ConnectedStructureHelper.apply(level, connectedBlocks, collectStructurePositions(validCorner));
         }
         if (valid != structureValid) {
             structureValid = valid;
             setChanged();
         }
+    }
+
+    /** Every base/wall/cap position of the 3×3×4 shell for a given corner. */
+    private Set<BlockPos> collectStructurePositions(BlockPos corner) {
+        Set<BlockPos> positions = new HashSet<>();
+        for (int dx = 0; dx <= 2; dx++)
+            for (int dz = 0; dz <= 2; dz++)
+                positions.add(corner.offset(dx, 0, dz));
+        for (int dy = 1; dy <= 2; dy++)
+            for (int dx = 0; dx <= 2; dx++)
+                for (int dz = 0; dz <= 2; dz++) {
+                    if (dx == 1 && dz == 1) continue;
+                    positions.add(corner.offset(dx, dy, dz));
+                }
+        for (int dx = 0; dx <= 2; dx++)
+            for (int dz = 0; dz <= 2; dz++)
+                positions.add(corner.offset(dx, 3, dz));
+        return positions;
     }
 
     private boolean validateAt(BlockPos corner) {
@@ -719,6 +747,7 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
         tag.putBoolean("StructureValid", structureValid);
         tag.putInt("SelectedRecipe", selectedRecipeIndex);
         tag.putBoolean("PreviewActive", previewActive);
+        ConnectedStructureHelper.writePositions(tag, "ConnectedBlocks", connectedBlocks);
     }
 
     @Override
@@ -732,5 +761,6 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
         structureValid = tag.getBoolean("StructureValid");
         selectedRecipeIndex = tag.contains("SelectedRecipe") ? tag.getInt("SelectedRecipe") : -1;
         previewActive = tag.getBoolean("PreviewActive");
+        connectedBlocks = ConnectedStructureHelper.readPositions(tag, "ConnectedBlocks");
     }
 }

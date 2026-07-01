@@ -248,13 +248,13 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> CHEMICAL_MIXER_BASE =
             BLOCKS.register("chemical_mixer_base",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.ChemicalMixerBaseBlock(BlockBehaviour.Properties.of()
                             .strength(5.0f)
                             .requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<Block> CHEMICAL_MIXER_WALL =
             BLOCKS.register("chemical_mixer_wall",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.ChemicalMixerWallBlock(BlockBehaviour.Properties.of()
                             .strength(5.0f)
                             .noOcclusion()
                             .requiresCorrectToolForDrops()));
@@ -636,17 +636,17 @@ public class ModBlocks {
     // ── Nuclear Reactor Stage 2 ──────────────────────────────────────────────
     public static final DeferredBlock<Block> REACTOR_BASE =
             BLOCKS.register("reactor_base",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.ReactorBaseBlock(BlockBehaviour.Properties.of()
                             .strength(10.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> REACTOR_WALL =
             BLOCKS.register("reactor_wall",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.ReactorWallBlock(BlockBehaviour.Properties.of()
                             .strength(8.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> REACTOR_TOP =
             BLOCKS.register("reactor_top",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.ReactorTopBlock(BlockBehaviour.Properties.of()
                             .strength(8.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> REACTOR_CONTROL_ROD_HOUSING =
@@ -695,17 +695,17 @@ public class ModBlocks {
     // ── Vehicle Garage ───────────────────────────────────────────────────────
     public static final DeferredBlock<Block> GARAGE_FLOOR =
             BLOCKS.register("garage_floor",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.GarageFloorBlock(BlockBehaviour.Properties.of()
                             .strength(8.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> GARAGE_WALL =
             BLOCKS.register("garage_wall",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.GarageWallBlock(BlockBehaviour.Properties.of()
                             .strength(8.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> GARAGE_ROOF =
             BLOCKS.register("garage_roof",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.GarageRoofBlock(BlockBehaviour.Properties.of()
                             .strength(8.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> GARAGE_DOOR =
@@ -723,17 +723,17 @@ public class ModBlocks {
     // ── Aircraft Hangar ───────────────────────────────────────────────────────
     public static final DeferredBlock<Block> HANGAR_FLOOR =
             BLOCKS.register("hangar_floor",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.HangarFloorBlock(BlockBehaviour.Properties.of()
                             .strength(8.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> HANGAR_WALL =
             BLOCKS.register("hangar_wall",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.HangarWallBlock(BlockBehaviour.Properties.of()
                             .strength(7.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> HANGAR_ROOF =
             BLOCKS.register("hangar_roof",
-                    () -> new Block(BlockBehaviour.Properties.of()
+                    () -> new com.sio.firearms.block.HangarRoofBlock(BlockBehaviour.Properties.of()
                             .strength(7.0f)
                             .requiresCorrectToolForDrops()));
     public static final DeferredBlock<Block> HANGAR_DOOR =

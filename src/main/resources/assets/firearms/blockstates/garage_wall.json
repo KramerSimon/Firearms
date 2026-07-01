@@ -1,1 +1,10 @@
-{ "variants": { "": { "model": "firearms:block/garage_wall" } } }
+{
+  "variants": {
+    "connected=false": {
+      "model": "firearms:block/garage_wall"
+    },
+    "connected=true": {
+      "model": "firearms:block/garage_wall_connected"
+    }
+  }
+}

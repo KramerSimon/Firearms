@@ -42,8 +42,10 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ReactorControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
@@ -67,6 +69,9 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
     private boolean structureValid = false;
     private Boolean lastValidState = null;
     private final List<BlockPos> controlRodHousingPositions = new ArrayList<>();
+    // Positions currently rendered with CONNECTED=true, so we can un-connect exactly the
+    // right blocks if the structure re-forms at a different origin (or stops forming).
+    private Set<BlockPos> connectedBlocks = new HashSet<>();
     private int temperature  = 0;
     private int meltdownTicks = 0;
     private int feOutputRate  = 0;
@@ -329,6 +334,8 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
                                 controlRodHousingPositions.size());
                         lastValidState = true;
                     }
+                    connectedBlocks = ConnectedStructureHelper.apply(level, connectedBlocks,
+                            collectStructurePositions(origin));
                     return true;
                 }
                 LOGGER.debug("[Reactor@{}]   origin {} — FAILED: {}",
@@ -343,7 +350,27 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
                     worldPosition.toShortString(), firstFail != null ? firstFail : "no valid base found");
             lastValidState = false;
         }
+        connectedBlocks = ConnectedStructureHelper.clear(level, connectedBlocks);
         return false;
+    }
+
+    /** Every base/wall/top position of the 7×7×9 shell for a given origin. */
+    private Set<BlockPos> collectStructurePositions(BlockPos origin) {
+        Set<BlockPos> positions = new HashSet<>();
+        for (int y = 0; y <= 1; y++)
+            for (int x = 0; x < 7; x++)
+                for (int z = 0; z < 7; z++)
+                    positions.add(origin.offset(x, y, z));
+        for (int y = 2; y <= 7; y++)
+            for (int x = 0; x < 7; x++)
+                for (int z = 0; z < 7; z++) {
+                    boolean border = x == 0 || x == 6 || z == 0 || z == 6;
+                    if (border) positions.add(origin.offset(x, y, z));
+                }
+        for (int x = 0; x < 7; x++)
+            for (int z = 0; z < 7; z++)
+                positions.add(origin.offset(x, 8, z));
+        return positions;
     }
 
     /** Populates controlRodHousingPositions from the 5×5 interior of layer 7. */
@@ -517,6 +544,7 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         tag.putInt("FeOutputRate",    feOutputRate);
         tag.putInt("OperationalTicks", operationalTicks);
         tag.putBoolean("PreviewActive", previewActive);
+        ConnectedStructureHelper.writePositions(tag, "ConnectedBlocks", connectedBlocks);
     }
 
     @Override
@@ -531,5 +559,6 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         feOutputRate      = tag.getInt("FeOutputRate");
         operationalTicks  = tag.getInt("OperationalTicks");
         previewActive     = tag.getBoolean("PreviewActive");
+        connectedBlocks   = ConnectedStructureHelper.readPositions(tag, "ConnectedBlocks");
     }
 }

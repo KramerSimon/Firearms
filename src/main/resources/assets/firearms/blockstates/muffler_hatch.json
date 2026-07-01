@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "firearms:block/muffler_hatch" }
+    "connected=false": { "model": "firearms:block/muffler_hatch" },
+    "connected=true": { "model": "firearms:block/muffler_hatch" }
   }
 }

@@ -28,7 +28,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class EBFControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
@@ -274,6 +276,9 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     // (0..4), r = right (-2..2), u = height (-2..2).
     private Direction structureBack = null;
     private int controllerD = 2, controllerR = 0, controllerU = 0;
+    // Positions the shell currently occupies with CONNECTED=true, so we can un-connect
+    // exactly the right blocks if the structure re-forms in a different orientation/cell.
+    private Set<BlockPos> connectedBlocks = new HashSet<>();
 
     public boolean checkStructure() {
         if (level == null) return false;
@@ -291,6 +296,8 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
                             controllerU = u;
                             installedCoilTemp = coil.getTemperature();
                             setFormed(true);
+                            connectedBlocks = ConnectedStructureHelper.apply(level, connectedBlocks,
+                                    collectStructurePositions(back, d, r, u));
                             return true;
                         }
                     }
@@ -301,7 +308,25 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         structureBack = null;
         installedCoilTemp = 0;
         setFormed(false);
+        connectedBlocks = ConnectedStructureHelper.clear(level, connectedBlocks);
         return false;
+    }
+
+    // Every shell position (casing / muffler / coil) for a given orientation and controller
+    // cell, excluding the controller's own cell (it has no CONNECTED property).
+    private Set<BlockPos> collectStructurePositions(Direction back, int cd, int cr, int cu) {
+        Direction right = back.getClockWise();
+        Set<BlockPos> positions = new HashSet<>();
+        for (int u = -2; u <= 2; u++) {
+            for (int d = 0; d <= 4; d++) {
+                for (int r = -2; r <= 2; r++) {
+                    if (cellType(d, r, u) == Cell.HOLLOW) continue;
+                    if (d == cd && r == cr && u == cu) continue;
+                    positions.add(worldPosition.relative(back, d - cd).relative(right, r - cr).relative(Direction.UP, u - cu));
+                }
+            }
+        }
+        return positions;
     }
 
     private CoilBlock validateOriented(Direction back, int cd, int cr, int cu) {
@@ -433,6 +458,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         tag.putInt("CoilTemp", installedCoilTemp);
         tag.putBoolean("Enabled", enabled);
         tag.putBoolean("PreviewActive", previewActive);
+        ConnectedStructureHelper.writePositions(tag, "ConnectedBlocks", connectedBlocks);
     }
 
     @Override
@@ -444,5 +470,6 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         installedCoilTemp = tag.getInt("CoilTemp");
         enabled = tag.getBoolean("Enabled");
         previewActive = tag.getBoolean("PreviewActive");
+        connectedBlocks = ConnectedStructureHelper.readPositions(tag, "ConnectedBlocks");
     }
 }

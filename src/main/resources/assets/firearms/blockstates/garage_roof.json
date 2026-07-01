@@ -1,1 +1,10 @@
-{ "variants": { "": { "model": "firearms:block/garage_roof" } } }
+{
+  "variants": {
+    "connected=false": {
+      "model": "firearms:block/garage_roof"
+    },
+    "connected=true": {
+      "model": "firearms:block/garage_roof_connected"
+    }
+  }
+}
