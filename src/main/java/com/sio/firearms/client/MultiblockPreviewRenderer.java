@@ -64,19 +64,28 @@ public class MultiblockPreviewRenderer {
 
     // Controller block → dummy BlockEntity factory, used to call getPreviewPositions()
     // without needing a real placed BlockEntity (e.g. while just holding the item).
-    private static final Map<Block, BiFunction<BlockPos, BlockState, BlockEntity>> CONTROLLER_FACTORIES = new HashMap<>();
-    static {
-        CONTROLLER_FACTORIES.put(ModBlocks.EBF_CONTROLLER.get(), EBFControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.CHEMICAL_MIXER_CONTROLLER.get(), ChemicalMixerControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.REFINERY_CONTROLLER.get(), RefineryControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.REACTOR_CONTROLLER.get(), ReactorControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.COOLING_TOWER_CONTROLLER.get(), CoolingTowerControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.GARAGE_CONTROLLER.get(), VehicleGarageControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.HANGAR_CONTROLLER.get(), HangarControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER.get(), SpentFuelStorageBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get(), CrystalGrowthControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get(), EuvLithographyControllerBlockEntity::new);
-        CONTROLLER_FACTORIES.put(ModBlocks.COKE_OVEN_CONTROLLER.get(), CokeOvenControllerBlockEntity::new);
+    // Built lazily on first use — a static initializer here would call ModBlocks.*.get()
+    // as soon as this @EventBusSubscriber class is loaded, which happens before the block
+    // RegisterEvent populates the DeferredRegister and throws an unbound-value NPE.
+    private static Map<Block, BiFunction<BlockPos, BlockState, BlockEntity>> controllerFactories;
+
+    private static Map<Block, BiFunction<BlockPos, BlockState, BlockEntity>> controllerFactories() {
+        if (controllerFactories == null) {
+            Map<Block, BiFunction<BlockPos, BlockState, BlockEntity>> map = new HashMap<>();
+            map.put(ModBlocks.EBF_CONTROLLER.get(), EBFControllerBlockEntity::new);
+            map.put(ModBlocks.CHEMICAL_MIXER_CONTROLLER.get(), ChemicalMixerControllerBlockEntity::new);
+            map.put(ModBlocks.REFINERY_CONTROLLER.get(), RefineryControllerBlockEntity::new);
+            map.put(ModBlocks.REACTOR_CONTROLLER.get(), ReactorControllerBlockEntity::new);
+            map.put(ModBlocks.COOLING_TOWER_CONTROLLER.get(), CoolingTowerControllerBlockEntity::new);
+            map.put(ModBlocks.GARAGE_CONTROLLER.get(), VehicleGarageControllerBlockEntity::new);
+            map.put(ModBlocks.HANGAR_CONTROLLER.get(), HangarControllerBlockEntity::new);
+            map.put(ModBlocks.SPENT_FUEL_STORAGE_CONTROLLER.get(), SpentFuelStorageBlockEntity::new);
+            map.put(ModBlocks.CRYSTAL_GROWTH_CONTROLLER.get(), CrystalGrowthControllerBlockEntity::new);
+            map.put(ModBlocks.EUV_LITHOGRAPHY_CONTROLLER.get(), EuvLithographyControllerBlockEntity::new);
+            map.put(ModBlocks.COKE_OVEN_CONTROLLER.get(), CokeOvenControllerBlockEntity::new);
+            controllerFactories = map;
+        }
+        return controllerFactories;
     }
 
     // Placed controllers with an active persistent preview toggle; refreshed periodically
@@ -154,7 +163,7 @@ public class MultiblockPreviewRenderer {
         double distSq = player.distanceToSqr(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5);
         if (distSq > (double) MAX_DISTANCE * MAX_DISTANCE) return;
 
-        BlockEntity dummy = CONTROLLER_FACTORIES.get(controllerBlock).apply(target, controllerBlock.defaultBlockState());
+        BlockEntity dummy = controllerFactories().get(controllerBlock).apply(target, controllerBlock.defaultBlockState());
         if (!(dummy instanceof IMultiblockPreview preview)) return;
 
         renderPreview(level, player, poseStack, bufferSource, cam, camera, target, preview.getPreviewPositions(target));
@@ -167,7 +176,7 @@ public class MultiblockPreviewRenderer {
     }
 
     private static Block blockFromStack(ItemStack stack) {
-        if (stack.getItem() instanceof BlockItem bi && CONTROLLER_FACTORIES.containsKey(bi.getBlock())) {
+        if (stack.getItem() instanceof BlockItem bi && controllerFactories().containsKey(bi.getBlock())) {
             return bi.getBlock();
         }
         return null;
