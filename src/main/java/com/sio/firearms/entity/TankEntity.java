@@ -5,6 +5,7 @@ import com.sio.firearms.item.WrenchItem;
 import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,18 +16,23 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class TankEntity extends Entity {
 
+    public static final int MAX_AMMO = 20;
+
     private static final EntityDataAccessor<Float>   DATA_TURRET_YAW   = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float>   DATA_TURRET_PITCH = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_FUEL         = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float>   DATA_HEALTH       = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_AMMO         = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.INT);
 
     // Server-side input state, set by TankInputPayload
     private boolean inputForward, inputBack, inputLeft, inputRight, firePressed;
@@ -44,6 +50,7 @@ public class TankEntity extends Entity {
         builder.define(DATA_TURRET_PITCH, 0.0f);
         builder.define(DATA_FUEL,         0);
         builder.define(DATA_HEALTH,       500.0f);
+        builder.define(DATA_AMMO,         MAX_AMMO);
     }
 
     @Override
@@ -78,8 +85,9 @@ public class TankEntity extends Entity {
             }
 
             // Fire cannon
-            if (firePressed && fireCooldown == 0 && fuel > 0) {
+            if (firePressed && fireCooldown == 0 && fuel > 0 && getAmmo() > 0) {
                 fireCannon(this.getFirstPassenger());
+                setAmmo(getAmmo() - 1);
                 fireCooldown = 100;
             }
 
@@ -129,12 +137,25 @@ public class TankEntity extends Entity {
 
     @Override
     protected void positionRider(Entity passenger, Entity.MoveFunction callback) {
-        // Seat inside the hull, offset forward of centre
-        double yawRad = Math.toRadians(getYRot());
-        callback.accept(passenger,
-                getX() - Math.sin(yawRad) * 0.5,
-                getY() + getBbHeight() * 0.65,
-                getZ() + Math.cos(yawRad) * 0.5);
+        // Seat the passenger directly above the tank's origin, in the hatch/turret area
+        callback.accept(passenger, getX(), getY() + 2.0, getZ());
+    }
+
+    @Override
+    public Vec3 getPassengerRidingPosition(Entity entity) {
+        // Turret/hatch area, used by vanilla dismount and passenger-offset logic
+        return position().add(0, 2.5, 0);
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        // getEyeHeight() is final in Entity; eye height is derived from dimensions instead
+        return super.getDimensions(pose).withEyeHeight(2.5f);
+    }
+
+    /** Interpolated body yaw, used by the client to lock the first-person camera to the hull. */
+    public float getBodyYawInterpolated(float partialTick) {
+        return Mth.rotLerp(partialTick, yRotO, getYRot());
     }
 
     @Override
@@ -185,11 +206,13 @@ public class TankEntity extends Entity {
     public float getTurretPitch() { return entityData.get(DATA_TURRET_PITCH); }
     public int   getFuel()        { return entityData.get(DATA_FUEL); }
     public float getHealth()      { return entityData.get(DATA_HEALTH); }
+    public int   getAmmo()        { return entityData.get(DATA_AMMO); }
 
     public void setTurretYaw(float v)   { entityData.set(DATA_TURRET_YAW, v); }
     public void setTurretPitch(float v) { entityData.set(DATA_TURRET_PITCH, v); }
     public void setFuel(int v)          { entityData.set(DATA_FUEL, v); }
     public void setHealth(float v)      { entityData.set(DATA_HEALTH, v); }
+    public void setAmmo(int v)          { entityData.set(DATA_AMMO, v); }
 
     // ── Damage ────────────────────────────────────────────────────────────────
 
@@ -222,6 +245,7 @@ public class TankEntity extends Entity {
         setFuel(tag.getInt("Fuel"));
         setHealth(tag.getFloat("Health"));
         setTurretYaw(tag.getFloat("TurretYaw"));
+        setAmmo(tag.contains("Ammo") ? tag.getInt("Ammo") : MAX_AMMO);
     }
 
     @Override
@@ -229,5 +253,6 @@ public class TankEntity extends Entity {
         tag.putInt("Fuel",       getFuel());
         tag.putFloat("Health",   getHealth());
         tag.putFloat("TurretYaw", getTurretYaw());
+        tag.putInt("Ammo",       getAmmo());
     }
 }

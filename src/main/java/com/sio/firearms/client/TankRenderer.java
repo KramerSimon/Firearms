@@ -38,13 +38,20 @@ public class TankRenderer extends EntityRenderer<TankEntity> {
         // Align model: rotate so "front" of hull faces entity yaw direction
         poseStack.mulPose(Axis.YP.rotationDegrees(180f - entityYaw));
 
+        // Sink the hull slightly below the entity origin so the driver's eye position
+        // (seated near the origin) sits above the model instead of inside/behind it
+        poseStack.translate(0, -0.5, 0);
+
         VertexConsumer vc = buffer.getBuffer(RenderType.entitySolid(TEXTURE));
 
         // Hull: 7 wide × 3 tall × 10 long, origin at entity foot position
         renderBox(poseStack, vc, -3.5f, 0f, -5f, 3.5f, 3f, 5f,
                   HULL_R, HULL_G, HULL_B, packedLight);
 
-        // Turret sits on top of hull, rotated separately by turretYaw
+        // Turret sits on top of hull, rotated separately by turretYaw.
+        // turretYaw is already relative to the hull's yaw (see TankTurretPayload), so rotating it
+        // here — inside the pose stack already rotated by the hull's (180 - entityYaw) — composes
+        // to an absolute turret facing of entityYaw + turretYaw, matching the player's look direction.
         poseStack.pushPose();
         poseStack.translate(0, 3, 0);
         poseStack.mulPose(Axis.YP.rotationDegrees(-entity.getTurretYaw()));
