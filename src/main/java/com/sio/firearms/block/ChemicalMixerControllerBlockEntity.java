@@ -665,29 +665,29 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    // Canonical layout: origin is always the centre of the 3×3 base (the controller can
-    // be placed at any of the 9 base positions, so the preview centres on wherever it is).
+    // Canonical layout: origin is the front-center cell at ground level (the 3×3 base),
+    // with the structure extending back (+dz) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
         Block base = ModBlocks.CHEMICAL_MIXER_BASE.get();
         Block wall = ModBlocks.CHEMICAL_MIXER_WALL.get();
         for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
+            for (int dz = 0; dz <= 2; dz++) {
                 BlockPos p = origin.offset(dx, 0, dz);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int dy = 1; dy <= 2; dy++) {
             for (int dx = -1; dx <= 1; dx++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    if (dx == 0 && dz == 0) continue;
+                for (int dz = 0; dz <= 2; dz++) {
+                    if (dx == 0 && dz == 1) continue;
                     map.put(origin.offset(dx, dy, dz), wall);
                 }
             }
         }
         for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
+            for (int dz = 0; dz <= 2; dz++) {
                 map.put(origin.offset(dx, 3, dz), wall);
             }
         }

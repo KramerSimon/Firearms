@@ -427,8 +427,8 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    // Canonical layout: origin is always the centre of the 9×9 footprint (the controller
-    // can be placed at any of the 81 floor positions, so the preview centres on it).
+    // Canonical layout: origin is the front-center cell at ground level (the 9×9
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -437,7 +437,7 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         Block roof  = ModBlocks.GARAGE_ROOF.get();
         for (int y = 0; y <= 1; y++) {
             for (int x = -4; x <= 4; x++) {
-                for (int z = -4; z <= 4; z++) {
+                for (int z = 0; z <= 8; z++) {
                     BlockPos p = origin.offset(x, y, z);
                     if (!p.equals(origin)) map.put(p, floor);
                 }
@@ -445,14 +445,14 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
         for (int y = 2; y <= 4; y++) {
             for (int x = -4; x <= 4; x++) {
-                for (int z = -4; z <= 4; z++) {
-                    boolean border = x == -4 || x == 4 || z == -4 || z == 4;
+                for (int z = 0; z <= 8; z++) {
+                    boolean border = x == -4 || x == 4 || z == 0 || z == 8;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -4; x <= 4; x++) {
-            for (int z = -4; z <= 4; z++) {
+            for (int z = 0; z <= 8; z++) {
                 map.put(origin.offset(x, 5, z), roof);
             }
         }

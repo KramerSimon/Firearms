@@ -383,9 +383,9 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         }
     }
 
-    // Canonical layout: origin is always the structure's depth-centre (d=2, r=0, u=0) —
-    // the controller can be placed at any non-hollow cell in the shell, so the preview
-    // centres on the machine regardless of where it ends up.
+    // Canonical layout: origin is the front-center cell at ground level (d=0, r=0, u=-2)
+    // — the front face the player is looking at when placing/previewing — with the
+    // structure extending back (+d) and up (+u) from there.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -397,7 +397,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         for (int u = -2; u <= 2; u++) {
             for (int d = 0; d <= 4; d++) {
                 for (int r = -2; r <= 2; r++) {
-                    BlockPos p = origin.relative(back, d - 2).relative(right, r).relative(Direction.UP, u);
+                    BlockPos p = origin.relative(back, d).relative(right, r).relative(Direction.UP, u + 2);
                     if (p.equals(origin)) continue;
                     Block expected = switch (cellType(d, r, u)) {
                         case CASING -> casing;

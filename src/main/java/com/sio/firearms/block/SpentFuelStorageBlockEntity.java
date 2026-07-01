@@ -205,29 +205,28 @@ public class SpentFuelStorageBlockEntity extends BlockEntity implements MenuProv
         }
     }
 
-    // Canonical layout: origin is always the centre of the 5×5 footprint, at the wall
-    // layer's base Y (the controller can be placed at any of the 25 positions in that
-    // layer, so the preview centres on wherever it is).
+    // Canonical layout: origin is the front-center cell at ground level (the wall
+    // layer's base Y), with the structure extending back (+dz) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
         Block base = ModBlocks.SPENT_FUEL_STORAGE_BASE.get();
         Block wall = ModBlocks.SPENT_FUEL_STORAGE_WALL.get();
         for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
+            for (int dz = 0; dz <= 4; dz++) {
                 map.put(origin.below().offset(dx, 0, dz), base);
             }
         }
         for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
+            for (int dz = 0; dz <= 4; dz++) {
                 BlockPos p = origin.offset(dx, 0, dz);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int dy = 1; dy <= 2; dy++) {
             for (int dx = -2; dx <= 2; dx++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    if (dx > -2 && dx < 2 && dz > -2 && dz < 2) continue;
+                for (int dz = 0; dz <= 4; dz++) {
+                    if (dx > -2 && dx < 2 && dz > 0 && dz < 4) continue;
                     map.put(origin.offset(dx, dy, dz), wall);
                 }
             }

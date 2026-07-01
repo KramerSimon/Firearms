@@ -456,8 +456,8 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         }
     }
 
-    // Canonical layout: origin is always the centre of the 7×7 footprint (the controller
-    // can be placed at any of the 49 base positions, so the preview centres on it).
+    // Canonical layout: origin is the front-center cell at ground level (the 7×7
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -466,7 +466,7 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         Block top  = ModBlocks.REACTOR_TOP.get();
         for (int y = 0; y <= 1; y++) {
             for (int x = -3; x <= 3; x++) {
-                for (int z = -3; z <= 3; z++) {
+                for (int z = 0; z <= 6; z++) {
                     BlockPos p = origin.offset(x, y, z);
                     if (!p.equals(origin)) map.put(p, base);
                 }
@@ -474,15 +474,15 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         }
         for (int y = 2; y <= 7; y++) {
             for (int x = -3; x <= 3; x++) {
-                for (int z = -3; z <= 3; z++) {
-                    boolean interior = x > -3 && x < 3 && z > -3 && z < 3;
+                for (int z = 0; z <= 6; z++) {
+                    boolean interior = x > -3 && x < 3 && z > 0 && z < 6;
                     if (interior) continue;
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -3; x <= 3; x++) {
-            for (int z = -3; z <= 3; z++) {
+            for (int z = 0; z <= 6; z++) {
                 map.put(origin.offset(x, 8, z), top);
             }
         }

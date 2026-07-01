@@ -162,8 +162,8 @@ public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    // Canonical layout: origin is always the centre of the 3×3 footprint (the controller
-    // can be placed at any of the 9 base positions, so the preview centres on it).
+    // Canonical layout: origin is the front-center cell at ground level (the 3×3
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -171,20 +171,20 @@ public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock imple
         Block wall = ModBlocks.CRYSTAL_GROWTH_WALL.get();
         Block top  = ModBlocks.CRYSTAL_GROWTH_TOP.get();
         for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
+            for (int z = 0; z <= 2; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 2; y++) {
             for (int x = -1; x <= 1; x++) {
-                for (int z = -1; z <= 1; z++) {
+                for (int z = 0; z <= 2; z++) {
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
+            for (int z = 0; z <= 2; z++) {
                 map.put(origin.offset(x, 3, z), top);
             }
         }

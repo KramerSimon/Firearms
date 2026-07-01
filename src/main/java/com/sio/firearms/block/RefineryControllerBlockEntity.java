@@ -374,8 +374,8 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         }
     }
 
-    // Canonical layout: origin is always the structure's centre (the controller can be
-    // placed at any of the 25 base positions, so the preview centres on wherever it is).
+    // Canonical layout: origin is the front-center cell at ground level (the 5×5
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -383,21 +383,21 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         Block wall = ModBlocks.REFINERY_WALL.get();
         Block top  = ModBlocks.REFINERY_TOP.get();
         for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
+            for (int z = 0; z <= 4; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 4; y++) {
             for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
-                    if (Math.abs(x) < 2 && Math.abs(z) < 2) continue;
+                for (int z = 0; z <= 4; z++) {
+                    if (Math.abs(x) < 2 && z > 0 && z < 4) continue;
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
+            for (int z = 0; z <= 4; z++) {
                 map.put(origin.offset(x, 5, z), top);
             }
         }

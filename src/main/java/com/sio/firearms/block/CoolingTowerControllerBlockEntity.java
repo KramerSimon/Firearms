@@ -358,8 +358,8 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
         }
     }
 
-    // Canonical layout: origin is always the centre of the 5×5 footprint (the controller
-    // can be placed at any of the 25 base positions, so the preview centres on it).
+    // Canonical layout: origin is the front-center cell at ground level (the 5×5
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -367,21 +367,21 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
         Block wall = ModBlocks.COOLING_TOWER_WALL.get();
         Block vent = ModBlocks.COOLING_TOWER_VENT.get();
         for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
+            for (int z = 0; z <= 4; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 6; y++) {
             for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
-                    boolean border = x == -2 || x == 2 || z == -2 || z == 2;
+                for (int z = 0; z <= 4; z++) {
+                    boolean border = x == -2 || x == 2 || z == 0 || z == 4;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
+            for (int z = 0; z <= 4; z++) {
                 map.put(origin.offset(x, 7, z), vent);
             }
         }

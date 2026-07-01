@@ -319,8 +319,8 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         }
     }
 
-    // Canonical layout: origin is always the centre of the 5×5 footprint (the controller
-    // can be placed at any of the 25 base positions, so the preview centres on it).
+    // Canonical layout: origin is the front-center cell at ground level (the 5×5
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -329,24 +329,24 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         Block mirror = ModBlocks.EUV_MIRROR_ARRAY.get();
         Block housing = ModBlocks.EUV_EMITTER_HOUSING.get();
         for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
+            for (int z = 0; z <= 4; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 2; y++) {
             for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
-                    if (x > -2 && x < 2 && z > -2 && z < 2) continue;
+                for (int z = 0; z <= 4; z++) {
+                    if (x > -2 && x < 2 && z > 0 && z < 4) continue;
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int y = 3; y <= 4; y++) {
             for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
-                    boolean corner = (x == -2 || x == 2) && (z == -2 || z == 2);
-                    boolean interior = (x > -2 && x < 2) && (z > -2 && z < 2);
+                for (int z = 0; z <= 4; z++) {
+                    boolean corner = (x == -2 || x == 2) && (z == 0 || z == 4);
+                    boolean interior = (x > -2 && x < 2) && (z > 0 && z < 4);
                     if (interior) continue;
                     map.put(origin.offset(x, y, z), corner ? mirror : wall);
                 }
@@ -354,7 +354,7 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         }
         for (int y = 5; y <= 6; y++) {
             for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
+                for (int z = 0; z <= 4; z++) {
                     map.put(origin.offset(x, y, z), housing);
                 }
             }

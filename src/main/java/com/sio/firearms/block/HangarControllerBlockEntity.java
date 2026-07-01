@@ -390,8 +390,8 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
     }
 
-    // Canonical layout: origin is always the centre of the 11×11 footprint (the controller
-    // can be placed at any of the 121 floor positions, so the preview centres on it).
+    // Canonical layout: origin is the front-center cell at ground level (the 11×11
+    // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -399,21 +399,21 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         Block wall  = ModBlocks.HANGAR_WALL.get();
         Block roof  = ModBlocks.HANGAR_ROOF.get();
         for (int x = -5; x <= 5; x++) {
-            for (int z = -5; z <= 5; z++) {
+            for (int z = 0; z <= 10; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, floor);
             }
         }
         for (int y = 1; y <= 4; y++) {
             for (int x = -5; x <= 5; x++) {
-                for (int z = -5; z <= 5; z++) {
-                    boolean border = x == -5 || x == 5 || z == -5 || z == 5;
+                for (int z = 0; z <= 10; z++) {
+                    boolean border = x == -5 || x == 5 || z == 0 || z == 10;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -5; x <= 5; x++) {
-            for (int z = -5; z <= 5; z++) {
+            for (int z = 0; z <= 10; z++) {
                 map.put(origin.offset(x, 5, z), roof);
             }
         }
