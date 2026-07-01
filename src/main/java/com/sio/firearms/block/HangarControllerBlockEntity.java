@@ -300,6 +300,9 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
 
         // Layers 1-4: 11x11 outer border = wall/door/controller, 9x9 interior = air/port
+        // Any border position may be wall or door — door placement/width isn't fixed here,
+        // so a wide door (e.g. 7-block, to clear the 5-wide aircraft with room to spare)
+        // already validates without further changes.
         for (int y = 1; y <= 4; y++) {
             for (int x = 0; x < 11; x++) {
                 for (int z = 0; z < 11; z++) {

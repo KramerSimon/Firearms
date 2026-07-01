@@ -35,7 +35,7 @@ public class AircraftHangarStructureCategory implements IRecipeCategory<Aircraft
           "FFFFFCFFFFF" }, // 1 — floor (controller front centre)
         { "WWWWWWWWWWW", "W.........W", "W.........W", "W.........W", "W.........W",
           "W.........W", "W.........W", "W.........W", "W.........W", "W.........W",
-          "WWWDDDDDWWW" }, // 2 — ×4 wall ring (D=doors on front wall)
+          "WWDDDDDDDWW" }, // 2 — ×4 wall ring (D=doors on front wall, 7 wide)
         { "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR",
           "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR",
           "RRRRRRRRRRR" }, // 3 — roof cap
@@ -130,7 +130,7 @@ public class AircraftHangarStructureCategory implements IRecipeCategory<Aircraft
 
         int ny = BOM_Y + 32;
         g.drawString(font, "Build bottom→top. 11×11×6. Controller on any border of the floor layer.", 2, ny,      0xFF9AA0A8, false);
-        g.drawString(font, "Layers 1–4 are hollow wall rings. Hangar Door blocks may replace any border wall.", 2, ny + 10, 0xFF9AA0A8, false);
+        g.drawString(font, "Layers 1-4 are hollow wall rings. Recommended door: 7 blocks wide (center of one face).", 2, ny + 10, 0xFF9AA0A8, false);
         g.drawString(font, "An aircraft spawns at interior centre on activation. Energy/Fluid Ports OK.", 2, ny + 20, 0xFF9AA0A8, false);
     }
 

@@ -1,5 +1,6 @@
 package com.sio.firearms.entity;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.item.WrenchItem;
 import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModItems;
@@ -12,14 +13,18 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
 
 public class AircraftEntity extends Entity {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     // ── Constants ─────────────────────────────────────────────────────────────
     public static final int   MAX_FUEL        = 15_000;  // mB
@@ -180,6 +185,8 @@ public class AircraftEntity extends Entity {
         if (!level().isClientSide()) {
             ItemStack held = player.getItemInHand(hand);
 
+            LOGGER.debug("[Aircraft] interact() called, passengers: {}", getPassengers().size());
+
             // Wrench + no passengers → dismantle and return schematic
             if (held.getItem() instanceof WrenchItem && !isVehicle()) {
                 level().playSound(null, getX(), getY(), getZ(),
@@ -189,7 +196,8 @@ public class AircraftEntity extends Entity {
                 return InteractionResult.SUCCESS;
             }
 
-            if (!isVehicle()) {
+            // Empty hand + no passengers → mount
+            if (held.isEmpty() && !isVehicle()) {
                 player.startRiding(this);
                 return InteractionResult.SUCCESS;
             }
@@ -208,10 +216,20 @@ public class AircraftEntity extends Entity {
                 getZ() + oz);
     }
 
+    @Override
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+        return new Vec3(0, 1.5, 0);
+    }
+
     public double getPassengersRidingOffset() { return 1.5; }
 
     @Override
     public boolean isPushable() { return false; }
+
+    // Entity.isPickable() defaults to false, which means right-click raytraces skip this
+    // entity entirely and interact() is never called — must override for mounting to work.
+    @Override
+    public boolean isPickable() { return true; }
 
     @Override
     protected boolean canAddPassenger(Entity passenger) { return getPassengers().isEmpty(); }
