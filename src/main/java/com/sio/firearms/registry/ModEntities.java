@@ -10,6 +10,7 @@ import com.sio.firearms.entity.MolotovEntity;
 import com.sio.firearms.entity.NapalmBombEntity;
 import com.sio.firearms.entity.NapalmFirePatchEntity;
 import com.sio.firearms.entity.NitroglycerinEntity;
+import com.sio.firearms.entity.NukeBombEntity;
 import com.sio.firearms.entity.SeaMineEntity;
 import com.sio.firearms.entity.SmokeGrenadeEntity;
 import com.sio.firearms.entity.TankCannonShellEntity;
@@ -105,6 +106,12 @@ public class ModEntities {
                     .sized(0.25F, 0.25F)
                     .clientTrackingRange(64)
                     .build(Firearms.MOD_ID + ":thermite_grenade"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<NukeBombEntity>> NUKE_BOMB =
+            ENTITY_TYPES.register("nuke_bomb", () -> EntityType.Builder.<NukeBombEntity>of(NukeBombEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 2.0F)
+                    .clientTrackingRange(128)
+                    .build(Firearms.MOD_ID + ":nuke_bomb"));
 
     // ── Aircraft ──────────────────────────────────────────────────────────────
     public static final DeferredHolder<EntityType<?>, EntityType<AircraftEntity>> AIRCRAFT =

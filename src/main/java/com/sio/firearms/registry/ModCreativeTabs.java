@@ -218,6 +218,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.FUEL_ROD_ASSEMBLY.get());
                         output.accept(ModItems.SPENT_FUEL_ROD.get());
                         output.accept(ModItems.DEPLETED_URANIUM.get());
+                        output.accept(ModItems.ENRICHED_URANIUM.get());
                         output.accept(ModItems.BORON_CARBIDE.get());
                         output.accept(ModItems.CONTROL_ROD.get());
                         output.accept(ModItems.GRAPHITE_BLOCK_ITEM.get());
@@ -315,6 +316,7 @@ public class ModCreativeTabs {
                         // ── Incendiary Weapons ────────────────────────────────
                         output.accept(ModItems.NAPALM_BOMB.get());
                         output.accept(ModItems.THERMITE_GRENADE.get());
+                        output.accept(ModItems.NUKE_BOMB.get());
                         // ── Aircraft Hangar ───────────────────────────────────
                         output.accept(ModItems.HANGAR_FLOOR.get());
                         output.accept(ModItems.HANGAR_WALL.get());

@@ -1893,6 +1893,67 @@ def make_stock():
     save(img, os.path.join(ITEM, "stock.png"))
 
 
+def make_enriched_uranium():
+    """Glowing yellow-green ingot — enriched uranium."""
+    EL = (200, 255, 130, 255)  # highlight
+    EM = (140, 220,  60, 255)  # mid
+    ED = ( 90, 160,  30, 255)  # dark
+    ES = ( 50, 100,  15, 255)  # shadow edge
+    GRID = [
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  EM, EM, EM, EM, EM, EM, EM, EM, EM, EM, T,  T,  T,  T],
+        [T,  EM, EL, EL, EL, EL, EL, EL, EL, EL, EL, EL, EM, T,  T,  T],
+        [T,  EM, EL, EL, EL, EL, EL, EL, EL, EL, EL, EM, EM, T,  T,  T],
+        [T,  EM, EM, EM, EM, EM, EM, EM, EM, EM, EM, EM, EM, T,  T,  T],
+        [T,  T,  EM, ED, ED, ED, ED, ED, ED, ED, ED, ED, EM, T,  T,  T],
+        [T,  T,  EM, ED, ED, EM, EM, EM, EM, ED, ED, ED, EM, T,  T,  T],
+        [T,  T,  EM, ED, EM, EL, EL, EL, EM, ED, ED, ED, EM, T,  T,  T],
+        [T,  T,  EM, ED, ED, EM, EM, EM, EM, ED, ED, ED, EM, T,  T,  T],
+        [T,  T,  EM, ED, ED, ED, ED, ED, ED, ED, ED, ED, EM, T,  T,  T],
+        [T,  T,  ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, ES, T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+        [T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T,  T],
+    ]
+    img = px(16, 16)
+    for y, row in enumerate(GRID):
+        for x, c in enumerate(row):
+            img.putpixel((x, y), c)
+    save(img, os.path.join(ITEM, "enriched_uranium.png"))
+
+
+def make_nuke_bomb():
+    """Dark grey cylindrical bomb casing with a yellow radiation trefoil emblem."""
+    img = px(16, 16)
+    draw = ImageDraw.Draw(img)
+
+    BODY   = ( 58,  58,  64, 255)
+    BODY_H = ( 82,  82,  90, 255)
+    BODY_D = ( 34,  34,  40, 255)
+    CAP    = ( 24,  24,  28, 255)
+    YEL    = (235, 200,  20, 255)
+    BLK    = ( 20,  20,  20, 255)
+
+    # Cylinder body
+    draw.rectangle([3, 1, 12, 14], fill=BODY)
+    for y in range(1, 15):
+        img.putpixel((4, y), BODY_H)
+        img.putpixel((11, y), BODY_D)
+    # End caps
+    draw.rectangle([3, 0, 12, 1], fill=CAP)
+    draw.rectangle([3, 13, 12, 15], fill=CAP)
+
+    # Radiation trefoil emblem, centered on (7, 7)
+    draw.ellipse([4, 4, 10, 10], fill=YEL)
+    img.putpixel((7, 7), BLK)
+    for dx, dy in [(0, -2), (0, -3), (2, 1), (2, 2), (-2, 1), (-2, 2)]:
+        img.putpixel((7 + dx, 7 + dy), BLK)
+
+    save(img, os.path.join(ITEM, "nuke_bomb.png"))
+
+
 # ── main ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Generating Firearms mod textures...")
@@ -1982,5 +2043,9 @@ if __name__ == "__main__":
     make_trigger_group()
     make_grip()
     make_stock()
+
+    # ── Nuclear Bomb ──────────────────────────────────────────────────────────
+    make_enriched_uranium()
+    make_nuke_bomb()
 
     print("Done.")

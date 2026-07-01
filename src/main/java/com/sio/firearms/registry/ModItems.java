@@ -13,6 +13,7 @@ import com.sio.firearms.item.KevlarVestItem;
 import com.sio.firearms.item.CleaningKitItem;
 import com.sio.firearms.item.GrenadeItem;
 import com.sio.firearms.item.NightVisionGogglesItem;
+import com.sio.firearms.item.NukeBombItem;
 import com.sio.firearms.item.SeaMineItem;
 import com.sio.firearms.item.SmokeGrenadeItem;
 import com.sio.firearms.item.GunItem;
@@ -368,6 +369,7 @@ public class ModItems {
     public static final DeferredItem<Item> FUEL_ROD_ASSEMBLY           = ITEMS.registerSimpleItem("fuel_rod_assembly");
     public static final DeferredItem<Item> SPENT_FUEL_ROD              = ITEMS.registerSimpleItem("spent_fuel_rod");
     public static final DeferredItem<Item> DEPLETED_URANIUM            = ITEMS.registerSimpleItem("depleted_uranium");
+    public static final DeferredItem<Item> ENRICHED_URANIUM            = ITEMS.registerSimpleItem("enriched_uranium");
     public static final DeferredItem<Item> CONTROL_ROD                 = ITEMS.registerSimpleItem("control_rod");
     public static final DeferredItem<Item> BORON_CARBIDE               = ITEMS.registerSimpleItem("boron_carbide");
     public static final DeferredItem<Item> GRAPHITE_BLOCK_ITEM         = ITEMS.registerSimpleItem("graphite_block_item");
@@ -490,6 +492,10 @@ public class ModItems {
 
     // ── Cordite & military ammo ───────────────────────────────────────────────
     public static final DeferredItem<Item> CORDITE          = ITEMS.registerSimpleItem("cordite");
+
+    // ── Nuclear Bomb ─────────────────────────────────────────────────────────
+    public static final DeferredItem<Item> NUKE_BOMB = ITEMS.register("nuke_bomb",
+            () -> new NukeBombItem(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> CORDITE_BULLET   = ITEMS.registerSimpleItem("cordite_bullet");
     public static final DeferredItem<Item> EXPLOSIVE_BULLET = ITEMS.registerSimpleItem("explosive_bullet");
 

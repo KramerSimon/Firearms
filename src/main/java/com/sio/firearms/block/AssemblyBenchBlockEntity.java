@@ -894,6 +894,19 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "minecraft:glass", 2));
         }
 
+        // ── Nuclear Bomb ─────────────────────────────────────────────────────
+        // enriched_uranium is unique to this recipe, so no ordering concerns with other tiers.
+        if (hasAtLeast(in, "firearms:enriched_uranium", 4)
+                && hasAtLeast(in, "firearms:advanced_microchip", 2)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:cordite", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.NUKE_BOMB.get()),
+                    Map.of("firearms:enriched_uranium", 4, "firearms:advanced_microchip", 2,
+                            "firearms:hardened_steel_ingot", 4, "firearms:circuit_board", 2,
+                            "firearms:cordite", 2));
+        }
+
         return null;
     }
 
