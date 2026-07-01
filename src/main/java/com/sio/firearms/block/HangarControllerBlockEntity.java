@@ -124,11 +124,25 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
     }
 
     private boolean hasRequiredItems() {
-        return slotMatches(0, ModItems.AIRCRAFT_FUSELAGE.get(), 1)
+        boolean ok = slotMatches(0, ModItems.AIRCRAFT_FUSELAGE.get(), 1)
             && slotMatches(1, ModItems.AIRCRAFT_WINGS.get(),    2)
             && slotMatches(2, ModItems.JET_ENGINE.get(),        2)
             && slotMatches(3, ModItems.COCKPIT_AVIONICS.get(),  1)
             && slotMatches(4, ModItems.KEROSENE_BUCKET.get(),   1);
+
+        if (!ok) {
+            LOGGER.debug("[HangarController@{}] hasRequiredItems=false — slot0(fuselage)={}/1 need aircraft_fuselage, "
+                            + "slot1(wings)={}/2 need aircraft_wings, slot2(engine)={}/2 need jet_engine, "
+                            + "slot3(avionics)={}/1 need cockpit_avionics, slot4(fuel)={}/1 need kerosene_bucket",
+                    worldPosition.toShortString(),
+                    describeSlot(0), describeSlot(1), describeSlot(2), describeSlot(3), describeSlot(4));
+        }
+        return ok;
+    }
+
+    private String describeSlot(int slot) {
+        ItemStack s = inputSlots.getItem(slot);
+        return s.isEmpty() ? "empty" : (BuiltInRegistries.ITEM.getKey(s.getItem()) + "x" + s.getCount());
     }
 
     private boolean slotMatches(int slot, Item item, int minCount) {

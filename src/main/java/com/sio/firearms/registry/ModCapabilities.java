@@ -410,6 +410,12 @@ public class ModCapabilities {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.VEHICLE_GARAGE_CONTROLLER.get(),
                 (be, dir) -> new net.neoforged.neoforge.items.wrapper.InvWrapper(be.inputSlots));
 
+        // ── Aircraft Hangar ────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.HANGAR_CONTROLLER.get(),
+                (be, dir) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.HANGAR_CONTROLLER.get(),
+                (be, dir) -> new net.neoforged.neoforge.items.wrapper.InvWrapper(be.inputSlots));
+
         // ── Trash Can ──────────────────────────────────────────────────────────
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.TRASH_CAN.get(),
                 (be, dir) -> be.itemHandler);

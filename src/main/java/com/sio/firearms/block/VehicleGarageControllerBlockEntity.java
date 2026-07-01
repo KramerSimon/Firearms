@@ -125,13 +125,29 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
 
     /** All 7 required components must be present to start assembly. */
     private boolean hasRequiredItems() {
-        return slotMatches(0, ModItems.TANK_HULL.get(),         1)
+        boolean ok = slotMatches(0, ModItems.TANK_HULL.get(),         1)
             && slotMatches(1, ModItems.TANK_TRACKS.get(),       2)
             && slotMatches(2, ModItems.TANK_TURRET.get(),       1)
             && slotMatches(3, ModItems.TANK_CANNON.get(),       1)
             && slotMatches(4, ModItems.DIESEL_ENGINE.get(),     1)
             && slotMatches(5, ModItems.ADVANCED_MICROCHIP.get(),2)
             && slotMatches(6, ModItems.DIESEL_BUCKET.get(),     1);
+
+        if (!ok) {
+            LOGGER.debug("[VehicleGarage@{}] hasRequiredItems=false — slot0(hull)={}/1 need tank_hull, "
+                            + "slot1(tracks)={}/2 need tank_tracks, slot2(turret)={}/1 need tank_turret, "
+                            + "slot3(cannon)={}/1 need tank_cannon, slot4(engine)={}/1 need diesel_engine, "
+                            + "slot5(chip)={}/2 need advanced_microchip, slot6(bucket)={}/1 need diesel_bucket",
+                    worldPosition.toShortString(),
+                    describeSlot(0), describeSlot(1), describeSlot(2), describeSlot(3),
+                    describeSlot(4), describeSlot(5), describeSlot(6));
+        }
+        return ok;
+    }
+
+    private String describeSlot(int slot) {
+        ItemStack s = inputSlots.getItem(slot);
+        return s.isEmpty() ? "empty" : (BuiltInRegistries.ITEM.getKey(s.getItem()) + "x" + s.getCount());
     }
 
     private boolean slotMatches(int slot, Item item, int minCount) {

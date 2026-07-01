@@ -776,6 +776,45 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:tungsten_rod", 1));
         }
 
+        // ── Tank Production Chain ─────────────────────────────────────────────
+        // Tank Hull: steel_plate×8 + hardened_steel_ingot×4 → 1
+        // Checked first: steel_plate×8 is a superset of tracks (×6) and turret (×4); no rubber/microchip
+        // requirement distinguishes it from Riot Shield (needs rubber_sheet) and Turret (needs microchip).
+        if (hasAtLeast(in, "firearms:steel_plate", 8)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.TANK_HULL.get()),
+                    Map.of("firearms:steel_plate", 8, "firearms:hardened_steel_ingot", 4));
+        }
+
+        // Tank Tracks: steel_plate×6 + rubber_sheet×4 → 2
+        // rubber_sheet×4 (vs Riot Shield's ×2) and lack of hardened_steel_ingot avoid ambiguity.
+        if (hasAtLeast(in, "firearms:steel_plate", 6)
+                && hasAtLeast(in, "firearms:rubber_sheet", 4)) {
+            return new RecipeMatch(new ItemStack(ModItems.TANK_TRACKS.get(), 2),
+                    Map.of("firearms:steel_plate", 6, "firearms:rubber_sheet", 4));
+        }
+
+        // Tank Turret: steel_plate×4 + hardened_steel_ingot×2 + advanced_microchip×1 → 1
+        // advanced_microchip uniquely distinguishes this from Riot Shield (no microchip).
+        if (hasAtLeast(in, "firearms:steel_plate", 4)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.TANK_TURRET.get()),
+                    Map.of("firearms:steel_plate", 4, "firearms:hardened_steel_ingot", 2,
+                            "firearms:advanced_microchip", 1));
+        }
+
+        // Diesel Engine: steel_ingot×4 + copper_wire×2 + circuit_board×2 + advanced_microchip×1 → 1
+        // steel_ingot×4 (below Minigun/Sniper's ×6 threshold) avoids conflict with weapon recipes.
+        if (hasAtLeast(in, "firearms:steel_ingot", 4)
+                && hasAtLeast(in, "firearms:copper_wire", 2)
+                && hasAtLeast(in, "firearms:circuit_board", 2)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.DIESEL_ENGINE.get()),
+                    Map.of("firearms:steel_ingot", 4, "firearms:copper_wire", 2,
+                            "firearms:circuit_board", 2, "firearms:advanced_microchip", 1));
+        }
+
         // ── Aircraft Components ───────────────────────────────────────────────
         // Fuselage: steel_plate×10 + titanium_ingot×6 → 1
         // Checked first: steel_plate×10 is a superset of wings check (×8), so fuselage must precede wings.

@@ -146,6 +146,7 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
         if (be instanceof EuvLithographyControllerBlockEntity euv) return euv.getEnergyStorage();
         if (be instanceof ReactorControllerBlockEntity reactor) return reactor.getEnergyStorage();
         if (be instanceof VehicleGarageControllerBlockEntity garage) return garage.getEnergyStorage();
+        if (be instanceof HangarControllerBlockEntity hangar) return hangar.getEnergyStorage();
         if (be instanceof ChemicalMixerControllerBlockEntity ctrl) return ctrl.getEnergyStorage();
         return null;
     }
@@ -159,6 +160,7 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || be instanceof EuvLithographyControllerBlockEntity
                 || be instanceof ReactorControllerBlockEntity
                 || be instanceof VehicleGarageControllerBlockEntity
+                || be instanceof HangarControllerBlockEntity
                 || be instanceof ChemicalMixerControllerBlockEntity;
     }
 
@@ -250,6 +252,11 @@ public class EnergyPortBlockEntity extends EnergyStorageBlock {
                 || block == ModBlocks.GARAGE_CONTROLLER.get()
                 || block == ModBlocks.CHEMICAL_MIXER_BASE.get()
                 || block == ModBlocks.CHEMICAL_MIXER_WALL.get()
-                || block == ModBlocks.CHEMICAL_MIXER_CONTROLLER.get();
+                || block == ModBlocks.CHEMICAL_MIXER_CONTROLLER.get()
+                || block == ModBlocks.HANGAR_FLOOR.get()
+                || block == ModBlocks.HANGAR_WALL.get()
+                || block == ModBlocks.HANGAR_ROOF.get()
+                || block == ModBlocks.HANGAR_DOOR.get()
+                || block == ModBlocks.HANGAR_CONTROLLER.get();
     }
 }
