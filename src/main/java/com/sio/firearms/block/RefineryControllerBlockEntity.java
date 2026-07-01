@@ -11,6 +11,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +31,10 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
-public class RefineryControllerBlockEntity extends BlockEntity implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class RefineryControllerBlockEntity extends BlockEntity implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -354,10 +360,69 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         else if (s.is(item) && s.getCount() < s.getMaxStackSize()) s.grow(1);
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: controller sits at (dx=-2, dz=-2) from the 5×5 center,
+    // so center = origin.offset(2, 0, 2).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        BlockPos center = origin.offset(2, 0, 2);
+        Block base = ModBlocks.REFINERY_BASE.get();
+        Block wall = ModBlocks.REFINERY_WALL.get();
+        Block top  = ModBlocks.REFINERY_TOP.get();
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                BlockPos p = center.offset(x, 0, z);
+                if (!p.equals(origin)) map.put(p, base);
+            }
+        }
+        for (int y = 1; y <= 4; y++) {
+            for (int x = -2; x <= 2; x++) {
+                for (int z = -2; z <= 2; z++) {
+                    if (Math.abs(x) < 2 && Math.abs(z) < 2) continue;
+                    map.put(center.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                map.put(center.offset(x, 5, z), top);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     // ── NBT ───────────────────────────────────────────────────────────────────
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putBoolean("PreviewActive", previewActive);
         tag.put("Energy",   energy.serializeNBT(registries));
         tag.put("OilTank",  oilTank.writeToNBT(registries, new CompoundTag()));
         tag.put("ButaneTank",          butaneTank.writeToNBT(registries, new CompoundTag()));
@@ -389,5 +454,6 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         progress       = tag.getInt("Progress");
         cycleCount     = tag.getInt("CycleCount");
         structureValid = tag.getBoolean("StructureValid");
+        previewActive  = tag.getBoolean("PreviewActive");
     }
 }

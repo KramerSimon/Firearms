@@ -12,6 +12,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +34,10 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
-public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -644,6 +650,61 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
         if (changed) setChanged();
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (min corner of the 3×3 base).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block base = ModBlocks.CHEMICAL_MIXER_BASE.get();
+        Block wall = ModBlocks.CHEMICAL_MIXER_WALL.get();
+        for (int dx = 0; dx <= 2; dx++) {
+            for (int dz = 0; dz <= 2; dz++) {
+                BlockPos p = origin.offset(dx, 0, dz);
+                if (!p.equals(origin)) map.put(p, base);
+            }
+        }
+        for (int dy = 1; dy <= 2; dy++) {
+            for (int dx = 0; dx <= 2; dx++) {
+                for (int dz = 0; dz <= 2; dz++) {
+                    if (dx == 1 && dz == 1) continue;
+                    map.put(origin.offset(dx, dy, dz), wall);
+                }
+            }
+        }
+        for (int dx = 0; dx <= 2; dx++) {
+            for (int dz = 0; dz <= 2; dz++) {
+                map.put(origin.offset(dx, 3, dz), wall);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     // ── NBT ───────────────────────────────────────────────────────────────────
 
     @Override
@@ -656,6 +717,7 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
         tag.putInt("Progress", progress);
         tag.putBoolean("StructureValid", structureValid);
         tag.putInt("SelectedRecipe", selectedRecipeIndex);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -668,5 +730,6 @@ public class ChemicalMixerControllerBlockEntity extends EnergyStorageBlock imple
         progress = tag.getInt("Progress");
         structureValid = tag.getBoolean("StructureValid");
         selectedRecipeIndex = tag.contains("SelectedRecipe") ? tag.getInt("SelectedRecipe") : -1;
+        previewActive = tag.getBoolean("PreviewActive");
     }
 }

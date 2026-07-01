@@ -10,6 +10,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -24,7 +27,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class EBFControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class EBFControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     public static final int MAX_PROCESS_TIME = 400;
     public static final int FE_PER_TICK = 200;
@@ -343,6 +349,59 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
 
     public boolean isStructureValid() { return structureValid; }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Direction back = structureBack != null ? structureBack : Direction.NORTH;
+        Direction right = back.getClockWise();
+        Block casing = ModBlocks.BLAST_FURNACE_CASING.get();
+        Block muffler = ModBlocks.MUFFLER_HATCH.get();
+        Block coil = ModBlocks.KANTHAL_COIL.get();
+        for (int u = -2; u <= 2; u++) {
+            for (int d = 0; d <= 4; d++) {
+                for (int r = -2; r <= 2; r++) {
+                    BlockPos p = origin.relative(back, d).relative(right, r).relative(Direction.UP, u);
+                    if (p.equals(origin)) continue;
+                    Block expected = switch (cellType(d, r, u)) {
+                        case CASING -> casing;
+                        case MUFFLER -> muffler;
+                        case COIL -> coil;
+                        default -> null;
+                    };
+                    if (expected != null) map.put(p, expected);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
@@ -351,6 +410,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         tag.putBoolean("StructureValid", structureValid);
         tag.putInt("CoilTemp", installedCoilTemp);
         tag.putBoolean("Enabled", enabled);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -361,5 +421,6 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         structureValid = tag.getBoolean("StructureValid");
         installedCoilTemp = tag.getInt("CoilTemp");
         enabled = tag.getBoolean("Enabled");
+        previewActive = tag.getBoolean("PreviewActive");
     }
 }

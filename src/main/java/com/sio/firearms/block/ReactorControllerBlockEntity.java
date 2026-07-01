@@ -41,9 +41,11 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ReactorControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+public class ReactorControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -440,6 +442,53 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         return null; // valid
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (min-X/min-Z corner, dx=0 dz=0).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block base = ModBlocks.REACTOR_BASE.get();
+        Block wall = ModBlocks.REACTOR_WALL.get();
+        Block top  = ModBlocks.REACTOR_TOP.get();
+        for (int y = 0; y <= 1; y++) {
+            for (int x = 0; x < 7; x++) {
+                for (int z = 0; z < 7; z++) {
+                    BlockPos p = origin.offset(x, y, z);
+                    if (!p.equals(origin)) map.put(p, base);
+                }
+            }
+        }
+        for (int y = 2; y <= 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                for (int z = 0; z < 7; z++) {
+                    boolean interior = x > 0 && x < 6 && z > 0 && z < 6;
+                    if (interior) continue;
+                    map.put(origin.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int x = 0; x < 7; x++) {
+            for (int z = 0; z < 7; z++) {
+                map.put(origin.offset(x, 8, z), top);
+            }
+        }
+        return map;
+    }
+
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
@@ -447,6 +496,7 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         tag.put("WaterTank", waterTank.writeToNBT(registries, new CompoundTag()));
         tag.put("SteamTank", steamTank.writeToNBT(registries, new CompoundTag()));
         tag.putInt("Temperature", temperature);
+        tag.putBoolean("PreviewActive", previewActive);
         return tag;
     }
 
@@ -466,6 +516,7 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         tag.putInt("MeltdownTicks",   meltdownTicks);
         tag.putInt("FeOutputRate",    feOutputRate);
         tag.putInt("OperationalTicks", operationalTicks);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -479,5 +530,6 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         meltdownTicks     = tag.getInt("MeltdownTicks");
         feOutputRate      = tag.getInt("FeOutputRate");
         operationalTicks  = tag.getInt("OperationalTicks");
+        previewActive     = tag.getBoolean("PreviewActive");
     }
 }
