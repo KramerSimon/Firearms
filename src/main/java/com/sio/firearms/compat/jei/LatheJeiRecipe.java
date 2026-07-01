@@ -86,7 +86,12 @@ public class LatheJeiRecipe {
             new LatheJeiRecipe(
                 new ItemStack(net.minecraft.world.item.Items.GOLD_INGOT),
                 ItemStack.EMPTY,
-                new ItemStack(ModItems.GOLD_WIRE.get(), 2))
+                new ItemStack(ModItems.GOLD_WIRE.get(), 2)),
+            // tool_steel_ingot x2 → barrel (precision-machined gun barrel)
+            new LatheJeiRecipe(
+                new ItemStack(ModItems.TOOL_STEEL_INGOT.get()),
+                new ItemStack(ModItems.TOOL_STEEL_INGOT.get()),
+                new ItemStack(ModItems.BARREL.get()))
         );
     }
 }

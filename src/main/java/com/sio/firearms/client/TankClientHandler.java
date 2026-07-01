@@ -18,14 +18,11 @@ import net.neoforged.neoforge.network.PacketDistributor;
 @EventBusSubscriber(modid = Firearms.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class TankClientHandler {
 
-    private static boolean prevForward, prevBack, prevLeft, prevRight, prevFire;
-
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isPassenger()
                 || !(mc.player.getVehicle() instanceof TankEntity tank)) {
-            prevForward = prevBack = prevLeft = prevRight = prevFire = false;
             return;
         }
 
@@ -35,13 +32,9 @@ public class TankClientHandler {
         boolean right   = mc.options.keyRight.isDown();
         boolean fire    = mc.options.keyAttack.isDown();
 
-        if (forward != prevForward || back != prevBack
-                || left != prevLeft || right != prevRight || fire != prevFire) {
-            PacketDistributor.sendToServer(new TankInputPayload(forward, back, left, right, fire));
-            prevForward = forward; prevBack  = back;
-            prevLeft    = left;    prevRight = right;
-            prevFire    = fire;
-        }
+        // Sent every tick while riding — not just on change — so the server always
+        // has fresh input state even across remounts or brief packet handling gaps.
+        PacketDistributor.sendToServer(new TankInputPayload(forward, back, left, right, fire));
 
         // Turret sent every tick for smooth tracking
         float turretYaw   = mc.player.getYRot() - tank.getYRot();

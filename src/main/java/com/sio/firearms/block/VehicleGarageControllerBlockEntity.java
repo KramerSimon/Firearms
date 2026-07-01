@@ -17,6 +17,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +31,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
-public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -87,7 +93,11 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
     public void serverTick() {
         if (level == null) return;
 
-        if (scanTick % 40 == 0) LOGGER.info("[VehicleGarage] ticking at {}", worldPosition);
+        if (scanTick % 40 == 0) {
+            LOGGER.info("[VehicleGarage@{}] tick — energy={}/{} FE, structureValid={}, buildProgress={}/{}",
+                    worldPosition.toShortString(), energy.getEnergyStored(), ENERGY_CAPACITY,
+                    structureValid, buildProgress, BUILD_TICKS);
+        }
 
         scanTick++;
         if (scanTick >= SCAN_INTERVAL) {
@@ -123,25 +133,52 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    /** All 7 required components must be present to start assembly. */
-    private boolean hasRequiredItems() {
-        boolean ok = slotMatches(0, ModItems.TANK_HULL.get(),         1)
-            && slotMatches(1, ModItems.TANK_TRACKS.get(),       2)
-            && slotMatches(2, ModItems.TANK_TURRET.get(),       1)
-            && slotMatches(3, ModItems.TANK_CANNON.get(),       1)
-            && slotMatches(4, ModItems.DIESEL_ENGINE.get(),     1)
-            && slotMatches(5, ModItems.ADVANCED_MICROCHIP.get(),2)
-            && slotMatches(6, ModItems.DIESEL_BUCKET.get(),     1);
+    /** Shapeless: components can be in any of the 10 slots, just need the right types/counts present. */
+    private Map<Item, Integer> requiredItems() {
+        Map<Item, Integer> req = new HashMap<>();
+        req.put(ModItems.TANK_HULL.get(), 1);
+        req.put(ModItems.TANK_TRACKS.get(), 2);
+        req.put(ModItems.TANK_TURRET.get(), 1);
+        req.put(ModItems.TANK_CANNON.get(), 1);
+        req.put(ModItems.DIESEL_ENGINE.get(), 1);
+        req.put(ModItems.ADVANCED_MICROCHIP.get(), 2);
+        req.put(ModItems.DIESEL_BUCKET.get(), 1);
+        return req;
+    }
 
-        if (!ok) {
-            LOGGER.debug("[VehicleGarage@{}] hasRequiredItems=false — slot0(hull)={}/1 need tank_hull, "
-                            + "slot1(tracks)={}/2 need tank_tracks, slot2(turret)={}/1 need tank_turret, "
-                            + "slot3(cannon)={}/1 need tank_cannon, slot4(engine)={}/1 need diesel_engine, "
-                            + "slot5(chip)={}/2 need advanced_microchip, slot6(bucket)={}/1 need diesel_bucket",
-                    worldPosition.toShortString(),
-                    describeSlot(0), describeSlot(1), describeSlot(2), describeSlot(3),
-                    describeSlot(4), describeSlot(5), describeSlot(6));
+    /** Aggregates item counts across all input slots, regardless of slot position. */
+    private Map<Item, Integer> getInputCounts() {
+        Map<Item, Integer> counts = new HashMap<>();
+        for (int i = 0; i < inputSlots.getContainerSize(); i++) {
+            ItemStack s = inputSlots.getItem(i);
+            if (!s.isEmpty()) counts.merge(s.getItem(), s.getCount(), Integer::sum);
         }
+        return counts;
+    }
+
+    /** All 7 required components must be present somewhere across the 10 slots to start assembly. */
+    private boolean hasRequiredItems() {
+        Map<Item, Integer> have = getInputCounts();
+        Map<Item, Integer> required = requiredItems();
+
+        StringBuilder slotsDump = new StringBuilder();
+        for (int i = 0; i < inputSlots.getContainerSize(); i++) {
+            slotsDump.append("slot").append(i).append('=').append(describeSlot(i)).append(' ');
+        }
+
+        boolean ok = true;
+        StringBuilder summary = new StringBuilder();
+        for (Map.Entry<Item, Integer> entry : required.entrySet()) {
+            int haveCount = have.getOrDefault(entry.getKey(), 0);
+            boolean satisfied = haveCount >= entry.getValue();
+            if (!satisfied) ok = false;
+            summary.append(BuiltInRegistries.ITEM.getKey(entry.getKey()))
+                    .append('=').append(haveCount).append('/').append(entry.getValue())
+                    .append(satisfied ? "(OK) " : "(MISSING) ");
+        }
+
+        LOGGER.debug("[VehicleGarage@{}] hasRequiredItems={} — slots: {} | required: {}",
+                worldPosition.toShortString(), ok, slotsDump, summary);
         return ok;
     }
 
@@ -150,9 +187,27 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         return s.isEmpty() ? "empty" : (BuiltInRegistries.ITEM.getKey(s.getItem()) + "x" + s.getCount());
     }
 
-    private boolean slotMatches(int slot, Item item, int minCount) {
-        ItemStack s = inputSlots.getItem(slot);
-        return s.getItem() == item && s.getCount() >= minCount;
+    /** Shrinks matching stacks across all slots until the exact requested amount of each item is consumed. */
+    private void consumeIngredients(Map<Item, Integer> toConsume) {
+        Map<Item, Integer> remaining = new HashMap<>(toConsume);
+        for (int i = 0; i < inputSlots.getContainerSize() && !remaining.isEmpty(); i++) {
+            ItemStack s = inputSlots.getItem(i);
+            if (s.isEmpty()) continue;
+            Item item = s.getItem();
+            Integer need = remaining.get(item);
+            if (need == null || need <= 0) continue;
+
+            int take = Math.min(need, s.getCount());
+            s.shrink(take);
+
+            int left = need - take;
+            if (left <= 0) remaining.remove(item);
+            else remaining.put(item, left);
+        }
+        if (!remaining.isEmpty()) {
+            LOGGER.warn("[VehicleGarage@{}] consumeIngredients could not fully consume: {}",
+                    worldPosition.toShortString(), remaining);
+        }
     }
 
     private void onBuildComplete() {
@@ -171,14 +226,8 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
 
         level.addFreshEntity(tank);
 
-        // Consume all required items
-        inputSlots.removeItem(0, 1);  // tank_hull
-        inputSlots.removeItem(1, 2);  // tank_tracks
-        inputSlots.removeItem(2, 1);  // tank_turret
-        inputSlots.removeItem(3, 1);  // tank_cannon
-        inputSlots.removeItem(4, 1);  // diesel_engine
-        inputSlots.removeItem(5, 2);  // advanced_microchip
-        inputSlots.removeItem(6, 1);  // diesel_bucket — return empty bucket
+        // Consume all required items, wherever they are in the 10 slots
+        consumeIngredients(requiredItems());
         Block.popResource(level, worldPosition, new ItemStack(Items.BUCKET));
         setChanged();
 
@@ -388,6 +437,64 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         return BuiltInRegistries.BLOCK.getKey(b).toString();
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (west face, dz=0).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block floor = ModBlocks.GARAGE_FLOOR.get();
+        Block wall  = ModBlocks.GARAGE_WALL.get();
+        Block roof  = ModBlocks.GARAGE_ROOF.get();
+        for (int y = 0; y <= 1; y++) {
+            for (int x = 0; x < 9; x++) {
+                for (int z = 0; z < 9; z++) {
+                    BlockPos p = origin.offset(x, y, z);
+                    if (!p.equals(origin)) map.put(p, floor);
+                }
+            }
+        }
+        for (int y = 2; y <= 4; y++) {
+            for (int x = 0; x < 9; x++) {
+                for (int z = 0; z < 9; z++) {
+                    boolean border = x == 0 || x == 8 || z == 0 || z == 8;
+                    if (border) map.put(origin.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int x = 0; x < 9; x++) {
+            for (int z = 0; z < 9; z++) {
+                map.put(origin.offset(x, 5, z), roof);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     // ── NBT ──────────────────────────────────────────────────────────────────
 
     @Override
@@ -403,6 +510,7 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         tag.put("Items", itemsTag);
         tag.putInt("BuildProgress", buildProgress);
         tag.putBoolean("StructureValid", structureValid);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -419,5 +527,6 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
         buildProgress  = tag.getInt("BuildProgress");
         structureValid = tag.getBoolean("StructureValid");
+        previewActive  = tag.getBoolean("PreviewActive");
     }
 }

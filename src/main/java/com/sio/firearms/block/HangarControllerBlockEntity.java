@@ -14,6 +14,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +31,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
-public class HangarControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class HangarControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -90,6 +96,12 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
     private void serverTick() {
         if (level == null) return;
 
+        if (scanTick % 40 == 0) {
+            LOGGER.info("[HangarController@{}] tick — energy={}/{} FE, structureValid={}, buildProgress={}/{}",
+                    worldPosition.toShortString(), energy.getEnergyStored(), ENERGY_CAPACITY,
+                    structureValid, buildProgress, BUILD_TICKS);
+        }
+
         scanTick++;
         if (scanTick >= SCAN_INTERVAL) {
             scanTick = 0;
@@ -123,20 +135,50 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
     }
 
-    private boolean hasRequiredItems() {
-        boolean ok = slotMatches(0, ModItems.AIRCRAFT_FUSELAGE.get(), 1)
-            && slotMatches(1, ModItems.AIRCRAFT_WINGS.get(),    2)
-            && slotMatches(2, ModItems.JET_ENGINE.get(),        2)
-            && slotMatches(3, ModItems.COCKPIT_AVIONICS.get(),  1)
-            && slotMatches(4, ModItems.KEROSENE_BUCKET.get(),   1);
+    /** Shapeless: components can be in any of the 10 slots, just need the right types/counts present. */
+    private Map<Item, Integer> requiredItems() {
+        Map<Item, Integer> req = new HashMap<>();
+        req.put(ModItems.AIRCRAFT_FUSELAGE.get(), 1);
+        req.put(ModItems.AIRCRAFT_WINGS.get(), 2);
+        req.put(ModItems.JET_ENGINE.get(), 2);
+        req.put(ModItems.COCKPIT_AVIONICS.get(), 1);
+        req.put(ModItems.KEROSENE_BUCKET.get(), 1);
+        return req;
+    }
 
-        if (!ok) {
-            LOGGER.debug("[HangarController@{}] hasRequiredItems=false — slot0(fuselage)={}/1 need aircraft_fuselage, "
-                            + "slot1(wings)={}/2 need aircraft_wings, slot2(engine)={}/2 need jet_engine, "
-                            + "slot3(avionics)={}/1 need cockpit_avionics, slot4(fuel)={}/1 need kerosene_bucket",
-                    worldPosition.toShortString(),
-                    describeSlot(0), describeSlot(1), describeSlot(2), describeSlot(3), describeSlot(4));
+    /** Aggregates item counts across all input slots, regardless of slot position. */
+    private Map<Item, Integer> getInputCounts() {
+        Map<Item, Integer> counts = new HashMap<>();
+        for (int i = 0; i < inputSlots.getContainerSize(); i++) {
+            ItemStack s = inputSlots.getItem(i);
+            if (!s.isEmpty()) counts.merge(s.getItem(), s.getCount(), Integer::sum);
         }
+        return counts;
+    }
+
+    /** All 5 required components must be present somewhere across the 10 slots to start assembly. */
+    private boolean hasRequiredItems() {
+        Map<Item, Integer> have = getInputCounts();
+        Map<Item, Integer> required = requiredItems();
+
+        StringBuilder slotsDump = new StringBuilder();
+        for (int i = 0; i < inputSlots.getContainerSize(); i++) {
+            slotsDump.append("slot").append(i).append('=').append(describeSlot(i)).append(' ');
+        }
+
+        boolean ok = true;
+        StringBuilder summary = new StringBuilder();
+        for (Map.Entry<Item, Integer> entry : required.entrySet()) {
+            int haveCount = have.getOrDefault(entry.getKey(), 0);
+            boolean satisfied = haveCount >= entry.getValue();
+            if (!satisfied) ok = false;
+            summary.append(BuiltInRegistries.ITEM.getKey(entry.getKey()))
+                    .append('=').append(haveCount).append('/').append(entry.getValue())
+                    .append(satisfied ? "(OK) " : "(MISSING) ");
+        }
+
+        LOGGER.debug("[HangarController@{}] hasRequiredItems={} — slots: {} | required: {}",
+                worldPosition.toShortString(), ok, slotsDump, summary);
         return ok;
     }
 
@@ -145,9 +187,27 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         return s.isEmpty() ? "empty" : (BuiltInRegistries.ITEM.getKey(s.getItem()) + "x" + s.getCount());
     }
 
-    private boolean slotMatches(int slot, Item item, int minCount) {
-        ItemStack s = inputSlots.getItem(slot);
-        return s.getItem() == item && s.getCount() >= minCount;
+    /** Shrinks matching stacks across all slots until the exact requested amount of each item is consumed. */
+    private void consumeIngredients(Map<Item, Integer> toConsume) {
+        Map<Item, Integer> remaining = new HashMap<>(toConsume);
+        for (int i = 0; i < inputSlots.getContainerSize() && !remaining.isEmpty(); i++) {
+            ItemStack s = inputSlots.getItem(i);
+            if (s.isEmpty()) continue;
+            Item item = s.getItem();
+            Integer need = remaining.get(item);
+            if (need == null || need <= 0) continue;
+
+            int take = Math.min(need, s.getCount());
+            s.shrink(take);
+
+            int left = need - take;
+            if (left <= 0) remaining.remove(item);
+            else remaining.put(item, left);
+        }
+        if (!remaining.isEmpty()) {
+            LOGGER.warn("[HangarController@{}] consumeIngredients could not fully consume: {}",
+                    worldPosition.toShortString(), remaining);
+        }
     }
 
     private void onBuildComplete() {
@@ -165,12 +225,8 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
 
         level.addFreshEntity(aircraft);
 
-        // Consume required items
-        inputSlots.removeItem(0, 1);  // fuselage
-        inputSlots.removeItem(1, 2);  // wings
-        inputSlots.removeItem(2, 2);  // jet engines
-        inputSlots.removeItem(3, 1);  // avionics
-        inputSlots.removeItem(4, 1);  // kerosene bucket - return empty bucket
+        // Consume required items, wherever they are in the 10 slots
+        consumeIngredients(requiredItems());
         Block.popResource(level, worldPosition, new ItemStack(Items.BUCKET));
         setChanged();
 
@@ -336,6 +392,62 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (west face, dz=0).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block floor = ModBlocks.HANGAR_FLOOR.get();
+        Block wall  = ModBlocks.HANGAR_WALL.get();
+        Block roof  = ModBlocks.HANGAR_ROOF.get();
+        for (int x = 0; x < 11; x++) {
+            for (int z = 0; z < 11; z++) {
+                BlockPos p = origin.offset(x, 0, z);
+                if (!p.equals(origin)) map.put(p, floor);
+            }
+        }
+        for (int y = 1; y <= 4; y++) {
+            for (int x = 0; x < 11; x++) {
+                for (int z = 0; z < 11; z++) {
+                    boolean border = x == 0 || x == 10 || z == 0 || z == 10;
+                    if (border) map.put(origin.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int x = 0; x < 11; x++) {
+            for (int z = 0; z < 11; z++) {
+                map.put(origin.offset(x, 5, z), roof);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     // --- NBT ---
 
     @Override
@@ -351,6 +463,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         tag.put("Items", itemsTag);
         tag.putInt("BuildProgress", buildProgress);
         tag.putBoolean("StructureValid", structureValid);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -367,5 +480,6 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
         buildProgress  = tag.getInt("BuildProgress");
         structureValid = tag.getBoolean("StructureValid");
+        previewActive  = tag.getBoolean("PreviewActive");
     }
 }

@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +31,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -298,6 +304,75 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         LOGGER.info("[EUV]   PASS clean room check");
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (ox=0, oz=0 corner of the 5×5).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block base   = ModBlocks.EUV_BASE.get();
+        Block wall   = ModBlocks.EUV_WALL.get();
+        Block mirror = ModBlocks.EUV_MIRROR_ARRAY.get();
+        Block housing = ModBlocks.EUV_EMITTER_HOUSING.get();
+        for (int x = 0; x < 5; x++) {
+            for (int z = 0; z < 5; z++) {
+                BlockPos p = origin.offset(x, 0, z);
+                if (!p.equals(origin)) map.put(p, base);
+            }
+        }
+        for (int y = 1; y <= 2; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    if (x > 0 && x < 4 && z > 0 && z < 4) continue;
+                    map.put(origin.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int y = 3; y <= 4; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    boolean corner = (x == 0 || x == 4) && (z == 0 || z == 4);
+                    boolean interior = (x > 0 && x < 4) && (z > 0 && z < 4);
+                    if (interior) continue;
+                    map.put(origin.offset(x, y, z), corner ? mirror : wall);
+                }
+            }
+        }
+        for (int y = 5; y <= 6; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    map.put(origin.offset(x, y, z), housing);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
@@ -306,6 +381,7 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         tag.putBoolean("StructureValid", structureValid);
         tag.putBoolean("CleanRoom", cleanRoom);
         tag.put("PhotoresistTank", photoresistTank.writeToNBT(registries, new CompoundTag()));
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -316,5 +392,6 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         structureValid = tag.getBoolean("StructureValid");
         cleanRoom = tag.getBoolean("CleanRoom");
         if (tag.contains("PhotoresistTank")) photoresistTank.readFromNBT(registries, tag.getCompound("PhotoresistTank"));
+        previewActive = tag.getBoolean("PreviewActive");
     }
 }

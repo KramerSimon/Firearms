@@ -344,6 +344,62 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
         return BuiltInRegistries.BLOCK.getKey(b).toString();
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (dx=0, dz=0 corner of the 5×5).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block base = ModBlocks.COOLING_TOWER_BASE.get();
+        Block wall = ModBlocks.COOLING_TOWER_WALL.get();
+        Block vent = ModBlocks.COOLING_TOWER_VENT.get();
+        for (int x = 0; x < 5; x++) {
+            for (int z = 0; z < 5; z++) {
+                BlockPos p = origin.offset(x, 0, z);
+                if (!p.equals(origin)) map.put(p, base);
+            }
+        }
+        for (int y = 1; y <= 6; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    boolean border = x == 0 || x == 4 || z == 0 || z == 4;
+                    if (border) map.put(origin.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int x = 0; x < 5; x++) {
+            for (int z = 0; z < 5; z++) {
+                map.put(origin.offset(x, 7, z), vent);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     // ── NBT ─────────────────────────────────────────────────────────────────
 
     @Override
@@ -354,6 +410,7 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
         tag.putInt("FeRate", feRate);
         tag.putInt("TurbineCount", turbineCount);
         tag.putBoolean("StructureValid", structureValid);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -364,5 +421,6 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
         feRate         = tag.getInt("FeRate");
         turbineCount   = tag.getInt("TurbineCount");
         structureValid = tag.getBoolean("StructureValid");
+        previewActive  = tag.getBoolean("PreviewActive");
     }
 }

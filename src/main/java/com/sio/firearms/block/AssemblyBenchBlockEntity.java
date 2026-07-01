@@ -300,18 +300,38 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
         }
 
         // ── Standard tier ────────────────────────────────────────────────────
+        // Realistic parts-based assembly: barrel(s) + receiver + trigger_group + circuit_board,
+        // topped up with grip/magazine/stock depending on weapon class. Ordered from highest
+        // part-count/most-specific down to Pistol (whose ingredient set is a subset of every
+        // other gun's) so supersets never misfire on the wrong branch.
 
-        // Rifle: steel×6 + hardened×2 + copper×3 + circuit×1 + bullet_casing×16
-        // Must come before Pistol — if propellant is also present, Pistol would fire first otherwise.
-        if (hasAtLeast(in, "firearms:steel_ingot", 6)
-                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
-                && hasAtLeast(in, "firearms:copper_wire", 3)
+        // Sniper Rifle: barrel×3 + receiver×1 + trigger_group×1 + stock×1 + advanced_microchip×1 + tool_steel_ingot×2
+        // barrel×3 and tool_steel_ingot uniquely identify this; checked first among the new gun recipes.
+        if (hasAtLeast(in, "firearms:barrel", 3)
+                && hasAtLeast(in, "firearms:receiver", 1)
+                && hasAtLeast(in, "firearms:trigger_group", 1)
+                && hasAtLeast(in, "firearms:stock", 1)
+                && hasAtLeast(in, "firearms:advanced_microchip", 1)
+                && hasAtLeast(in, "firearms:tool_steel_ingot", 2)) {
+            return new RecipeMatch(new ItemStack(ModItems.SNIPER_RIFLE.get()),
+                    Map.of("firearms:barrel", 3, "firearms:receiver", 1, "firearms:trigger_group", 1,
+                            "firearms:stock", 1, "firearms:advanced_microchip", 1,
+                            "firearms:tool_steel_ingot", 2));
+        }
+
+        // Rifle: barrel×2 + receiver×1 + trigger_group×1 + stock×1 + magazine×1 + circuit_board×1 + hardened_steel_ingot×2
+        // hardened_steel_ingot×2 distinguishes this from Shotgun (same barrel×2, no hardened requirement).
+        if (hasAtLeast(in, "firearms:barrel", 2)
+                && hasAtLeast(in, "firearms:receiver", 1)
+                && hasAtLeast(in, "firearms:trigger_group", 1)
+                && hasAtLeast(in, "firearms:stock", 1)
+                && hasAtLeast(in, "firearms:magazine", 1)
                 && hasAtLeast(in, "firearms:circuit_board", 1)
-                && hasAtLeast(in, "firearms:bullet_casing", 16)) {
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)) {
             return new RecipeMatch(new ItemStack(ModItems.RIFLE.get()),
-                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 2,
-                            "firearms:copper_wire", 3, "firearms:circuit_board", 1,
-                            "firearms:bullet_casing", 16));
+                    Map.of("firearms:barrel", 2, "firearms:receiver", 1, "firearms:trigger_group", 1,
+                            "firearms:stock", 1, "firearms:magazine", 1, "firearms:circuit_board", 1,
+                            "firearms:hardened_steel_ingot", 2));
         }
 
         // Stainless Pistol: stainless_steel_ingot×4 + stainless_plate×2 + copper_wire×2 + bullet_casing×8
@@ -327,43 +347,21 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:copper_wire", 2, "firearms:bullet_casing", 8));
         }
 
-        // Pistol: steel×4 + copper×2 + circuit×1 + bullet_casing×8 + propellant×4
-        if (hasAtLeast(in, "firearms:steel_ingot", 4)
-                && hasAtLeast(in, "firearms:copper_wire", 2)
-                && hasAtLeast(in, "firearms:circuit_board", 1)
-                && hasAtLeast(in, "firearms:bullet_casing", 8)
-                && hasAtLeast(in, "firearms:propellant_powder", 4)) {
-            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()),
-                    Map.of("firearms:steel_ingot", 4, "firearms:copper_wire", 2,
-                            "firearms:circuit_board", 1, "firearms:bullet_casing", 8,
-                            "firearms:propellant_powder", 4));
-        }
-
-        // Sniper Rifle: steel×6 + hardened×4 + copper×3 + advanced_microchip×1
-        // Minigun already handled above; this safely matches only standard Sniper ingredients.
-        if (hasAtLeast(in, "firearms:steel_ingot", 6)
-                && hasAtLeast(in, "firearms:hardened_steel_ingot", 4)
-                && hasAtLeast(in, "firearms:copper_wire", 3)
-                && hasAtLeast(in, "firearms:advanced_microchip", 1)) {
-            return new RecipeMatch(new ItemStack(ModItems.SNIPER_RIFLE.get()),
-                    Map.of("firearms:steel_ingot", 6, "firearms:hardened_steel_ingot", 4,
-                            "firearms:copper_wire", 3, "firearms:advanced_microchip", 1));
-        }
-
-        // Shotgun: steel×5 + hardened×2 + copper×2 + circuit×1
-        // Must come before SMG — SMG needs only steel×4, so 5 steel would also satisfy SMG.
-        if (hasAtLeast(in, "firearms:steel_ingot", 5)
-                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
-                && hasAtLeast(in, "firearms:copper_wire", 2)
+        // Shotgun: barrel×2 + receiver×1 + trigger_group×1 + stock×1 + grip×1 + circuit_board×1
+        // Must come before SMG/Pistol — barrel×2 would also satisfy their lower barrel requirement.
+        if (hasAtLeast(in, "firearms:barrel", 2)
+                && hasAtLeast(in, "firearms:receiver", 1)
+                && hasAtLeast(in, "firearms:trigger_group", 1)
+                && hasAtLeast(in, "firearms:stock", 1)
+                && hasAtLeast(in, "firearms:grip", 1)
                 && hasAtLeast(in, "firearms:circuit_board", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.SHOTGUN.get()),
-                    Map.of("firearms:steel_ingot", 5, "firearms:hardened_steel_ingot", 2,
-                            "firearms:copper_wire", 2, "firearms:circuit_board", 1));
+                    Map.of("firearms:barrel", 2, "firearms:receiver", 1, "firearms:trigger_group", 1,
+                            "firearms:stock", 1, "firearms:grip", 1, "firearms:circuit_board", 1));
         }
 
         // Chainsaw: steel×4 + hardened×2 + circuit×1 + copper×2 + chain×2
-        // Must come before SMG — SMG matches steel≥4, hardened≥2, copper≥2, circuit≥1 (no chain check),
-        // so chainsaw ingredients would false-match SMG without the chain gate.
+        // Uses raw materials directly (not gun parts); chain×2 keeps it disjoint from the new part-based guns.
         if (hasAtLeast(in, "firearms:steel_ingot", 4)
                 && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
                 && hasAtLeast(in, "firearms:circuit_board", 1)
@@ -375,14 +373,33 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "minecraft:chain", 2));
         }
 
-        // SMG: steel×4 + hardened×2 + copper×2 + circuit×1
-        if (hasAtLeast(in, "firearms:steel_ingot", 4)
-                && hasAtLeast(in, "firearms:hardened_steel_ingot", 2)
-                && hasAtLeast(in, "firearms:copper_wire", 2)
+        // SMG: barrel×1 + receiver×1 + trigger_group×1 + grip×1 + magazine×2 + stock×1 + circuit_board×1
+        // Must come before Pistol — SMG's ingredient set is a strict superset of Pistol's
+        // (magazine×2 ≥ Pistol's ×1, plus stock), so Pistol would always also match otherwise.
+        if (hasAtLeast(in, "firearms:barrel", 1)
+                && hasAtLeast(in, "firearms:receiver", 1)
+                && hasAtLeast(in, "firearms:trigger_group", 1)
+                && hasAtLeast(in, "firearms:grip", 1)
+                && hasAtLeast(in, "firearms:magazine", 2)
+                && hasAtLeast(in, "firearms:stock", 1)
                 && hasAtLeast(in, "firearms:circuit_board", 1)) {
             return new RecipeMatch(new ItemStack(ModItems.SMG.get()),
-                    Map.of("firearms:steel_ingot", 4, "firearms:hardened_steel_ingot", 2,
-                            "firearms:copper_wire", 2, "firearms:circuit_board", 1));
+                    Map.of("firearms:barrel", 1, "firearms:receiver", 1, "firearms:trigger_group", 1,
+                            "firearms:grip", 1, "firearms:magazine", 2, "firearms:stock", 1,
+                            "firearms:circuit_board", 1));
+        }
+
+        // Pistol: barrel×1 + receiver×1 + trigger_group×1 + grip×1 + magazine×1 + circuit_board×1
+        // Checked last — its ingredient set is the minimal common subset of every gun above.
+        if (hasAtLeast(in, "firearms:barrel", 1)
+                && hasAtLeast(in, "firearms:receiver", 1)
+                && hasAtLeast(in, "firearms:trigger_group", 1)
+                && hasAtLeast(in, "firearms:grip", 1)
+                && hasAtLeast(in, "firearms:magazine", 1)
+                && hasAtLeast(in, "firearms:circuit_board", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.PISTOL.get()),
+                    Map.of("firearms:barrel", 1, "firearms:receiver", 1, "firearms:trigger_group", 1,
+                            "firearms:grip", 1, "firearms:magazine", 1, "firearms:circuit_board", 1));
         }
 
         // ── Machines ─────────────────────────────────────────────────────────
@@ -534,6 +551,21 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
             return new RecipeMatch(new ItemStack(ModItems.KANTHAL_ALLOY.get(), 4),
                     Map.of("firearms:chromium_ingot", 1, "minecraft:iron_ingot", 1,
                             "firearms:aluminum_ingot", 1));
+        }
+
+        // Receiver: steel×3 + hardened×1 → receiver×1 (gun main body)
+        // Checked before Trigger Group — hardened_steel_ingot uniquely distinguishes it.
+        if (hasAtLeast(in, "firearms:steel_ingot", 3)
+                && hasAtLeast(in, "firearms:hardened_steel_ingot", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.RECEIVER.get()),
+                    Map.of("firearms:steel_ingot", 3, "firearms:hardened_steel_ingot", 1));
+        }
+
+        // Trigger Group: steel×2 + copper_wire×1 → trigger_group×1 (firing mechanism)
+        if (hasAtLeast(in, "firearms:steel_ingot", 2)
+                && hasAtLeast(in, "firearms:copper_wire", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.TRIGGER_GROUP.get()),
+                    Map.of("firearms:steel_ingot", 2, "firearms:copper_wire", 1));
         }
 
         // ── Nuclear Reactor Stage 1 ───────────────────────────────────────────

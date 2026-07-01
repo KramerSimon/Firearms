@@ -326,6 +326,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.AIRCRAFT_WINGS.get());
                         output.accept(ModItems.JET_ENGINE.get());
                         output.accept(ModItems.COCKPIT_AVIONICS.get());
+                        output.accept(ModItems.AIRCRAFT_SCHEMATIC.get());
                     })
                     .build());
 }

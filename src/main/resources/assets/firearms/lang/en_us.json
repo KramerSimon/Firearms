@@ -351,6 +351,7 @@
   "item.firearms.aircraft_wings": "Aircraft Wings",
   "item.firearms.jet_engine": "Jet Engine",
   "item.firearms.cockpit_avionics": "Cockpit Avionics",
+  "item.firearms.aircraft_schematic": "Aircraft Schematic",
   "entity.firearms.aircraft": "Fighter Aircraft",
   "container.firearms.hangar_controller": "Aircraft Hangar",
 
@@ -366,5 +367,11 @@
   "item.firearms.neodymium_ore_raw": "Raw Neodymium",
   "item.firearms.neodymium_ingot": "Neodymium Ingot",
   "item.firearms.beryllium_copper_ingot": "Beryllium Copper Ingot",
+
+  "item.firearms.barrel": "Barrel",
+  "item.firearms.receiver": "Receiver",
+  "item.firearms.trigger_group": "Trigger Group",
+  "item.firearms.grip": "Grip",
+  "item.firearms.stock": "Stock",
   "block.firearms.neodymium_ore": "Neodymium Ore"
 }

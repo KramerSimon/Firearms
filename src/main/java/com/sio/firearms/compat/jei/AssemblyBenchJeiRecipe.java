@@ -44,6 +44,9 @@ public class AssemblyBenchJeiRecipe {
         return List.of(
                 createGunBarrelRecipe(),
                 createTriggerAssemblyRecipe(),
+                // ── Gun Parts (intermediate) ──────────────────────────────────
+                createReceiverRecipe(),
+                createTriggerGroupRecipe(),
                 // ── Weapons — Standard tier ───────────────────────────────────
                 createPistolRecipe(),
                 createShotgunRecipe(),
@@ -152,50 +155,74 @@ public class AssemblyBenchJeiRecipe {
         }, new ItemStack(ModItems.TRIGGER_ASSEMBLY.get()));
     }
 
+    private static AssemblyBenchJeiRecipe createReceiverRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 3),
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get())
+        }, new ItemStack(ModItems.RECEIVER.get()));
+    }
+
+    private static AssemblyBenchJeiRecipe createTriggerGroupRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.STEEL_INGOT.get(), 2),
+                new ItemStack(ModItems.COPPER_WIRE.get())
+        }, new ItemStack(ModItems.TRIGGER_GROUP.get()));
+    }
+
     private static AssemblyBenchJeiRecipe createPistolRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
-                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
-                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
-                new ItemStack(ModItems.BULLET_CASING.get(), 8),
-                new ItemStack(ModItems.PROPELLANT_POWDER.get(), 4)
+                new ItemStack(ModItems.BARREL.get()),
+                new ItemStack(ModItems.RECEIVER.get()),
+                new ItemStack(ModItems.TRIGGER_GROUP.get()),
+                new ItemStack(ModItems.GRIP.get()),
+                new ItemStack(ModItems.MAGAZINE.get()),
+                new ItemStack(ModItems.CIRCUIT_BOARD.get())
         }, new ItemStack(ModItems.PISTOL.get()));
     }
 
     private static AssemblyBenchJeiRecipe createShotgunRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.STEEL_INGOT.get(), 5),
-                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
-                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.BARREL.get(), 2),
+                new ItemStack(ModItems.RECEIVER.get()),
+                new ItemStack(ModItems.TRIGGER_GROUP.get()),
+                new ItemStack(ModItems.STOCK.get()),
+                new ItemStack(ModItems.GRIP.get()),
                 new ItemStack(ModItems.CIRCUIT_BOARD.get())
         }, new ItemStack(ModItems.SHOTGUN.get()));
     }
 
     private static AssemblyBenchJeiRecipe createRifleRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
-                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
-                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
+                new ItemStack(ModItems.BARREL.get(), 2),
+                new ItemStack(ModItems.RECEIVER.get()),
+                new ItemStack(ModItems.TRIGGER_GROUP.get()),
+                new ItemStack(ModItems.STOCK.get()),
+                new ItemStack(ModItems.MAGAZINE.get()),
                 new ItemStack(ModItems.CIRCUIT_BOARD.get()),
-                new ItemStack(ModItems.BULLET_CASING.get(), 16)
+                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2)
         }, new ItemStack(ModItems.RIFLE.get()));
     }
 
     private static AssemblyBenchJeiRecipe createSMGRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.STEEL_INGOT.get(), 4),
-                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 2),
-                new ItemStack(ModItems.COPPER_WIRE.get(), 2),
+                new ItemStack(ModItems.BARREL.get()),
+                new ItemStack(ModItems.RECEIVER.get()),
+                new ItemStack(ModItems.TRIGGER_GROUP.get()),
+                new ItemStack(ModItems.GRIP.get()),
+                new ItemStack(ModItems.MAGAZINE.get(), 2),
+                new ItemStack(ModItems.STOCK.get()),
                 new ItemStack(ModItems.CIRCUIT_BOARD.get())
         }, new ItemStack(ModItems.SMG.get()));
     }
 
     private static AssemblyBenchJeiRecipe createSniperRifleRecipe() {
         return of(new ItemStack[]{
-                new ItemStack(ModItems.STEEL_INGOT.get(), 6),
-                new ItemStack(ModItems.HARDENED_STEEL_INGOT.get(), 4),
-                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
-                new ItemStack(ModItems.ADVANCED_MICROCHIP.get())
+                new ItemStack(ModItems.BARREL.get(), 3),
+                new ItemStack(ModItems.RECEIVER.get()),
+                new ItemStack(ModItems.TRIGGER_GROUP.get()),
+                new ItemStack(ModItems.STOCK.get()),
+                new ItemStack(ModItems.ADVANCED_MICROCHIP.get()),
+                new ItemStack(ModItems.TOOL_STEEL_INGOT.get(), 2)
         }, new ItemStack(ModItems.SNIPER_RIFLE.get()));
     }
 

@@ -574,10 +574,11 @@ public class ModItems {
     public static final DeferredItem<BlockItem> HANGAR_CONTROLLER = ITEMS.registerSimpleBlockItem(ModBlocks.HANGAR_CONTROLLER);
 
     // ── Aircraft Components ────────────────────────────────────────────────────
-    public static final DeferredItem<Item> AIRCRAFT_FUSELAGE = ITEMS.registerSimpleItem("aircraft_fuselage");
-    public static final DeferredItem<Item> AIRCRAFT_WINGS    = ITEMS.registerSimpleItem("aircraft_wings");
-    public static final DeferredItem<Item> JET_ENGINE        = ITEMS.registerSimpleItem("jet_engine");
-    public static final DeferredItem<Item> COCKPIT_AVIONICS  = ITEMS.registerSimpleItem("cockpit_avionics");
+    public static final DeferredItem<Item> AIRCRAFT_FUSELAGE  = ITEMS.registerSimpleItem("aircraft_fuselage");
+    public static final DeferredItem<Item> AIRCRAFT_WINGS     = ITEMS.registerSimpleItem("aircraft_wings");
+    public static final DeferredItem<Item> JET_ENGINE         = ITEMS.registerSimpleItem("jet_engine");
+    public static final DeferredItem<Item> COCKPIT_AVIONICS   = ITEMS.registerSimpleItem("cockpit_avionics");
+    public static final DeferredItem<Item> AIRCRAFT_SCHEMATIC = ITEMS.registerSimpleItem("aircraft_schematic");
 
     // ── New materials tier ────────────────────────────────────────────────────
 
@@ -592,6 +593,14 @@ public class ModItems {
     public static final DeferredItem<Item> NEODYMIUM_ORE_RAW      = ITEMS.registerSimpleItem("neodymium_ore_raw");
     public static final DeferredItem<Item> NEODYMIUM_INGOT        = ITEMS.registerSimpleItem("neodymium_ingot");
     public static final DeferredItem<Item> BERYLLIUM_COPPER_INGOT = ITEMS.registerSimpleItem("beryllium_copper_ingot");
+
+    // ── Gun Parts (intermediate) ──────────────────────────────────────────────
+    public static final DeferredItem<Item> BARREL        = ITEMS.registerSimpleItem("barrel");
+    public static final DeferredItem<Item> RECEIVER      = ITEMS.registerSimpleItem("receiver");
+    public static final DeferredItem<Item> TRIGGER_GROUP = ITEMS.registerSimpleItem("trigger_group");
+    public static final DeferredItem<Item> GRIP          = ITEMS.registerSimpleItem("grip");
+    public static final DeferredItem<Item> STOCK         = ITEMS.registerSimpleItem("stock");
+    // Note: MAGAZINE already registered above (line 64) from a previously-orphaned part system; reused here.
 
     public static final DeferredItem<Item> KEVLAR_VEST =
             ITEMS.register("kevlar_vest",

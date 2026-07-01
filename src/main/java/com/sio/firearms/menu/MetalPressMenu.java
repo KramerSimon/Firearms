@@ -125,6 +125,24 @@ public class MetalPressMenu extends AbstractContainerMenu {
             return;
         }
 
+        // rubber_sheet + rubber_sheet → grip (molded polymer handle)
+        if (slotIs(0, "firearms:rubber_sheet") && slotIs(1, "firearms:rubber_sheet")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.GRIP.get()));
+            return;
+        }
+
+        // steel_ingot + spring → magazine (spring-fed ammo feed)
+        if (slotIs(0, "firearms:steel_ingot") && slotIs(1, "firearms:spring")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.MAGAZINE.get()));
+            return;
+        }
+
+        // steel_ingot + rubber_sheet → stock (metal frame + polymer cheek rest)
+        if (slotIs(0, "firearms:steel_ingot") && slotIs(1, "firearms:rubber_sheet")) {
+            handler.setStackInSlot(2, new ItemStack(ModItems.STOCK.get()));
+            return;
+        }
+
         handler.setStackInSlot(2, ItemStack.EMPTY);
     }
 

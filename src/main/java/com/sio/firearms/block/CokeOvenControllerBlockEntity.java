@@ -9,6 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +19,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -23,7 +27,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuProvider, IMultiblockPreview {
 
     public static final int MAX_PROCESS_TIME = 600;
     public static final int CREOSOTE_PER_CYCLE = 100;
@@ -173,6 +180,49 @@ public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuPr
         }
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (min corner of the 3×3×3 cube).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block brick = ModBlocks.COKE_OVEN_BRICK.get();
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                for (int z = 0; z < 3; z++) {
+                    BlockPos p = origin.offset(x, y, z);
+                    if (!p.equals(origin)) map.put(p, brick);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
@@ -180,6 +230,7 @@ public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuPr
         tag.put("CreosoteTank", creosoteTank.writeToNBT(registries, new CompoundTag()));
         tag.putInt("Progress", progress);
         tag.putBoolean("StructureValid", structureValid);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -189,5 +240,6 @@ public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuPr
         if (tag.contains("CreosoteTank")) creosoteTank.readFromNBT(registries, tag.getCompound("CreosoteTank"));
         progress = tag.getInt("Progress");
         structureValid = tag.getBoolean("StructureValid");
+        previewActive = tag.getBoolean("PreviewActive");
     }
 }

@@ -5,6 +5,7 @@ import com.sio.firearms.block.FluidPipeBlock;
 import com.sio.firearms.block.FluidPipeBlockEntity;
 import com.sio.firearms.block.FluidPortBlock;
 import com.sio.firearms.block.FluidPortBlockEntity;
+import com.sio.firearms.block.IMultiblockPreview;
 import com.sio.firearms.block.ItemPipeBlock;
 import com.sio.firearms.block.ItemPipeBlockEntity;
 import com.sio.firearms.block.WireBlock;
@@ -132,6 +133,17 @@ public class WrenchItem extends Item {
                 port.cycleTargetFluid();
                 ctx.getPlayer().displayClientMessage(
                         Component.literal("Fluid Port: Targeting " + port.getTargetFluidDisplayName()), true);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        // ── Multiblock controllers — toggle the ghost structure preview ─────────
+        if (level.getBlockEntity(pos) instanceof IMultiblockPreview preview) {
+            boolean nowActive = !preview.isPreviewActive();
+            preview.setPreviewActive(nowActive);
+            if (ctx.getPlayer() != null) {
+                String msg = nowActive ? "Structure preview: ON" : "Structure preview: OFF";
+                ctx.getPlayer().displayClientMessage(Component.literal(msg), true);
             }
             return InteractionResult.SUCCESS;
         }

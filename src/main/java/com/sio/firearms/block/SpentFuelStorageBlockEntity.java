@@ -12,6 +12,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.Level;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,13 +22,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class SpentFuelStorageBlockEntity extends BlockEntity implements MenuProvider {
+public class SpentFuelStorageBlockEntity extends BlockEntity implements MenuProvider, IMultiblockPreview {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int SLOTS = 9;
@@ -184,11 +190,68 @@ public class SpentFuelStorageBlockEntity extends BlockEntity implements MenuProv
         return new SpentFuelStorageMenu(containerId, playerInventory, inventory, data);
     }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: the controller sits in the wall layer, corner = origin.below() (dx=0 dz=0).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        BlockPos corner = origin.below();
+        Block base = ModBlocks.SPENT_FUEL_STORAGE_BASE.get();
+        Block wall = ModBlocks.SPENT_FUEL_STORAGE_WALL.get();
+        for (int dx = 0; dx < 5; dx++) {
+            for (int dz = 0; dz < 5; dz++) {
+                map.put(corner.offset(dx, 0, dz), base);
+            }
+        }
+        for (int dx = 0; dx < 5; dx++) {
+            for (int dz = 0; dz < 5; dz++) {
+                BlockPos p = corner.offset(dx, 1, dz);
+                if (!p.equals(origin)) map.put(p, base);
+            }
+        }
+        for (int dy = 2; dy <= 3; dy++) {
+            for (int dx = 0; dx < 5; dx++) {
+                for (int dz = 0; dz < 5; dz++) {
+                    if (dx > 0 && dx < 4 && dz > 0 && dz < 4) continue;
+                    map.put(corner.offset(dx, dy, dz), wall);
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putBoolean("StructureValid", structureValid);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -196,5 +259,6 @@ public class SpentFuelStorageBlockEntity extends BlockEntity implements MenuProv
         super.loadAdditional(tag, registries);
         if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         structureValid = tag.getBoolean("StructureValid");
+        previewActive = tag.getBoolean("PreviewActive");
     }
 }

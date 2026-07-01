@@ -80,7 +80,23 @@ public class MetalPressJeiRecipe {
                 new MetalPressJeiRecipe(
                         new ItemStack(Items.GLASS),
                         new ItemStack(Items.IRON_NUGGET),
-                        new ItemStack(ModItems.SYRINGE.get()))
+                        new ItemStack(ModItems.SYRINGE.get())),
+                // ── Gun Parts (intermediate) ───────────────────────────────────
+                // rubber_sheet x2 → grip
+                new MetalPressJeiRecipe(
+                        new ItemStack(ModItems.RUBBER_SHEET.get()),
+                        new ItemStack(ModItems.RUBBER_SHEET.get()),
+                        new ItemStack(ModItems.GRIP.get())),
+                // steel_ingot + spring → magazine
+                new MetalPressJeiRecipe(
+                        new ItemStack(ModItems.STEEL_INGOT.get()),
+                        new ItemStack(ModItems.SPRING.get()),
+                        new ItemStack(ModItems.MAGAZINE.get())),
+                // steel_ingot + rubber_sheet → stock
+                new MetalPressJeiRecipe(
+                        new ItemStack(ModItems.STEEL_INGOT.get()),
+                        new ItemStack(ModItems.RUBBER_SHEET.get()),
+                        new ItemStack(ModItems.STOCK.get()))
         );
     }
 }

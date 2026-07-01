@@ -1,16 +1,21 @@
 package com.sio.firearms.entity;
 
+import com.sio.firearms.item.WrenchItem;
 import com.sio.firearms.registry.ModEntities;
+import com.sio.firearms.registry.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,7 +47,6 @@ public class AircraftEntity extends Entity {
 
     private float   currentSpeed  = 0f;
     private int     fireCooldown  = 0;
-    private int     fuelTick      = 0;
 
     public AircraftEntity(EntityType<? extends AircraftEntity> type, Level level) {
         super(type, level);
@@ -84,7 +88,7 @@ public class AircraftEntity extends Entity {
         int fuel = getFuel();
 
         if (hasPassenger && fuel > 0) {
-            // Yaw (A/D)
+            // Yaw (A/D) — bank left/right
             if (inputLeft)  setYRot(getYRot() - YAW_RATE);
             if (inputRight) setYRot(getYRot() + YAW_RATE);
 
@@ -94,17 +98,14 @@ public class AircraftEntity extends Entity {
             if (inputDown) pitch = Math.min(pitch + PITCH_RATE,  30f);
             setAircraftPitch(pitch);
 
-            // Throttle (W/S)
+            // Throttle (W=increase speed, S=decrease speed)
             if (inputForward) currentSpeed = Math.min(currentSpeed + ACCELERATION, MAX_SPEED);
             else if (inputBack) currentSpeed = Math.max(currentSpeed - DECELERATION * 2, 0f);
             else currentSpeed = Math.max(currentSpeed - DECELERATION, 0f);
 
-            // Fuel consumption: 2 mB/tick when engine running
+            // Fuel consumption: 2 mB/tick while throttle > 0
             if (currentSpeed > 0.01f) {
-                if (++fuelTick >= 1) {
-                    fuelTick = 0;
-                    setFuel(Math.max(0, fuel - 2));
-                }
+                setFuel(Math.max(0, fuel - 2));
             }
 
             // Fire weapon
@@ -117,8 +118,13 @@ public class AircraftEntity extends Entity {
             currentSpeed = Math.max(currentSpeed - DECELERATION, 0f);
         }
 
-        // ── Movement physics ─────────────────────────────────────────────────
-        if (currentSpeed > 0.01f) {
+        // ── Movement physics: velocity is derived purely from yaw + pitch + throttle ──
+        // Below TAKEOFF_SPEED while still on the ground, the aircraft taxis (horizontal only).
+        // Once airborne (either past takeoff speed, or already off the ground), full 3D flight
+        // vector applies. Gravity only kicks in once throttle is ~0 and the aircraft isn't grounded.
+        boolean airborne = !onGround() || currentSpeed >= TAKEOFF_SPEED;
+
+        if (currentSpeed > 0.01f && airborne) {
             double yawRad   = Math.toRadians(getYRot());
             double pitchRad = Math.toRadians(getAircraftPitch());
 
@@ -126,20 +132,21 @@ public class AircraftEntity extends Entity {
             double vy =  Math.sin(-pitchRad) * currentSpeed;
             double vz =  Math.cos(yawRad)  * Math.cos(pitchRad) * currentSpeed;
 
-            // If flying fast enough, negate gravity
-            if (currentSpeed >= TAKEOFF_SPEED) {
-                vy = Math.max(vy, 0.02);  // minimum lift
-            }
-
             setDeltaMovement(vx, vy, vz);
-        } else {
-            // Gravity when slow / stopped
+        } else if (currentSpeed > 0.01f) {
+            // Taxiing on the ground: below takeoff speed, no lift yet
+            double yawRad = Math.toRadians(getYRot());
+            double vx = -Math.sin(yawRad) * currentSpeed;
+            double vz =  Math.cos(yawRad) * currentSpeed;
+            setDeltaMovement(vx, 0, vz);
+        } else if (!onGround()) {
+            // Throttle is 0 and airborne — fall
             Vec3 dm = getDeltaMovement();
-            if (!onGround()) {
-                setDeltaMovement(dm.x * 0.9, dm.y - GRAVITY, dm.z * 0.9);
-            } else {
-                setDeltaMovement(dm.x * 0.8, 0, dm.z * 0.8);
-            }
+            setDeltaMovement(dm.x * 0.9, dm.y - GRAVITY, dm.z * 0.9);
+        } else {
+            // Throttle is 0 and grounded — friction to a stop
+            Vec3 dm = getDeltaMovement();
+            setDeltaMovement(dm.x * 0.8, 0, dm.z * 0.8);
         }
 
         move(MoverType.SELF, getDeltaMovement());
@@ -170,9 +177,22 @@ public class AircraftEntity extends Entity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!level().isClientSide() && !isVehicle()) {
-            player.startRiding(this);
-            return InteractionResult.SUCCESS;
+        if (!level().isClientSide()) {
+            ItemStack held = player.getItemInHand(hand);
+
+            // Wrench + no passengers → dismantle and return schematic
+            if (held.getItem() instanceof WrenchItem && !isVehicle()) {
+                level().playSound(null, getX(), getY(), getZ(),
+                        SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 1.0f, 0.8f);
+                player.addItem(new ItemStack(ModItems.AIRCRAFT_SCHEMATIC.get()));
+                discard();
+                return InteractionResult.SUCCESS;
+            }
+
+            if (!isVehicle()) {
+                player.startRiding(this);
+                return InteractionResult.SUCCESS;
+            }
         }
         return InteractionResult.PASS;
     }

@@ -10,6 +10,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +23,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock implements MenuProvider {
+import java.util.HashMap;
+import java.util.Map;
+
+public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock implements MenuProvider, IMultiblockPreview {
 
     public static final int CAPACITY = 200_000;
     public static final int MAX_RECEIVE = 2000;
@@ -142,12 +148,68 @@ public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock imple
 
     public boolean isStructureValid() { return structureValid; }
 
+    // ── Multiblock preview ghost ────────────────────────────────────────────────
+    private boolean previewActive = false;
+
+    @Override
+    public boolean isPreviewActive() { return previewActive; }
+
+    @Override
+    public void setPreviewActive(boolean active) {
+        previewActive = active;
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    // Canonical layout: origin is the controller's own position (ox=0, oz=0 corner of the 3×3).
+    @Override
+    public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
+        Map<BlockPos, Block> map = new HashMap<>();
+        Block base = ModBlocks.CRYSTAL_GROWTH_BASE.get();
+        Block wall = ModBlocks.CRYSTAL_GROWTH_WALL.get();
+        Block top  = ModBlocks.CRYSTAL_GROWTH_TOP.get();
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                BlockPos p = origin.offset(x, 0, z);
+                if (!p.equals(origin)) map.put(p, base);
+            }
+        }
+        for (int y = 1; y <= 2; y++) {
+            for (int x = 0; x < 3; x++) {
+                for (int z = 0; z < 3; z++) {
+                    map.put(origin.offset(x, y, z), wall);
+                }
+            }
+        }
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                map.put(origin.offset(x, 3, z), top);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putInt("Progress", progress);
         tag.putBoolean("StructureValid", structureValid);
+        tag.putBoolean("PreviewActive", previewActive);
     }
 
     @Override
@@ -156,5 +218,6 @@ public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock imple
         if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         progress = tag.getInt("Progress");
         structureValid = tag.getBoolean("StructureValid");
+        previewActive = tag.getBoolean("PreviewActive");
     }
 }

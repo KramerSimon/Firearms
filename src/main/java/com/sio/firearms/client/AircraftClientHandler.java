@@ -14,16 +14,11 @@ import net.neoforged.neoforge.network.PacketDistributor;
 @EventBusSubscriber(modid = Firearms.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class AircraftClientHandler {
 
-    private static boolean prevForward, prevBack, prevLeft, prevRight;
-    private static boolean prevUp, prevDown, prevFire;
-
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || !mc.player.isPassenger()
                 || !(mc.player.getVehicle() instanceof AircraftEntity aircraft)) {
-            prevForward = prevBack = prevLeft = prevRight = false;
-            prevUp = prevDown = prevFire = false;
             return;
         }
 
@@ -35,15 +30,10 @@ public class AircraftClientHandler {
         boolean down    = mc.options.keyShift.isDown();
         boolean fire    = mc.options.keyAttack.isDown();
 
-        if (forward != prevForward || back != prevBack || left != prevLeft || right != prevRight
-                || up != prevUp || down != prevDown || fire != prevFire) {
-            PacketDistributor.sendToServer(
-                    new AircraftInputPayload(forward, back, left, right, up, down, fire));
-            prevForward = forward; prevBack  = back;
-            prevLeft    = left;   prevRight = right;
-            prevUp      = up;     prevDown  = down;
-            prevFire    = fire;
-        }
+        // Sent every tick while riding — not just on change — so the server always
+        // has fresh input state even across remounts or brief packet handling gaps.
+        PacketDistributor.sendToServer(
+                new AircraftInputPayload(forward, back, left, right, up, down, fire));
 
         // HUD: fuel and speed
         int fuel  = aircraft.getFuel();

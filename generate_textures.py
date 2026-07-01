@@ -1818,6 +1818,81 @@ def make_neodymium_ore_block():
     save(img, os.path.join(BLOCK, "neodymium_ore.png"))
 
 
+# ── Gun Parts (intermediate) ─────────────────────────────────────────────────
+
+def make_barrel():
+    """Precision-machined steel gun barrel — tube profile with a bored muzzle."""
+    ED = ( 55,  56,  60, 255)
+    HI = (168, 170, 178, 255)
+    MD = (108, 110, 118, 255)
+    SH = ( 66,  68,  74, 255)
+    BO = ( 15,  15,  17, 255)
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    d.rectangle([1, 6, 14, 9], fill=MD, outline=ED)
+    d.rectangle([1, 6, 14, 6], fill=HI)
+    d.rectangle([1, 9, 14, 9], fill=SH)
+    d.ellipse([12, 6, 15, 9], fill=BO, outline=ED)
+    save(img, os.path.join(ITEM, "barrel.png"))
+
+
+def make_receiver():
+    """Gun receiver — the main machined steel body, with top rail and ejection port."""
+    ED = ( 50,  52,  56, 255)
+    HI = (145, 148, 155, 255)
+    MD = ( 90,  93, 100, 255)
+    SH = ( 55,  57,  63, 255)
+    EJ = ( 28,  29,  32, 255)
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    d.rectangle([1, 3, 14, 12], fill=MD, outline=ED)
+    d.rectangle([2, 3, 13, 4], fill=HI)
+    d.rectangle([2, 11, 13, 12], fill=SH)
+    d.rectangle([5, 6, 8, 8], fill=EJ)
+    save(img, os.path.join(ITEM, "receiver.png"))
+
+
+def make_trigger_group():
+    """Trigger group — sear housing, trigger guard loop, and trigger bar."""
+    ED = ( 45,  46,  50, 255)
+    MD = ( 88,  90,  97, 255)
+    HI = (140, 142, 150, 255)
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    d.rectangle([5, 2, 10, 5], fill=MD, outline=ED)
+    d.ellipse([3, 6, 12, 14], outline=ED, width=2)
+    d.line([(8, 5), (8, 11)], fill=HI, width=2)
+    save(img, os.path.join(ITEM, "trigger_group.png"))
+
+
+def make_grip():
+    """Grip — molded rubber pistol grip with checkered texture."""
+    ED = ( 35,  33,  30, 255)
+    MD = ( 60,  56,  50, 255)
+    HI = ( 80,  75,  66, 255)
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    d.polygon([(4, 2), (11, 2), (13, 14), (6, 14)], fill=MD, outline=ED)
+    d.rectangle([4, 2, 11, 3], fill=HI)
+    for y in range(5, 13, 2):
+        d.line([(5, y), (11, y)], fill=ED)
+    save(img, os.path.join(ITEM, "grip.png"))
+
+
+def make_stock():
+    """Stock — rifle buttstock, straight comb tapering to an angled buttplate."""
+    ED = ( 55,  40,  28, 255)
+    MD = ( 92,  70,  48, 255)
+    HI = (122,  96,  68, 255)
+    SH = ( 68,  50,  34, 255)
+    img = px(16, 16)
+    d = ImageDraw.Draw(img)
+    d.polygon([(1, 6), (11, 5), (14, 9), (11, 10), (1, 9)], fill=MD, outline=ED)
+    d.line([(1, 6), (11, 5)], fill=HI)
+    d.line([(1, 9), (11, 10)], fill=SH)
+    save(img, os.path.join(ITEM, "stock.png"))
+
+
 # ── main ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Generating Firearms mod textures...")
@@ -1900,5 +1975,12 @@ if __name__ == "__main__":
     make_neodymium_ingot()
     make_beryllium_copper_ingot()
     make_neodymium_ore_block()
+
+    # ── Gun Parts (intermediate) ──────────────────────────────────────────────
+    make_barrel()
+    make_receiver()
+    make_trigger_group()
+    make_grip()
+    make_stock()
 
     print("Done.")
