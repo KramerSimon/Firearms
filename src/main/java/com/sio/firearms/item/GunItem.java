@@ -1,5 +1,6 @@
 package com.sio.firearms.item;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.config.FirearmsConfig;
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.registry.ModDataComponents;
@@ -16,10 +17,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
 
 import java.util.List;
 
 public class GunItem extends Item {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private final int damage;
     private final int fireRate;
@@ -92,17 +96,31 @@ public class GunItem extends Item {
 
         setAmmo(stack, currentAmmo - 1);
 
-        boolean ap = Boolean.TRUE.equals(stack.get(ModDataComponents.ARMOR_PIERCING.get()));
-        boolean matchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
-        boolean refined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
-        boolean cordite = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_CORDITE_AMMO.get()));
-        boolean explosive = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_EXPLOSIVE_AMMO.get()));
+        // Priority detection order: AP -> Explosive -> Cordite -> Match Grade -> Refined -> Normal.
+        // Reload logic only ever sets one of these flags at a time, but the ordering here mirrors
+        // that priority so the highest tier ammo always wins if multiple flags were somehow set.
+        boolean rawAp = Boolean.TRUE.equals(stack.get(ModDataComponents.ARMOR_PIERCING.get()));
+        boolean rawExplosive = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_EXPLOSIVE_AMMO.get()));
+        boolean rawCordite = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_CORDITE_AMMO.get()));
+        boolean rawMatchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
+        boolean rawRefined = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_REFINED_AMMO.get()));
+
+        boolean ap = rawAp;
+        boolean explosive = !ap && rawExplosive;
+        boolean cordite = !ap && !explosive && rawCordite;
+        boolean matchGrade = !ap && !explosive && !cordite && rawMatchGrade;
+        boolean refined = !ap && !explosive && !cordite && !matchGrade && rawRefined;
+
+        String ammoType = ap ? "AP" : explosive ? "Explosive" : cordite ? "Cordite" : matchGrade ? "Match Grade" : refined ? "Refined" : "Normal";
+
         WeaponQuality quality = getQuality(stack);
-        int actualDamage = (int) ((ap ? 20 : (cordite ? 14 : (refined ? 10 : damage))) * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get() * quality.getDamageMultiplier());
+        int baseDamage = ap ? 20 : (refined ? 10 : damage);
+        int actualDamage = (int) (baseDamage * FirearmsConfig.GUN_DAMAGE_MULTIPLIER.get() * quality.getDamageMultiplier());
         float inaccuracy = matchGrade ? 0.0F : 0.0F; // match grade guarantees zero spread; base GunItem already fires straight
+        LOGGER.debug("[Gun] Loaded ammo type={} inaccuracy={}", ammoType, inaccuracy);
         BulletEntity bullet = new BulletEntity(level, player, actualDamage);
         bullet.setArmorPiercing(ap);
-        bullet.setPartialArmorPiercing(cordite);
+        bullet.setCordite(cordite);
         bullet.setExplosive(explosive);
         bullet.setMatchGrade(matchGrade);
         bullet.setShooterGun(stack);

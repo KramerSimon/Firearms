@@ -5,12 +5,15 @@ import com.sio.firearms.item.GunItem;
 import com.sio.firearms.registry.ModDataComponents;
 import com.sio.firearms.registry.ModItems;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public record ReloadGunPayload() implements CustomPacketPayload {
 
@@ -19,6 +22,33 @@ public record ReloadGunPayload() implements CustomPacketPayload {
 
     public static final StreamCodec<ByteBuf, ReloadGunPayload> STREAM_CODEC =
             StreamCodec.unit(new ReloadGunPayload());
+
+    // Priority order: AP -> Explosive -> Cordite -> Match Grade -> Refined -> Normal.
+    // Earlier entries take priority when the player is carrying multiple ammo types.
+    private static final DeferredHolder<Item, ? extends Item>[] AMMO_ITEMS_IN_PRIORITY = ammoPriorityArray();
+    private static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>[] AMMO_FLAGS_IN_PRIORITY = ammoFlagPriorityArray();
+
+    @SuppressWarnings("unchecked")
+    private static DeferredHolder<Item, ? extends Item>[] ammoPriorityArray() {
+        return new DeferredHolder[] {
+                ModItems.ARMOR_PIERCING_BULLET,
+                ModItems.EXPLOSIVE_BULLET,
+                ModItems.CORDITE_BULLET,
+                ModItems.MATCH_GRADE_BULLET,
+                ModItems.REFINED_BULLET
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    private static DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>[] ammoFlagPriorityArray() {
+        return new DeferredHolder[] {
+                ModDataComponents.ARMOR_PIERCING,
+                ModDataComponents.USING_EXPLOSIVE_AMMO,
+                ModDataComponents.USING_CORDITE_AMMO,
+                ModDataComponents.USING_MATCH_GRADE_AMMO,
+                ModDataComponents.USING_REFINED_AMMO
+        };
+    }
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -36,51 +66,31 @@ public record ReloadGunPayload() implements CustomPacketPayload {
             int needed = maxAmmo - currentAmmo;
             if (needed <= 0) return;
 
-            // Priority: Match Grade > Refined > Standard
-            int availableMatchGrade = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                if (player.getInventory().getItem(i).is(ModItems.MATCH_GRADE_BULLET.get()))
-                    availableMatchGrade += player.getInventory().getItem(i).getCount();
-            }
+            for (int priority = 0; priority < AMMO_ITEMS_IN_PRIORITY.length; priority++) {
+                Item ammoItem = AMMO_ITEMS_IN_PRIORITY[priority].get();
 
-            if (availableMatchGrade > 0) {
-                int toLoad = Math.min(needed, availableMatchGrade);
+                int available = 0;
+                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                    if (player.getInventory().getItem(i).is(ammoItem))
+                        available += player.getInventory().getItem(i).getCount();
+                }
+                if (available <= 0) continue;
+
+                int toLoad = Math.min(needed, available);
                 int remaining = toLoad;
                 for (int i = 0; i < player.getInventory().getContainerSize() && remaining > 0; i++) {
                     ItemStack slot = player.getInventory().getItem(i);
-                    if (slot.is(ModItems.MATCH_GRADE_BULLET.get())) {
+                    if (slot.is(ammoItem)) {
                         int take = Math.min(remaining, slot.getCount());
                         if (!player.isCreative()) slot.shrink(take);
                         remaining -= take;
                     }
                 }
+
                 gunItem.setAmmo(held, currentAmmo + toLoad);
-                held.set(ModDataComponents.USING_MATCH_GRADE_AMMO.get(), true);
-                held.set(ModDataComponents.USING_REFINED_AMMO.get(), false);
-                return;
-            }
-
-            // Prefer refined bullets over standard bullets
-            int availableRefined = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                if (player.getInventory().getItem(i).is(ModItems.REFINED_BULLET.get()))
-                    availableRefined += player.getInventory().getItem(i).getCount();
-            }
-
-            if (availableRefined > 0) {
-                int toLoad = Math.min(needed, availableRefined);
-                int remaining = toLoad;
-                for (int i = 0; i < player.getInventory().getContainerSize() && remaining > 0; i++) {
-                    ItemStack slot = player.getInventory().getItem(i);
-                    if (slot.is(ModItems.REFINED_BULLET.get())) {
-                        int take = Math.min(remaining, slot.getCount());
-                        if (!player.isCreative()) slot.shrink(take);
-                        remaining -= take;
-                    }
+                for (int i = 0; i < AMMO_FLAGS_IN_PRIORITY.length; i++) {
+                    held.set(AMMO_FLAGS_IN_PRIORITY[i].get(), i == priority);
                 }
-                gunItem.setAmmo(held, currentAmmo + toLoad);
-                held.set(ModDataComponents.USING_REFINED_AMMO.get(), true);
-                held.set(ModDataComponents.USING_MATCH_GRADE_AMMO.get(), false);
                 return;
             }
 
@@ -104,8 +114,9 @@ public record ReloadGunPayload() implements CustomPacketPayload {
                 }
             }
             gunItem.setAmmo(held, currentAmmo + toLoad);
-            held.set(ModDataComponents.USING_REFINED_AMMO.get(), false);
-            held.set(ModDataComponents.USING_MATCH_GRADE_AMMO.get(), false);
+            for (DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> flag : AMMO_FLAGS_IN_PRIORITY) {
+                held.set(flag.get(), false);
+            }
         });
     }
 }

@@ -1,5 +1,6 @@
 package com.sio.firearms.item;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.entity.BulletEntity;
 import com.sio.firearms.registry.ModDataComponents;
 import net.minecraft.network.chat.Component;
@@ -10,9 +11,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
 
 public class ShotgunItem extends GunItem {
 
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final int PELLET_COUNT = 6;
     private static final float SPREAD = 0.3f;
 
@@ -36,6 +39,7 @@ public class ShotgunItem extends GunItem {
 
         boolean matchGrade = Boolean.TRUE.equals(stack.get(ModDataComponents.USING_MATCH_GRADE_AMMO.get()));
         float spread = matchGrade ? 0.0F : SPREAD;
+        LOGGER.debug("[Shotgun] Loaded ammo type={} inaccuracy={}", matchGrade ? "Match Grade" : "Normal", spread);
         for (int i = 0; i < PELLET_COUNT; i++) {
             BulletEntity bullet = new BulletEntity(level, player, 4);
             bullet.setShooterGun(stack);

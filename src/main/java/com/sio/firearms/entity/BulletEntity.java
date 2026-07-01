@@ -1,5 +1,6 @@
 package com.sio.firearms.entity;
 
+import com.mojang.logging.LogUtils;
 import com.sio.firearms.item.BulletproofVestItem;
 import com.sio.firearms.registry.ModDataComponents;
 import com.sio.firearms.registry.ModEffects;
@@ -7,6 +8,7 @@ import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModItems;
 import com.sio.firearms.registry.ModSounds;
 import net.minecraft.sounds.SoundSource;
+import org.slf4j.Logger;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -31,11 +33,15 @@ import java.util.UUID;
 
 public class BulletEntity extends Projectile implements ItemSupplier {
 
+    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final float ARMOR_PIERCING_BYPASS_RATIO = 0.5f;
+    private static final float CORDITE_DAMAGE_MULTIPLIER = 1.4f;
+
     private float damage = 8.0F;
     private int life = 0;
     private int piercingCount = 0;
     private boolean armorPiercing = false;
-    private boolean partialArmorPiercing = false;
+    private boolean cordite = false;
     private boolean explosive = false;
     private boolean matchGrade = false;
     private final Set<UUID> playersFlybyPlayed = new HashSet<>();
@@ -62,8 +68,8 @@ public class BulletEntity extends Projectile implements ItemSupplier {
         this.armorPiercing = ap;
     }
 
-    public void setPartialArmorPiercing(boolean partial) {
-        this.partialArmorPiercing = partial;
+    public void setCordite(boolean cordite) {
+        this.cordite = cordite;
     }
 
     public void setExplosive(boolean explosive) {
@@ -135,15 +141,21 @@ public class BulletEntity extends Projectile implements ItemSupplier {
             Entity target = result.getEntity();
             Entity owner = getOwner();
             if (armorPiercing) {
-                target.hurt(damageSources().magic(), damage);
-            } else if (partialArmorPiercing) {
-                // 30% bypasses armor as magic, 70% is reduced by armor
-                target.hurt(damageSources().magic(), damage * 0.3f);
-                target.hurt(damageSources().thrown(this, owner), damage * 0.7f);
+                // 50% of the damage bypasses armor entirely, the rest is reduced normally
+                float bypassedDamage = damage * ARMOR_PIERCING_BYPASS_RATIO;
+                float normalDamage = damage - bypassedDamage;
+                target.hurt(damageSources().magic(), bypassedDamage);
+                target.hurt(damageSources().thrown(this, owner), normalDamage);
+                LOGGER.debug("[Bullet] AP hit {} for {} damage (armor bypassed)", target.getName().getString(), damage);
+            } else if (cordite) {
+                float corditeDamage = damage * CORDITE_DAMAGE_MULTIPLIER;
+                target.hurt(damageSources().thrown(this, owner), corditeDamage);
+                LOGGER.debug("[Bullet] Cordite hit {} for {} damage (1.4x multiplier applied)", target.getName().getString(), corditeDamage);
             } else {
                 target.hurt(damageSources().thrown(this, owner), damage);
             }
             if (explosive) {
+                LOGGER.debug("[Bullet] Explosive hit at {},{},{} — creating explosion", getX(), getY(), getZ());
                 level().explode(null, getX(), getY(), getZ(), 1.0f, false,
                         net.minecraft.world.level.Level.ExplosionInteraction.NONE);
             }
