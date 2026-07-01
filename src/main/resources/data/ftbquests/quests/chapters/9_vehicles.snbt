@@ -1,0 +1,425 @@
+{
+	id: "1000000000000009",
+	group: "",
+	order_index: 8,
+	filename: "9_vehicles",
+	title: "Vehicles",
+	icon: "firearms:tank_hull",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Build the Vehicle Garage",
+			subtitle: "Where tanks are born",
+			description: [
+				"The Vehicle Garage is a multiblock built from Garage Floor, Wall, Roof, Door, and a Controller.",
+				"It assembles vehicles from their component parts.",
+				"Ensure you have enough space - the structure is large."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "2000000000000050",
+			tasks: [
+				{
+					id: "300000000000005B",
+					type: "item",
+					item: "firearms:garage_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000051",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Steel Plate",
+			subtitle: "Armor plating for vehicles",
+			description: [
+				"Steel Plates are stamped in the Metal Press and used throughout vehicle construction."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000050"],
+			id: "2000000000000051",
+			tasks: [
+				{
+					id: "300000000000005C",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 16L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000052",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 16
+				}
+			]
+		},
+		{
+			title: "Craft a Tank Hull",
+			subtitle: "Armoured chassis",
+			description: [
+				"The Tank Hull is the main body of the vehicle.",
+				"Craft it in the Assembly Bench from Steel Plates and Hardened Steel Ingots.",
+				"It defines the tank's armour rating and weight."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000051"],
+			id: "2000000000000052",
+			tasks: [
+				{
+					id: "300000000000005D",
+					type: "item",
+					item: "firearms:tank_hull",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000053",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Tank Tracks",
+			subtitle: "Keep on rolling",
+			description: [
+				"A tank needs a matched pair of Tank Tracks to move under its own power."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000052"],
+			id: "2000000000000053",
+			tasks: [
+				{
+					id: "300000000000005E",
+					type: "item",
+					item: "firearms:tank_tracks",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000054",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 16
+				}
+			]
+		},
+		{
+			title: "Craft a Tank Turret",
+			subtitle: "Rotating firepower",
+			description: [
+				"The Tank Turret rotates independently of the hull, letting the cannon track targets."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000053"],
+			id: "2000000000000054",
+			tasks: [
+				{
+					id: "300000000000005F",
+					type: "item",
+					item: "firearms:tank_turret",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000055",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft a Diesel Engine",
+			subtitle: "Power for the tracks",
+			description: [
+				"The Diesel Engine drives the tank tracks - fill it with diesel fuel from the Refinery."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000054"],
+			id: "2000000000000055",
+			tasks: [
+				{
+					id: "3000000000000060",
+					type: "item",
+					item: "firearms:diesel_engine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000056",
+					type: "item",
+					item: "firearms:diesel_bucket",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft a Tank Cannon",
+			subtitle: "The main gun",
+			description: [
+				"The Tank Cannon is the primary weapon of the vehicle, mounted in the turret."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000055"],
+			id: "2000000000000056",
+			tasks: [
+				{
+					id: "3000000000000061",
+					type: "item",
+					item: "firearms:tank_cannon",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000057",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 32
+				}
+			]
+		},
+		{
+			title: "Build the Tank",
+			subtitle: "Assemble it in the Vehicle Garage",
+			description: [
+				"Bring the Hull, Tracks, Turret, Diesel Engine, and Cannon to the Garage Controller.",
+				"Insert the Tank Schematic and activate the garage to assemble your tank."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000056"],
+			id: "2000000000000057",
+			tasks: [
+				{
+					id: "3000000000000062",
+					type: "item",
+					item: "firearms:tank_schematic",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000058",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 64
+				}
+			]
+		},
+		{
+			title: "Build an Aircraft Hangar",
+			subtitle: "Where planes take shape",
+			description: [
+				"The Aircraft Hangar mirrors the Vehicle Garage, but sized and shaped for aircraft assembly."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000057"],
+			id: "2000000000000058",
+			tasks: [
+				{
+					id: "3000000000000063",
+					type: "item",
+					item: "firearms:hangar_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000059",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft an Aircraft Fuselage",
+			subtitle: "The airframe's backbone",
+			description: [
+				"The Fuselage forms the main body of the aircraft, housing the cockpit and engine."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000058"],
+			id: "2000000000000059",
+			tasks: [
+				{
+					id: "3000000000000064",
+					type: "item",
+					item: "firearms:aircraft_fuselage",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000005A",
+					type: "item",
+					item: "firearms:aluminum_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Aircraft Wings",
+			subtitle: "Lift off",
+			description: [
+				"A matched pair of Wings generates the lift needed to get your aircraft airborne."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000059"],
+			id: "200000000000005A",
+			tasks: [
+				{
+					id: "3000000000000065",
+					type: "item",
+					item: "firearms:aircraft_wings",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000005B",
+					type: "item",
+					item: "firearms:aluminum_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft a Jet Engine",
+			subtitle: "Break the sound barrier",
+			description: [
+				"The Jet Engine runs on refined Kerosene and propels the aircraft forward at high speed."
+			],
+			x: 0.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000005A"],
+			id: "200000000000005B",
+			tasks: [
+				{
+					id: "3000000000000066",
+					type: "item",
+					item: "firearms:jet_engine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000005C",
+					type: "item",
+					item: "firearms:kerosene_bucket",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft Cockpit Avionics",
+			subtitle: "Fly with precision",
+			description: [
+				"Cockpit Avionics give the pilot instrumentation and control surfaces for stable flight."
+			],
+			x: 0.0d,
+			y: 4.0d,
+			shape: "default",
+			dependencies: ["200000000000005B"],
+			id: "200000000000005C",
+			tasks: [
+				{
+					id: "3000000000000067",
+					type: "item",
+					item: "firearms:cockpit_avionics",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000005D",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Build the Aircraft",
+			subtitle: "Assemble it in the Hangar",
+			description: [
+				"Bring the Fuselage, Wings, Jet Engine, and Cockpit Avionics to the Hangar Controller.",
+				"Insert the Aircraft Schematic and activate the hangar to assemble your aircraft."
+			],
+			x: 2.0d,
+			y: 4.0d,
+			shape: "default",
+			dependencies: ["200000000000005C"],
+			id: "200000000000005D",
+			tasks: [
+				{
+					id: "3000000000000068",
+					type: "item",
+					item: "firearms:aircraft_schematic",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000005E",
+					type: "item",
+					item: "firearms:kerosene_bucket",
+					count: 8
+				}
+			]
+		}
+	],
+	quest_links: []
+}

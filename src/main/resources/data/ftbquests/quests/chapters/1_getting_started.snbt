@@ -1,5 +1,5 @@
 {
-	id: "0000000000000001",
+	id: "1000000000000001",
 	group: "",
 	order_index: 0,
 	filename: "1_getting_started",
@@ -19,10 +19,10 @@
 			x: 0.0d,
 			y: 0.0d,
 			shape: "default",
-			id: "0000000000000101",
+			id: "2000000000000001",
 			tasks: [
 				{
-					id: "0000000000001101",
+					id: "3000000000000001",
 					type: "item",
 					item: "minecraft:raw_iron",
 					count: 16L,
@@ -31,7 +31,7 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002101",
+					id: "4000000000000001",
 					type: "item",
 					item: "firearms:steel_ingot",
 					count: 4
@@ -39,7 +39,7 @@
 			]
 		},
 		{
-			title: "Smelt Steel Ingots",
+			title: "Craft Steel Ingots",
 			subtitle: "Iron + coal coke = steel",
 			description: [
 				"Use the Coke Oven to produce coal coke, then smelt iron into steel.",
@@ -48,11 +48,11 @@
 			x: 2.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000101"],
-			id: "0000000000000102",
+			dependencies: ["2000000000000001"],
+			id: "2000000000000002",
 			tasks: [
 				{
-					id: "0000000000001102",
+					id: "3000000000000002",
 					type: "item",
 					item: "firearms:steel_ingot",
 					count: 8L,
@@ -61,10 +61,40 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002102",
+					id: "4000000000000002",
 					type: "item",
 					item: "firearms:copper_wire",
 					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Coke Oven",
+			subtitle: "Turn coal into coke",
+			description: [
+				"The Coke Oven converts coal into coal coke, a hotter-burning fuel needed for steel production.",
+				"Stack the Coke Oven Bricks into a chamber and place the Controller to finish the multiblock."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000002"],
+			id: "2000000000000003",
+			tasks: [
+				{
+					id: "3000000000000003",
+					type: "item",
+					item: "firearms:coke_oven_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000003",
+					type: "item",
+					item: "firearms:coke_oven_brick",
+					count: 8
 				}
 			]
 		},
@@ -75,14 +105,14 @@
 				"The Assembly Bench is required to craft all weapons and machines.",
 				"Build one as soon as you have the materials."
 			],
-			x: 4.0d,
+			x: 6.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000102"],
-			id: "0000000000000103",
+			dependencies: ["2000000000000003"],
+			id: "2000000000000004",
 			tasks: [
 				{
-					id: "0000000000001103",
+					id: "3000000000000004",
 					type: "item",
 					item: "firearms:assembly_bench",
 					count: 1L,
@@ -91,7 +121,7 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002103",
+					id: "4000000000000004",
 					type: "item",
 					item: "firearms:hardened_steel_ingot",
 					count: 4
@@ -99,21 +129,79 @@
 			]
 		},
 		{
+			title: "Craft Pistol Parts",
+			subtitle: "Every gun starts with its components",
+			description: [
+				"Use the Assembly Bench to craft each part of a pistol: barrel, receiver, trigger group, grip, and magazine.",
+				"Gather all five before assembling the finished weapon."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000004"],
+			id: "2000000000000005",
+			tasks: [
+				{
+					id: "3000000000000005",
+					type: "item",
+					item: "firearms:barrel",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000006",
+					type: "item",
+					item: "firearms:receiver",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000007",
+					type: "item",
+					item: "firearms:trigger_group",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000008",
+					type: "item",
+					item: "firearms:grip",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000009",
+					type: "item",
+					item: "firearms:magazine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000005",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
 			title: "Craft Your First Pistol",
 			subtitle: "A sidearm for self-defence",
 			description: [
-				"Use the Assembly Bench to craft a Pistol.",
+				"Use the Assembly Bench to craft a Pistol from its parts.",
 				"Load it with bullets and keep it close - this world is dangerous.",
 				"Tip: press R to reload, right-click to aim."
 			],
-			x: 6.0d,
+			x: 10.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000103"],
-			id: "0000000000000104",
+			dependencies: ["2000000000000005"],
+			id: "2000000000000006",
 			tasks: [
 				{
-					id: "0000000000001104",
+					id: "300000000000000A",
 					type: "item",
 					item: "firearms:pistol",
 					count: 1L,
@@ -122,16 +210,73 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002104",
+					id: "4000000000000006",
 					type: "item",
 					item: "firearms:bullet_casing",
 					count: 16
 				},
 				{
-					id: "0000000000002105",
+					id: "4000000000000007",
 					type: "item",
 					item: "firearms:propellant_powder",
 					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Bullets",
+			subtitle: "No gun is useful without ammo",
+			description: [
+				"Combine bullet casings with propellant powder and a projectile to craft bullets.",
+				"Stock up before heading into danger."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000006"],
+			id: "2000000000000007",
+			tasks: [
+				{
+					id: "300000000000000B",
+					type: "item",
+					item: "firearms:bullet",
+					count: 16L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000008",
+					type: "item",
+					item: "firearms:bullet",
+					count: 16
+				}
+			]
+		},
+		{
+			title: "Load and Fire",
+			subtitle: "Put your pistol to work",
+			description: [
+				"Load your pistol with bullets and fire it at a target.",
+				"Tip: press R to reload, right-click to aim, left-click to fire."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000007"],
+			id: "2000000000000008",
+			tasks: [
+				{
+					id: "300000000000000C",
+					type: "checkmark"
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000009",
+					type: "item",
+					item: "firearms:magazine",
+					count: 2
 				}
 			]
 		}

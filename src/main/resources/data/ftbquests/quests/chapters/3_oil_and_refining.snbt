@@ -1,5 +1,5 @@
 {
-	id: "0000000000000003",
+	id: "1000000000000003",
 	group: "",
 	order_index: 2,
 	filename: "3_oil_and_refining",
@@ -10,7 +10,7 @@
 	images: [],
 	quests: [
 		{
-			title: "Strike Oil",
+			title: "Find Oil",
 			subtitle: "Black gold awaits underground",
 			description: [
 				"Oil can be found underground as fluid-filled deposits.",
@@ -20,10 +20,10 @@
 			x: 0.0d,
 			y: 0.0d,
 			shape: "default",
-			id: "0000000000000301",
+			id: "200000000000000E",
 			tasks: [
 				{
-					id: "0000000000001301",
+					id: "3000000000000012",
 					type: "item",
 					item: "firearms:oil_bucket",
 					count: 1L,
@@ -32,7 +32,7 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002301",
+					id: "400000000000000F",
 					type: "item",
 					item: "firearms:steel_ingot",
 					count: 8
@@ -50,11 +50,11 @@
 			x: 2.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000301"],
-			id: "0000000000000302",
+			dependencies: ["200000000000000E"],
+			id: "200000000000000F",
 			tasks: [
 				{
-					id: "0000000000001302",
+					id: "3000000000000013",
 					type: "item",
 					item: "firearms:oil_derrick_controller",
 					count: 1L,
@@ -63,10 +63,70 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002302",
+					id: "4000000000000010",
 					type: "item",
 					item: "firearms:hardened_steel_ingot",
 					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Fluid Tank",
+			subtitle: "Store liquids in bulk",
+			description: [
+				"Fluid Tanks store oil, fuel, and other liquids produced by your machines.",
+				"Connect one to the Oil Derrick to catch its output."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000000F"],
+			id: "2000000000000010",
+			tasks: [
+				{
+					id: "3000000000000014",
+					type: "item",
+					item: "firearms:fluid_tank",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000011",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build Fluid Pipes",
+			subtitle: "Move liquids between machines",
+			description: [
+				"Fluid Pipes transport oil and refined products between tanks, derricks, and the Refinery.",
+				"Use Fluid Ports to connect pipes directly into machine inventories."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000010"],
+			id: "2000000000000011",
+			tasks: [
+				{
+					id: "3000000000000015",
+					type: "item",
+					item: "firearms:fluid_pipe",
+					count: 8L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000012",
+					type: "item",
+					item: "firearms:fluid_port",
+					count: 2
 				}
 			]
 		},
@@ -79,14 +139,14 @@
 				"Build it from Refinery Base, Refinery Walls, Refinery Top, and a Controller.",
 				"Outputs are used in the Fuel Generator and incendiary weapons."
 			],
-			x: 4.0d,
+			x: 8.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000302"],
-			id: "0000000000000303",
+			dependencies: ["2000000000000011"],
+			id: "2000000000000012",
 			tasks: [
 				{
-					id: "0000000000001303",
+					id: "3000000000000016",
 					type: "item",
 					item: "firearms:refinery_controller",
 					count: 1L,
@@ -95,7 +155,97 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002303",
+					id: "4000000000000013",
+					type: "item",
+					item: "firearms:refined_gunpowder",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Produce Gasoline",
+			subtitle: "Fuel for engines and generators",
+			description: [
+				"The Refinery cracks crude oil into gasoline, among other products.",
+				"Gasoline powers the Fuel Generator and vehicle engines."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000012"],
+			id: "2000000000000013",
+			tasks: [
+				{
+					id: "3000000000000017",
+					type: "item",
+					item: "firearms:gasoline_bucket",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000014",
+					type: "item",
+					item: "firearms:fuel_bucket",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Produce Diesel",
+			subtitle: "Heavy fuel for heavy machines",
+			description: [
+				"Diesel is a denser refinery product used by tank and vehicle engines.",
+				"Keep a stockpile before starting Chapter 9's vehicle projects."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000013"],
+			id: "2000000000000014",
+			tasks: [
+				{
+					id: "3000000000000018",
+					type: "item",
+					item: "firearms:diesel_bucket",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000015",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Produce Kerosene",
+			subtitle: "Fuel for flamethrowers and jets",
+			description: [
+				"Kerosene is a lighter refinery product used in flamethrower fuel and jet engines.",
+				"It's one of the last fractions to unlock as you tune the Refinery."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000014"],
+			id: "2000000000000015",
+			tasks: [
+				{
+					id: "3000000000000019",
+					type: "item",
+					item: "firearms:kerosene_bucket",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000016",
 					type: "item",
 					item: "firearms:refined_gunpowder",
 					count: 8

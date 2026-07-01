@@ -1,0 +1,388 @@
+{
+	id: "1000000000000008",
+	group: "",
+	order_index: 7,
+	filename: "8_nuclear_power",
+	title: "Nuclear Power",
+	icon: "firearms:reactor_controller",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Mine Uranium",
+			subtitle: "Handle with care",
+			description: [
+				"Uranium Ore spawns deep underground and emits radiation.",
+				"Wear a Hazmat Suit before handling raw uranium ore or processed products.",
+				"Use a Geiger Counter to detect nearby radiation sources."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "2000000000000044",
+			tasks: [
+				{
+					id: "300000000000004C",
+					type: "item",
+					item: "firearms:uranium_ore_raw",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000045",
+					type: "item",
+					item: "firearms:lead_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft a Hazmat Suit",
+			subtitle: "Protection from radiation",
+			description: [
+				"A full Hazmat Suit - helmet, chestplate, leggings, and boots - shields you from radiation exposure.",
+				"Never handle raw uranium or reactor fuel without one equipped."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000044"],
+			id: "2000000000000045",
+			tasks: [
+				{
+					id: "300000000000004D",
+					type: "item",
+					item: "firearms:hazmat_helmet",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "300000000000004E",
+					type: "item",
+					item: "firearms:hazmat_chestplate",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "300000000000004F",
+					type: "item",
+					item: "firearms:hazmat_leggings",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000050",
+					type: "item",
+					item: "firearms:hazmat_boots",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000046",
+					type: "item",
+					item: "firearms:geiger_counter",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Build EUV Lithography",
+			subtitle: "Precision equipment for advanced processing",
+			description: [
+				"The EUV Lithography multiblock provides the precision components needed for reactor control systems.",
+				"Build the Base, Walls, Lens Housing, Mirror Array, Emitter Housing, and Controller."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000045"],
+			id: "2000000000000046",
+			tasks: [
+				{
+					id: "3000000000000051",
+					type: "item",
+					item: "firearms:euv_lithography_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000047",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Process Uranium",
+			subtitle: "Convert ore into reactor feedstock",
+			description: [
+				"Smelt raw uranium ore into ingots, then convert it into Uranium Hexafluoride (UF6) for enrichment."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000046"],
+			id: "2000000000000047",
+			tasks: [
+				{
+					id: "3000000000000052",
+					type: "item",
+					item: "firearms:uranium_hexafluoride",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000048",
+					type: "item",
+					item: "firearms:uranium_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Gas Centrifuge",
+			subtitle: "Enrichment starts here",
+			description: [
+				"The Gas Centrifuge spins UF6 gas to separate the fissile isotope from the rest."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000047"],
+			id: "2000000000000048",
+			tasks: [
+				{
+					id: "3000000000000053",
+					type: "item",
+					item: "firearms:gas_centrifuge",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000049",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Enrich Uranium",
+			subtitle: "Concentrate the fissile isotope",
+			description: [
+				"Cycle Uranium Hexafluoride through the Gas Centrifuge to produce Enriched UF6.",
+				"The leftover Depleted Uranium is useful for armor-piercing ammunition."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000048"],
+			id: "2000000000000049",
+			tasks: [
+				{
+					id: "3000000000000054",
+					type: "item",
+					item: "firearms:enriched_uranium_hexafluoride",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000004A",
+					type: "item",
+					item: "firearms:depleted_uranium",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Produce a Fuel Rod",
+			subtitle: "Fuel for the reactor core",
+			description: [
+				"Convert Enriched UF6 into Uranium Dioxide Pellets, then pack them into Zirconium cladding to form a Fuel Rod."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000049"],
+			id: "200000000000004A",
+			tasks: [
+				{
+					id: "3000000000000055",
+					type: "item",
+					item: "firearms:fuel_rod",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000004B",
+					type: "item",
+					item: "firearms:fuel_rod_cladding",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build the Nuclear Reactor",
+			subtitle: "Unlimited (radioactive) power",
+			description: [
+				"The Reactor is a large multiblock: Reactor Base, Walls, Top, Control Rod Housings, and a Controller.",
+				"Insert Fuel Rods and Control Rods, then activate to generate massive amounts of FE.",
+				"WARNING: keep a Hazmat Suit equipped at all times near an active reactor."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000004A"],
+			id: "200000000000004B",
+			tasks: [
+				{
+					id: "3000000000000056",
+					type: "item",
+					item: "firearms:reactor_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000004C",
+					type: "item",
+					item: "firearms:battery",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Cooling Tower",
+			subtitle: "Dissipate reactor heat",
+			description: [
+				"A Cooling Tower vents excess heat from the reactor, keeping it from overheating.",
+				"Build one near every active reactor."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000004B"],
+			id: "200000000000004C",
+			tasks: [
+				{
+					id: "3000000000000057",
+					type: "item",
+					item: "firearms:cooling_tower_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000004D",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Build a Steam Turbine",
+			subtitle: "Convert steam into power",
+			description: [
+				"The Steam Turbine converts the steam produced by your reactor into additional Forge Energy."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000004C"],
+			id: "200000000000004D",
+			tasks: [
+				{
+					id: "3000000000000058",
+					type: "item",
+					item: "firearms:steam_turbine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000004E",
+					type: "item",
+					item: "firearms:battery",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Generate Nuclear Power",
+			subtitle: "The reactor comes online",
+			description: [
+				"With fuel loaded and cooling online, activate the reactor and confirm it is generating FE."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000004D"],
+			id: "200000000000004E",
+			tasks: [
+				{
+					id: "3000000000000059",
+					type: "checkmark"
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000004F",
+					type: "item",
+					item: "firearms:battery",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build Spent Fuel Storage",
+			subtitle: "Contain what's left behind",
+			description: [
+				"Spent Fuel Rods remain radioactive long after use.",
+				"Build dedicated Spent Fuel Storage to contain them safely."
+			],
+			x: 0.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000004E"],
+			id: "200000000000004F",
+			tasks: [
+				{
+					id: "300000000000005A",
+					type: "item",
+					item: "firearms:spent_fuel_storage_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000050",
+					type: "item",
+					item: "firearms:lead_ingot",
+					count: 8
+				}
+			]
+		}
+	],
+	quest_links: []
+}

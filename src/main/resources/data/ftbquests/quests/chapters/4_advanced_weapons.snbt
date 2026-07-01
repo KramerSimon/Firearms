@@ -1,0 +1,364 @@
+{
+	id: "1000000000000004",
+	group: "",
+	order_index: 3,
+	filename: "4_advanced_weapons",
+	title: "Advanced Weapons",
+	icon: "firearms:sniper_rifle",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Craft Rifle Parts",
+			subtitle: "Long-range components",
+			description: [
+				"Rifles need a longer barrel, a sturdy receiver, a trigger group, and a stock.",
+				"Craft each part at the Assembly Bench before assembling the finished weapon."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "2000000000000016",
+			tasks: [
+				{
+					id: "300000000000001A",
+					type: "item",
+					item: "firearms:barrel",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "300000000000001B",
+					type: "item",
+					item: "firearms:receiver",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "300000000000001C",
+					type: "item",
+					item: "firearms:trigger_group",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "300000000000001D",
+					type: "item",
+					item: "firearms:stock",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000017",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft a Rifle",
+			subtitle: "Reach out and touch someone",
+			description: [
+				"Assemble your rifle parts at the Assembly Bench.",
+				"Rifles hit harder and further than a pistol, at the cost of fire rate."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000016"],
+			id: "2000000000000017",
+			tasks: [
+				{
+					id: "300000000000001E",
+					type: "item",
+					item: "firearms:rifle",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000018",
+					type: "item",
+					item: "firearms:bullet",
+					count: 32
+				}
+			]
+		},
+		{
+			title: "Craft an SMG",
+			subtitle: "Close-quarters firepower",
+			description: [
+				"The SMG trades range for a fast rate of fire.",
+				"Ideal for clearing tight spaces."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000017"],
+			id: "2000000000000018",
+			tasks: [
+				{
+					id: "300000000000001F",
+					type: "item",
+					item: "firearms:smg",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000019",
+					type: "item",
+					item: "firearms:bullet_casing",
+					count: 32
+				}
+			]
+		},
+		{
+			title: "Craft a Shotgun",
+			subtitle: "Devastating up close",
+			description: [
+				"The Shotgun fires a spread of projectiles - brutal at short range.",
+				"Craft one for home defence or breaching rooms."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000018"],
+			id: "2000000000000019",
+			tasks: [
+				{
+					id: "3000000000000020",
+					type: "item",
+					item: "firearms:shotgun",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000001A",
+					type: "item",
+					item: "firearms:propellant_powder",
+					count: 16
+				}
+			]
+		},
+		{
+			title: "Craft a Sniper Rifle",
+			subtitle: "One shot, one kill",
+			description: [
+				"The Sniper Rifle requires an Advanced Microchip for its targeting system.",
+				"If you haven't built a chip fab yet, see Chapter 7."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000019"],
+			id: "200000000000001A",
+			tasks: [
+				{
+					id: "3000000000000021",
+					type: "item",
+					item: "firearms:sniper_rifle",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000001B",
+					type: "item",
+					item: "firearms:scope_8x",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Craft Match Grade Ammo",
+			subtitle: "Precision ammunition",
+			description: [
+				"Match Grade Ammo is manufactured to tighter tolerances for improved accuracy.",
+				"Pairs best with the Sniper Rifle."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000001A"],
+			id: "200000000000001B",
+			tasks: [
+				{
+					id: "3000000000000022",
+					type: "item",
+					item: "firearms:match_grade_bullet",
+					count: 16L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000001C",
+					type: "item",
+					item: "firearms:match_grade_powder",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Cordite Bullets",
+			subtitle: "A cleaner-burning propellant",
+			description: [
+				"Cordite burns more consistently than black powder, improving muzzle velocity.",
+				"Craft Cordite first, then load it into bullets."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000001B"],
+			id: "200000000000001C",
+			tasks: [
+				{
+					id: "3000000000000023",
+					type: "item",
+					item: "firearms:cordite_bullet",
+					count: 16L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000001D",
+					type: "item",
+					item: "firearms:cordite",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Explosive Bullets",
+			subtitle: "Ammunition with a bang",
+			description: [
+				"Explosive Bullets detonate on impact for extra damage.",
+				"Handle the volatile filler with care during crafting."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000001C"],
+			id: "200000000000001D",
+			tasks: [
+				{
+					id: "3000000000000024",
+					type: "item",
+					item: "firearms:explosive_bullet",
+					count: 8L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000001E",
+					type: "item",
+					item: "firearms:armor_piercing_bullet",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft a Minigun",
+			subtitle: "Overwhelming firepower",
+			description: [
+				"The Minigun lays down a wall of lead but drains ammunition fast.",
+				"Bring plenty of bullets and a strong back."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000001D"],
+			id: "200000000000001E",
+			tasks: [
+				{
+					id: "3000000000000025",
+					type: "item",
+					item: "firearms:minigun",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000001F",
+					type: "item",
+					item: "firearms:bullet",
+					count: 64
+				}
+			]
+		},
+		{
+			title: "Craft a Flamethrower",
+			subtitle: "Bring the heat",
+			description: [
+				"The Flamethrower burns refined fuel to project a stream of fire.",
+				"Effective against groups, dangerous in enclosed spaces."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000001E"],
+			id: "200000000000001F",
+			tasks: [
+				{
+					id: "3000000000000026",
+					type: "item",
+					item: "firearms:flamethrower",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000020",
+					type: "item",
+					item: "firearms:kerosene_bucket",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft a Chainsaw",
+			subtitle: "For up-close and personal work",
+			description: [
+				"The Chainsaw runs on refinery gasoline and makes short work of anything in melee range.",
+				"The last weapon you will need before things get truly explosive."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000001F"],
+			id: "2000000000000020",
+			tasks: [
+				{
+					id: "3000000000000027",
+					type: "item",
+					item: "firearms:chainsaw",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000021",
+					type: "item",
+					item: "firearms:gasoline_bucket",
+					count: 2
+				}
+			]
+		}
+	],
+	quest_links: []
+}

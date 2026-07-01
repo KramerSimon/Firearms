@@ -1,0 +1,393 @@
+{
+	id: "1000000000000007",
+	group: "",
+	order_index: 6,
+	filename: "7_microchip_production",
+	title: "Microchip Production",
+	icon: "firearms:advanced_microchip",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Build a Crystal Growth Chamber",
+			subtitle: "Where silicon ingots are grown",
+			description: [
+				"The Crystal Growth Chamber pulls a single crystal silicon ingot from molten electronic-grade silicon.",
+				"This is the first machine in the semiconductor fabrication line."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "2000000000000037",
+			tasks: [
+				{
+					id: "300000000000003F",
+					type: "item",
+					item: "firearms:crystal_growth_controller",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000038",
+					type: "item",
+					item: "firearms:metallurgical_silicon",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Grow a Silicon Crystal",
+			subtitle: "Pulling a perfect ingot",
+			description: [
+				"Feed Electronic-Grade Silicon into the Crystal Growth Chamber to grow a Silicon Ingot."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000037"],
+			id: "2000000000000038",
+			tasks: [
+				{
+					id: "3000000000000040",
+					type: "item",
+					item: "firearms:silicon_ingot",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000039",
+					type: "item",
+					item: "firearms:electronic_grade_silicon",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Wafer Cutter",
+			subtitle: "Slice ingots into wafers",
+			description: [
+				"The Wafer Cutter slices a Silicon Ingot into thin Silicon Wafers."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000038"],
+			id: "2000000000000039",
+			tasks: [
+				{
+					id: "3000000000000041",
+					type: "item",
+					item: "firearms:wafer_cutting_machine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000003A",
+					type: "item",
+					item: "firearms:silicon_wafer",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Cut Wafers",
+			subtitle: "Thin discs of pure silicon",
+			description: [
+				"Cut several Silicon Wafers - you will need a steady supply to feed the rest of the fab line."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000039"],
+			id: "200000000000003A",
+			tasks: [
+				{
+					id: "3000000000000042",
+					type: "item",
+					item: "firearms:silicon_wafer",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000003B",
+					type: "item",
+					item: "firearms:diamond_saw_blade",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Build a Deposition Chamber",
+			subtitle: "Coat wafers with thin films",
+			description: [
+				"The Deposition Chamber deposits thin films onto wafers, the first step of patterning."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000003A"],
+			id: "200000000000003B",
+			tasks: [
+				{
+					id: "3000000000000043",
+					type: "item",
+					item: "firearms:deposition_chamber",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000003C",
+					type: "item",
+					item: "firearms:coated_wafer",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Build a Plasma Etcher",
+			subtitle: "Carve microscopic circuits",
+			description: [
+				"The Plasma Etcher carves circuit patterns into coated wafers using reactive plasma."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000003B"],
+			id: "200000000000003C",
+			tasks: [
+				{
+					id: "3000000000000044",
+					type: "item",
+					item: "firearms:plasma_etcher",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000003D",
+					type: "item",
+					item: "firearms:etched_wafer",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Build an Ion Implanter",
+			subtitle: "Dope the silicon",
+			description: [
+				"The Ion Implanter fires dopant ions like Boron and Phosphorus into etched wafers to create transistors."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000003C"],
+			id: "200000000000003D",
+			tasks: [
+				{
+					id: "3000000000000045",
+					type: "item",
+					item: "firearms:ion_implanter",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000003E",
+					type: "item",
+					item: "firearms:boron",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Metallization Chamber",
+			subtitle: "Wire up the circuits",
+			description: [
+				"The Metallization Chamber deposits metal interconnects, using Gold Foil, to wire up the circuit."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000003D"],
+			id: "200000000000003E",
+			tasks: [
+				{
+					id: "3000000000000046",
+					type: "item",
+					item: "firearms:metallization_chamber",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000003F",
+					type: "item",
+					item: "firearms:gold_foil",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Build a Wafer Tester",
+			subtitle: "Sort the good from the bad",
+			description: [
+				"The Wafer Tester checks each finished wafer for defects before dicing."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000003E"],
+			id: "200000000000003F",
+			tasks: [
+				{
+					id: "3000000000000047",
+					type: "item",
+					item: "firearms:wafer_tester",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000040",
+					type: "item",
+					item: "firearms:tested_wafer",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Build a Dicing Saw",
+			subtitle: "Cut wafers into dies",
+			description: [
+				"The Dicing Saw cuts a tested wafer into individual silicon dies, one per chip."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000003F"],
+			id: "2000000000000040",
+			tasks: [
+				{
+					id: "3000000000000048",
+					type: "item",
+					item: "firearms:dicing_saw",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000041",
+					type: "item",
+					item: "firearms:silicon_die",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Build a Chip Packager",
+			subtitle: "Seal the finished chip",
+			description: [
+				"The Chip Packager encases a silicon die in its final protective package."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000040"],
+			id: "2000000000000041",
+			tasks: [
+				{
+					id: "3000000000000049",
+					type: "item",
+					item: "firearms:chip_packaging_machine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000042",
+					type: "item",
+					item: "firearms:photomask",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Produce a Basic Microchip",
+			subtitle: "The fruit of the fab line",
+			description: [
+				"Run a die through the Chip Packager to produce a finished Basic Microchip.",
+				"Basic Microchips power circuit boards and simple electronics."
+			],
+			x: 0.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000041"],
+			id: "2000000000000042",
+			tasks: [
+				{
+					id: "300000000000004A",
+					type: "item",
+					item: "firearms:basic_microchip",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000043",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Produce an Advanced Microchip",
+			subtitle: "State of the art",
+			description: [
+				"Advanced Microchips require tighter tolerances throughout the fab line.",
+				"They are required for sniper rifles, the minigun, EUV lithography, and elite gear."
+			],
+			x: 0.0d,
+			y: 4.0d,
+			shape: "default",
+			dependencies: ["2000000000000042"],
+			id: "2000000000000043",
+			tasks: [
+				{
+					id: "300000000000004B",
+					type: "item",
+					item: "firearms:advanced_microchip",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000044",
+					type: "item",
+					item: "firearms:advanced_microchip",
+					count: 1
+				}
+			]
+		}
+	],
+	quest_links: []
+}

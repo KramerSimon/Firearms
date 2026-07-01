@@ -1,0 +1,335 @@
+{
+	id: "1000000000000005",
+	group: "",
+	order_index: 4,
+	filename: "5_explosives_and_gear",
+	title: "Explosives \& Gear",
+	icon: "firearms:grenade",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Craft a Grenade",
+			subtitle: "Frag out",
+			description: [
+				"The standard Grenade is a reliable area-denial tool.",
+				"Cook it too long at your own risk."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "2000000000000021",
+			tasks: [
+				{
+					id: "3000000000000028",
+					type: "item",
+					item: "firearms:grenade",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000022",
+					type: "item",
+					item: "firearms:refined_gunpowder",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft a Smoke Grenade",
+			subtitle: "Cover your advance",
+			description: [
+				"Smoke Grenades obscure vision, letting you reposition or retreat safely."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000021"],
+			id: "2000000000000022",
+			tasks: [
+				{
+					id: "3000000000000029",
+					type: "item",
+					item: "firearms:smoke_grenade",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000023",
+					type: "item",
+					item: "firearms:grenade",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft a Molotov",
+			subtitle: "Improvised incendiary",
+			description: [
+				"A bottle of gasoline and a rag - simple, cheap, and effective against groups."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000022"],
+			id: "2000000000000023",
+			tasks: [
+				{
+					id: "300000000000002A",
+					type: "item",
+					item: "firearms:molotov_cocktail",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000024",
+					type: "item",
+					item: "firearms:gasoline_bucket",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Craft Nitroglycerin",
+			subtitle: "Handle with extreme care",
+			description: [
+				"Nitroglycerin is a powerful but unstable liquid explosive.",
+				"It is a key ingredient in several advanced explosives - keep it away from heat."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000023"],
+			id: "2000000000000024",
+			tasks: [
+				{
+					id: "300000000000002B",
+					type: "item",
+					item: "firearms:nitroglycerin",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000025",
+					type: "item",
+					item: "firearms:sulfuric_acid_bucket",
+					count: 1
+				}
+			]
+		},
+		{
+			title: "Craft a Napalm Bomb",
+			subtitle: "Scorched earth",
+			description: [
+				"Napalm clings to surfaces and burns far longer than gasoline alone.",
+				"Devastating against fortified positions."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000024"],
+			id: "2000000000000025",
+			tasks: [
+				{
+					id: "300000000000002C",
+					type: "item",
+					item: "firearms:napalm_bomb",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000026",
+					type: "item",
+					item: "firearms:kerosene_bucket",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft a Thermite Grenade",
+			subtitle: "Burns through armor",
+			description: [
+				"Thermite burns hot enough to melt through metal, making it ideal against armored targets."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000025"],
+			id: "2000000000000026",
+			tasks: [
+				{
+					id: "300000000000002D",
+					type: "item",
+					item: "firearms:thermite_grenade",
+					count: 2L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000027",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft a Gas Mask",
+			subtitle: "Breathe easy",
+			description: [
+				"A Gas Mask protects you from smoke, gas, and airborne contaminants."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000026"],
+			id: "2000000000000027",
+			tasks: [
+				{
+					id: "300000000000002E",
+					type: "item",
+					item: "firearms:gas_mask",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000028",
+					type: "item",
+					item: "firearms:bandage",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft Rubber Boots",
+			subtitle: "Sure footing in the field",
+			description: [
+				"Rubber Boots insulate against electrical and chemical hazards underfoot."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000027"],
+			id: "2000000000000028",
+			tasks: [
+				{
+					id: "300000000000002F",
+					type: "item",
+					item: "firearms:rubber_boots",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000029",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft a Riot Shield",
+			subtitle: "Advance under cover",
+			description: [
+				"A Riot Shield blocks incoming fire from the front, letting you push forward safely."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000028"],
+			id: "2000000000000029",
+			tasks: [
+				{
+					id: "3000000000000030",
+					type: "item",
+					item: "firearms:riot_shield",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000002A",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft a Bulletproof Vest",
+			subtitle: "Stop the bleeding before it starts",
+			description: [
+				"A Bulletproof Vest absorbs incoming rounds, reducing the damage you take."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000029"],
+			id: "200000000000002A",
+			tasks: [
+				{
+					id: "3000000000000031",
+					type: "item",
+					item: "firearms:bulletproof_vest",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000002B",
+					type: "item",
+					item: "firearms:kevlar_plate",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft Night Vision Goggles",
+			subtitle: "See in the dark",
+			description: [
+				"Night Vision Goggles let you spot threats in dark caves and at night."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["200000000000002A"],
+			id: "200000000000002B",
+			tasks: [
+				{
+					id: "3000000000000032",
+					type: "item",
+					item: "firearms:night_vision_goggles",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000002C",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 4
+				}
+			]
+		}
+	],
+	quest_links: []
+}

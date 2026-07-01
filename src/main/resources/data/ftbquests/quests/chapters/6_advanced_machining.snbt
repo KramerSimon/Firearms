@@ -1,0 +1,342 @@
+{
+	id: "1000000000000006",
+	group: "",
+	order_index: 5,
+	filename: "6_advanced_machining",
+	title: "Advanced Machining",
+	icon: "firearms:ebf_controller",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Build the EBF with a Kanthal Coil",
+			subtitle: "High-temperature smelting",
+			description: [
+				"The EBF smelts exotic ores (tungsten, chromium, nickel, titanium) that a regular furnace cannot.",
+				"It is a multiblock: arrange Blast Furnace Casings, Coils, Import/Output Buses, a Muffler Hatch, and the Controller.",
+				"Start with a Kanthal Coil - it unlocks the first processing tier."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "200000000000002C",
+			tasks: [
+				{
+					id: "3000000000000033",
+					type: "item",
+					item: "firearms:ebf_controller",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000034",
+					type: "item",
+					item: "firearms:kanthal_coil",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000002D",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Smelt Hardened Steel",
+			subtitle: "Tougher than steel",
+			description: [
+				"Hardened Steel is smelted in the EBF and used throughout advanced machine construction."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000002C"],
+			id: "200000000000002D",
+			tasks: [
+				{
+					id: "3000000000000035",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 8L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000002E",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Lathe",
+			subtitle: "Precision turning",
+			description: [
+				"The Lathe turns ingots into rods and other precision-machined parts."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000002D"],
+			id: "200000000000002E",
+			tasks: [
+				{
+					id: "3000000000000036",
+					type: "item",
+					item: "firearms:lathe",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000002F",
+					type: "item",
+					item: "firearms:steel_rod",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Build a Metal Press",
+			subtitle: "Stamp sheets and plates",
+			description: [
+				"The Metal Press stamps ingots into plates and other flat components."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000002E"],
+			id: "200000000000002F",
+			tasks: [
+				{
+					id: "3000000000000037",
+					type: "item",
+					item: "firearms:metal_press",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000030",
+					type: "item",
+					item: "firearms:steel_plate",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Build a Heat Treatment Furnace",
+			subtitle: "Tempering for tougher parts",
+			description: [
+				"The Heat Treatment Furnace tempers metal parts, improving their properties for tool and weapon parts."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000002F"],
+			id: "2000000000000030",
+			tasks: [
+				{
+					id: "3000000000000038",
+					type: "item",
+					item: "firearms:heat_treatment_furnace",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000031",
+					type: "item",
+					item: "firearms:tool_steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build a Chemical Mixer",
+			subtitle: "Where chemistry begins",
+			description: [
+				"The Chemical Mixer combines fluids and items to produce acids, powders, and other reagents."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000030"],
+			id: "2000000000000031",
+			tasks: [
+				{
+					id: "3000000000000039",
+					type: "item",
+					item: "firearms:chemical_mixer",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000032",
+					type: "item",
+					item: "firearms:refined_gunpowder",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Produce Sulfuric Acid",
+			subtitle: "A key industrial chemical",
+			description: [
+				"Sulfuric Acid is used across the mod, from explosives to the Acid Bath."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000031"],
+			id: "2000000000000032",
+			tasks: [
+				{
+					id: "300000000000003A",
+					type: "item",
+					item: "firearms:sulfuric_acid_bucket",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000033",
+					type: "item",
+					item: "firearms:lead_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Produce Nitric Acid",
+			subtitle: "For explosives and etching",
+			description: [
+				"Nitric Acid is required for several explosives and for wafer etching later on."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000032"],
+			id: "2000000000000033",
+			tasks: [
+				{
+					id: "300000000000003B",
+					type: "item",
+					item: "firearms:nitric_acid_bucket",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000034",
+					type: "item",
+					item: "firearms:lead_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build an Acid Bath",
+			subtitle: "Etch and dissolve materials",
+			description: [
+				"The Acid Bath uses your acids to dissolve and process materials that resist normal machining."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000033"],
+			id: "2000000000000034",
+			tasks: [
+				{
+					id: "300000000000003C",
+					type: "item",
+					item: "firearms:acid_bath",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000035",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Build an Electrolysis Machine",
+			subtitle: "Split compounds with current",
+			description: [
+				"The Electrolysis Machine uses electric current to split compounds into their base elements."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000034"],
+			id: "2000000000000035",
+			tasks: [
+				{
+					id: "300000000000003D",
+					type: "item",
+					item: "firearms:electrolysis_machine",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000036",
+					type: "item",
+					item: "firearms:aluminum_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Build a Gas Centrifuge",
+			subtitle: "Separate gases and isotopes",
+			description: [
+				"The Gas Centrifuge separates gaseous mixtures by density.",
+				"You'll need another one later for uranium enrichment."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000035"],
+			id: "2000000000000036",
+			tasks: [
+				{
+					id: "300000000000003E",
+					type: "item",
+					item: "firearms:gas_centrifuge",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000037",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 8
+				}
+			]
+		}
+	],
+	quest_links: []
+}

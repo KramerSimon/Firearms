@@ -1,0 +1,352 @@
+{
+	id: "100000000000000A",
+	group: "",
+	order_index: 9,
+	filename: "10_elite_gear",
+	title: "Elite Gear",
+	icon: "firearms:battlesuit_helmet",
+	default_quest_shape: "",
+	default_hide_dependency_lines: 0B,
+	images: [],
+	quests: [
+		{
+			title: "Mine Titanium",
+			subtitle: "Light, strong, and hard to find",
+			description: [
+				"Titanium Ore is rare, but the metal it yields is stronger and lighter than steel."
+			],
+			x: 0.0d,
+			y: 0.0d,
+			shape: "default",
+			id: "200000000000005E",
+			tasks: [
+				{
+					id: "3000000000000069",
+					type: "item",
+					item: "firearms:titanium_ore_raw",
+					count: 8L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000005F",
+					type: "item",
+					item: "firearms:steel_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Smelt a Titanium Ingot",
+			subtitle: "The pinnacle of armor materials",
+			description: [
+				"Smelt raw Titanium Ore into ingots in the EBF.",
+				"Titanium is the base material for the Battlesuit."
+			],
+			x: 2.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000005E"],
+			id: "200000000000005F",
+			tasks: [
+				{
+					id: "300000000000006A",
+					type: "item",
+					item: "firearms:titanium_ingot",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000060",
+					type: "item",
+					item: "firearms:hardened_steel_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Craft the Battlesuit Helmet",
+			subtitle: "Head protection, elite tier",
+			description: [
+				"The Battlesuit Helmet is crafted from Titanium at the Assembly Bench."
+			],
+			x: 4.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000005F"],
+			id: "2000000000000060",
+			tasks: [
+				{
+					id: "300000000000006B",
+					type: "item",
+					item: "firearms:battlesuit_helmet",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000061",
+					type: "item",
+					item: "firearms:titanium_ingot",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft the Battlesuit Chestplate",
+			subtitle: "Core protection, elite tier",
+			description: [
+				"The Chestplate provides the bulk of the Battlesuit's protection."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000060"],
+			id: "2000000000000061",
+			tasks: [
+				{
+					id: "300000000000006C",
+					type: "item",
+					item: "firearms:battlesuit_chestplate",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000062",
+					type: "item",
+					item: "firearms:titanium_ingot",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft the Battlesuit Leggings",
+			subtitle: "Leg protection, elite tier",
+			description: [
+				"The Leggings round out the Battlesuit's lower body armor."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000061"],
+			id: "2000000000000062",
+			tasks: [
+				{
+					id: "300000000000006D",
+					type: "item",
+					item: "firearms:battlesuit_leggings",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000063",
+					type: "item",
+					item: "firearms:titanium_ingot",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft the Battlesuit Boots",
+			subtitle: "Foot protection, elite tier",
+			description: [
+				"The Boots complete the set, rounding out full-body Titanium protection."
+			],
+			x: 10.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["2000000000000062"],
+			id: "2000000000000063",
+			tasks: [
+				{
+					id: "300000000000006E",
+					type: "item",
+					item: "firearms:battlesuit_boots",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000064",
+					type: "item",
+					item: "firearms:titanium_ingot",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Assemble the Full Battlesuit",
+			subtitle: "Suited up for anything",
+			description: [
+				"Equip all four pieces of the Battlesuit at once for maximum protection."
+			],
+			x: 10.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000063"],
+			id: "2000000000000064",
+			tasks: [
+				{
+					id: "300000000000006F",
+					type: "item",
+					item: "firearms:battlesuit_helmet",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000070",
+					type: "item",
+					item: "firearms:battlesuit_chestplate",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000071",
+					type: "item",
+					item: "firearms:battlesuit_leggings",
+					count: 1L,
+					consume_items: 0B
+				},
+				{
+					id: "3000000000000072",
+					type: "item",
+					item: "firearms:battlesuit_boots",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000065",
+					type: "item",
+					item: "firearms:titanium_ingot",
+					count: 8
+				}
+			]
+		},
+		{
+			title: "Craft Four Advanced Microchips",
+			subtitle: "Enough compute for a coil driver",
+			description: [
+				"The Iridium Coil needs a substantial number of Advanced Microchips to control its extreme heat output."
+			],
+			x: 8.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000064"],
+			id: "2000000000000065",
+			tasks: [
+				{
+					id: "3000000000000073",
+					type: "item",
+					item: "firearms:advanced_microchip",
+					count: 4L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000066",
+					type: "item",
+					item: "firearms:advanced_microchip",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Craft an Iridium Coil",
+			subtitle: "The final tier of EBF heating",
+			description: [
+				"The Iridium Coil is the highest tier heating element for the EBF, unlocking its final processing tier."
+			],
+			x: 6.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000065"],
+			id: "2000000000000066",
+			tasks: [
+				{
+					id: "3000000000000074",
+					type: "item",
+					item: "firearms:iridium_coil",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000067",
+					type: "item",
+					item: "firearms:iridium_ingot",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Upgrade the EBF to Iridium Tier",
+			subtitle: "Unlock the hottest smelting tier",
+			description: [
+				"Replace your EBF coils with Iridium Coils to reach the highest processing tier."
+			],
+			x: 4.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000066"],
+			id: "2000000000000067",
+			tasks: [
+				{
+					id: "3000000000000075",
+					type: "checkmark"
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000068",
+					type: "item",
+					item: "firearms:iridium_ingot",
+					count: 4
+				}
+			]
+		},
+		{
+			title: "Produce Iridium Alloy",
+			subtitle: "The rarest material in the mod",
+			description: [
+				"Iridium Alloy is only achievable with a fully upgraded EBF.",
+				"It represents the pinnacle of the firearms production chain."
+			],
+			x: 2.0d,
+			y: 2.0d,
+			shape: "default",
+			dependencies: ["2000000000000067"],
+			id: "2000000000000068",
+			tasks: [
+				{
+					id: "3000000000000076",
+					type: "item",
+					item: "firearms:iridium_alloy",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "4000000000000069",
+					type: "item",
+					item: "firearms:iridium_alloy",
+					count: 1
+				}
+			]
+		}
+	],
+	quest_links: []
+}

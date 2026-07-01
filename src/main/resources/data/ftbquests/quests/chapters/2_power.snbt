@@ -1,5 +1,5 @@
 {
-	id: "0000000000000002",
+	id: "1000000000000002",
 	group: "",
 	order_index: 1,
 	filename: "2_power",
@@ -19,10 +19,10 @@
 			x: 0.0d,
 			y: 0.0d,
 			shape: "default",
-			id: "0000000000000201",
+			id: "2000000000000009",
 			tasks: [
 				{
-					id: "0000000000001201",
+					id: "300000000000000D",
 					type: "item",
 					item: "firearms:coal_generator",
 					count: 1L,
@@ -31,7 +31,7 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002201",
+					id: "400000000000000A",
 					type: "item",
 					item: "firearms:copper_wire",
 					count: 8
@@ -48,11 +48,11 @@
 			x: 2.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000201"],
-			id: "0000000000000202",
+			dependencies: ["2000000000000009"],
+			id: "200000000000000A",
 			tasks: [
 				{
-					id: "0000000000001202",
+					id: "300000000000000E",
 					type: "item",
 					item: "firearms:copper_wire",
 					count: 8L,
@@ -61,7 +61,7 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002202",
+					id: "400000000000000B",
 					type: "item",
 					item: "firearms:circuit_board",
 					count: 2
@@ -78,11 +78,11 @@
 			x: 4.0d,
 			y: 0.0d,
 			shape: "default",
-			dependencies: ["0000000000000202"],
-			id: "0000000000000203",
+			dependencies: ["200000000000000A"],
+			id: "200000000000000B",
 			tasks: [
 				{
-					id: "0000000000001203",
+					id: "300000000000000F",
 					type: "item",
 					item: "firearms:energy_pylon",
 					count: 1L,
@@ -91,10 +91,70 @@
 			],
 			rewards: [
 				{
-					id: "0000000000002203",
+					id: "400000000000000C",
 					type: "item",
 					item: "firearms:battery",
 					count: 1
+				}
+			]
+		},
+		{
+			title: "Build a Fuel Generator",
+			subtitle: "Burn liquid fuel for power",
+			description: [
+				"The Fuel Generator burns liquid fuels like gasoline and diesel to generate FE.",
+				"It outputs more power than the Coal Generator once your refinery is running."
+			],
+			x: 6.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000000B"],
+			id: "200000000000000C",
+			tasks: [
+				{
+					id: "3000000000000010",
+					type: "item",
+					item: "firearms:fuel_generator",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000000D",
+					type: "item",
+					item: "firearms:fuel_bucket",
+					count: 2
+				}
+			]
+		},
+		{
+			title: "Build a Battery",
+			subtitle: "Store power for later",
+			description: [
+				"Batteries store Forge Energy so machines can keep running when generators are offline.",
+				"Charge one at an Energy Pylon or generator, then carry it to power remote machines."
+			],
+			x: 8.0d,
+			y: 0.0d,
+			shape: "default",
+			dependencies: ["200000000000000C"],
+			id: "200000000000000D",
+			tasks: [
+				{
+					id: "3000000000000011",
+					type: "item",
+					item: "firearms:battery",
+					count: 1L,
+					consume_items: 0B
+				}
+			],
+			rewards: [
+				{
+					id: "400000000000000E",
+					type: "item",
+					item: "firearms:circuit_board",
+					count: 4
 				}
 			]
 		}
