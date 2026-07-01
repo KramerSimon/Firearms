@@ -205,29 +205,30 @@ public class SpentFuelStorageBlockEntity extends BlockEntity implements MenuProv
         }
     }
 
-    // Canonical layout: the controller sits in the wall layer, corner = origin.below() (dx=0 dz=0).
+    // Canonical layout: origin is always the centre of the 5×5 footprint, at the wall
+    // layer's base Y (the controller can be placed at any of the 25 positions in that
+    // layer, so the preview centres on wherever it is).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
-        BlockPos corner = origin.below();
         Block base = ModBlocks.SPENT_FUEL_STORAGE_BASE.get();
         Block wall = ModBlocks.SPENT_FUEL_STORAGE_WALL.get();
-        for (int dx = 0; dx < 5; dx++) {
-            for (int dz = 0; dz < 5; dz++) {
-                map.put(corner.offset(dx, 0, dz), base);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                map.put(origin.below().offset(dx, 0, dz), base);
             }
         }
-        for (int dx = 0; dx < 5; dx++) {
-            for (int dz = 0; dz < 5; dz++) {
-                BlockPos p = corner.offset(dx, 1, dz);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                BlockPos p = origin.offset(dx, 0, dz);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
-        for (int dy = 2; dy <= 3; dy++) {
-            for (int dx = 0; dx < 5; dx++) {
-                for (int dz = 0; dz < 5; dz++) {
-                    if (dx > 0 && dx < 4 && dz > 0 && dz < 4) continue;
-                    map.put(corner.offset(dx, dy, dz), wall);
+        for (int dy = 1; dy <= 2; dy++) {
+            for (int dx = -2; dx <= 2; dx++) {
+                for (int dz = -2; dz <= 2; dz++) {
+                    if (dx > -2 && dx < 2 && dz > -2 && dz < 2) continue;
+                    map.put(origin.offset(dx, dy, dz), wall);
                 }
             }
         }

@@ -174,11 +174,11 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         if (level == null) return false;
         LOGGER.info("[EUV] checkStructure() called, controller at {}", worldPosition);
 
-        // Try all 16 outer border positions of the 5x5 grid as the controller's grid position.
-        // origin is the SW corner (min x, min z); structure extends +X, +Z from there.
+        // Try all 25 positions of the 5x5 grid as the controller's grid position (anywhere
+        // in the footprint, not just the border). origin is the SW corner (min x, min z);
+        // structure extends +X, +Z from there.
         for (int ox = 0; ox <= 4; ox++) {
             for (int oz = 0; oz <= 4; oz++) {
-                if (ox > 0 && ox < 4 && oz > 0 && oz < 4) continue; // interior can't be the controller
                 BlockPos origin = worldPosition.offset(-ox, 0, -oz);
                 LOGGER.info("[EUV] Trying origin {} (ox={} oz={})", origin, ox, oz);
                 if (isValidAt(origin)) {
@@ -319,7 +319,8 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         }
     }
 
-    // Canonical layout: origin is the controller's own position (ox=0, oz=0 corner of the 5×5).
+    // Canonical layout: origin is always the centre of the 5×5 footprint (the controller
+    // can be placed at any of the 25 base positions, so the preview centres on it).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -327,33 +328,33 @@ public class EuvLithographyControllerBlockEntity extends EnergyStorageBlock impl
         Block wall   = ModBlocks.EUV_WALL.get();
         Block mirror = ModBlocks.EUV_MIRROR_ARRAY.get();
         Block housing = ModBlocks.EUV_EMITTER_HOUSING.get();
-        for (int x = 0; x < 5; x++) {
-            for (int z = 0; z < 5; z++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 2; y++) {
-            for (int x = 0; x < 5; x++) {
-                for (int z = 0; z < 5; z++) {
-                    if (x > 0 && x < 4 && z > 0 && z < 4) continue;
+            for (int x = -2; x <= 2; x++) {
+                for (int z = -2; z <= 2; z++) {
+                    if (x > -2 && x < 2 && z > -2 && z < 2) continue;
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int y = 3; y <= 4; y++) {
-            for (int x = 0; x < 5; x++) {
-                for (int z = 0; z < 5; z++) {
-                    boolean corner = (x == 0 || x == 4) && (z == 0 || z == 4);
-                    boolean interior = (x > 0 && x < 4) && (z > 0 && z < 4);
+            for (int x = -2; x <= 2; x++) {
+                for (int z = -2; z <= 2; z++) {
+                    boolean corner = (x == -2 || x == 2) && (z == -2 || z == 2);
+                    boolean interior = (x > -2 && x < 2) && (z > -2 && z < 2);
                     if (interior) continue;
                     map.put(origin.offset(x, y, z), corner ? mirror : wall);
                 }
             }
         }
         for (int y = 5; y <= 6; y++) {
-            for (int x = 0; x < 5; x++) {
-                for (int z = 0; z < 5; z++) {
+            for (int x = -2; x <= 2; x++) {
+                for (int z = -2; z <= 2; z++) {
                     map.put(origin.offset(x, y, z), housing);
                 }
             }

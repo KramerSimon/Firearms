@@ -263,13 +263,12 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         return true;
     }
 
-    // Controller is on the outer border of the 5×5 (|dx|=2 or |dz|=2 from center).
+    // Controller may sit anywhere within the 5×5 base (not just the outer border).
     // isValidCenter() is used purely to find the right center; failures are not logged
-    // individually here because all 16 candidates are tried before giving up.
+    // individually here because all 25 candidates are tried before giving up.
     private BlockPos findCenter() {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                if (Math.abs(dx) != 2 && Math.abs(dz) != 2) continue;
                 BlockPos candidate = worldPosition.offset(-dx, 0, -dz);
                 LOGGER.info("[Refinery]   Trying center {} (dx={} dz={})", candidate, dx, dz);
                 if (isValidCenter(candidate)) return candidate;
@@ -375,18 +374,17 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
         }
     }
 
-    // Canonical layout: controller sits at (dx=-2, dz=-2) from the 5×5 center,
-    // so center = origin.offset(2, 0, 2).
+    // Canonical layout: origin is always the structure's centre (the controller can be
+    // placed at any of the 25 base positions, so the preview centres on wherever it is).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
-        BlockPos center = origin.offset(2, 0, 2);
         Block base = ModBlocks.REFINERY_BASE.get();
         Block wall = ModBlocks.REFINERY_WALL.get();
         Block top  = ModBlocks.REFINERY_TOP.get();
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
-                BlockPos p = center.offset(x, 0, z);
+                BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
@@ -394,13 +392,13 @@ public class RefineryControllerBlockEntity extends BlockEntity implements MenuPr
             for (int x = -2; x <= 2; x++) {
                 for (int z = -2; z <= 2; z++) {
                     if (Math.abs(x) < 2 && Math.abs(z) < 2) continue;
-                    map.put(center.offset(x, y, z), wall);
+                    map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
-                map.put(center.offset(x, 5, z), top);
+                map.put(origin.offset(x, 5, z), top);
             }
         }
         return map;

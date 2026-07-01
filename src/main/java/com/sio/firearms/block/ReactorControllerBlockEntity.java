@@ -302,12 +302,11 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
 
         String firstFail = null;
 
-        // Try all 24 outer border positions of a 7×7 grid as the controller's possible
-        // location within the grid.  Origin = worldPosition.offset(-dx, 0, -dz).
+        // Try all 49 positions of a 7×7 grid as the controller's possible location within
+        // the grid (anywhere in the base layer, not just the border).
+        // Origin = worldPosition.offset(-dx, 0, -dz).
         for (int dx = 0; dx <= 6; dx++) {
             for (int dz = 0; dz <= 6; dz++) {
-                if (dx > 0 && dx < 6 && dz > 0 && dz < 6) continue; // interior — skip
-
                 BlockPos origin = worldPosition.offset(-dx, 0, -dz);
 
                 LOGGER.debug("[Reactor@{}] Trying origin {} (controller at dx={} dz={})",
@@ -457,7 +456,8 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         }
     }
 
-    // Canonical layout: origin is the controller's own position (min-X/min-Z corner, dx=0 dz=0).
+    // Canonical layout: origin is always the centre of the 7×7 footprint (the controller
+    // can be placed at any of the 49 base positions, so the preview centres on it).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -465,24 +465,24 @@ public class ReactorControllerBlockEntity extends EnergyStorageBlock implements 
         Block wall = ModBlocks.REACTOR_WALL.get();
         Block top  = ModBlocks.REACTOR_TOP.get();
         for (int y = 0; y <= 1; y++) {
-            for (int x = 0; x < 7; x++) {
-                for (int z = 0; z < 7; z++) {
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
                     BlockPos p = origin.offset(x, y, z);
                     if (!p.equals(origin)) map.put(p, base);
                 }
             }
         }
         for (int y = 2; y <= 7; y++) {
-            for (int x = 0; x < 7; x++) {
-                for (int z = 0; z < 7; z++) {
-                    boolean interior = x > 0 && x < 6 && z > 0 && z < 6;
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    boolean interior = x > -3 && x < 3 && z > -3 && z < 3;
                     if (interior) continue;
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
-        for (int x = 0; x < 7; x++) {
-            for (int z = 0; z < 7; z++) {
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
                 map.put(origin.offset(x, 8, z), top);
             }
         }

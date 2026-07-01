@@ -256,42 +256,17 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         if (level == null) return false;
         String firstFail = null;
 
-        // West and east faces (dx=0 and dx=8), all dz positions 0-8
-        for (int dz = 0; dz <= 8; dz++) {
-            BlockPos o; String fail;
-
-            o = worldPosition.offset(0, 0, -dz);
-            LOGGER.info("[VehicleGarage@{}] Trying origin {} (ctrl at local dx=0, dz={})",
-                    worldPosition.toShortString(), o.toShortString(), dz);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-            if (firstFail == null) firstFail = fail;
-
-            o = worldPosition.offset(-8, 0, -dz);
-            LOGGER.info("[VehicleGarage@{}] Trying origin {} (ctrl at local dx=8, dz={})",
-                    worldPosition.toShortString(), o.toShortString(), dz);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-            if (firstFail == null) firstFail = fail;
-        }
-
-        // North and south faces (dz=0 and dz=8), all dx positions 0-8
+        // Try all 81 positions of the 9×9 floor as the controller's possible location
+        // within the grid (anywhere in the footprint, not just the border).
         for (int dx = 0; dx <= 8; dx++) {
-            BlockPos o; String fail;
-
-            o = worldPosition.offset(-dx, 0, 0);
-            LOGGER.info("[VehicleGarage@{}] Trying origin {} (ctrl at local dx={}, dz=0)",
-                    worldPosition.toShortString(), o.toShortString(), dx);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-            if (firstFail == null) firstFail = fail;
-
-            o = worldPosition.offset(-dx, 0, -8);
-            LOGGER.info("[VehicleGarage@{}] Trying origin {} (ctrl at local dx={}, dz=8)",
-                    worldPosition.toShortString(), o.toShortString(), dx);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-            if (firstFail == null) firstFail = fail;
+            for (int dz = 0; dz <= 8; dz++) {
+                BlockPos o = worldPosition.offset(-dx, 0, -dz);
+                LOGGER.info("[VehicleGarage@{}] Trying origin {} (ctrl at local dx={}, dz={})",
+                        worldPosition.toShortString(), o.toShortString(), dx, dz);
+                String fail = validateAt(o);
+                if (fail == null) return onValidOrigin(o);
+                if (firstFail == null) firstFail = fail;
+            }
         }
 
         structureOrigin = null;
@@ -452,7 +427,8 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    // Canonical layout: origin is the controller's own position (west face, dz=0).
+    // Canonical layout: origin is always the centre of the 9×9 footprint (the controller
+    // can be placed at any of the 81 floor positions, so the preview centres on it).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -460,23 +436,23 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         Block wall  = ModBlocks.GARAGE_WALL.get();
         Block roof  = ModBlocks.GARAGE_ROOF.get();
         for (int y = 0; y <= 1; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
+            for (int x = -4; x <= 4; x++) {
+                for (int z = -4; z <= 4; z++) {
                     BlockPos p = origin.offset(x, y, z);
                     if (!p.equals(origin)) map.put(p, floor);
                 }
             }
         }
         for (int y = 2; y <= 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
-                    boolean border = x == 0 || x == 8 || z == 0 || z == 8;
+            for (int x = -4; x <= 4; x++) {
+                for (int z = -4; z <= 4; z++) {
+                    boolean border = x == -4 || x == 4 || z == -4 || z == 4;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
-        for (int x = 0; x < 9; x++) {
-            for (int z = 0; z < 9; z++) {
+        for (int x = -4; x <= 4; x++) {
+            for (int z = -4; z <= 4; z++) {
                 map.put(origin.offset(x, 5, z), roof);
             }
         }

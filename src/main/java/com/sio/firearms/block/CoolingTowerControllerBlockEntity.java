@@ -225,7 +225,6 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
 
         for (int dx = 0; dx <= 4; dx++) {
             for (int dz = 0; dz <= 4; dz++) {
-                if (dx > 0 && dx < 4 && dz > 0 && dz < 4) continue; // only border positions
                 BlockPos origin = worldPosition.offset(-dx, 0, -dz);
 
                 if (!quickBaseCheck(origin)) continue;
@@ -359,29 +358,30 @@ public class CoolingTowerControllerBlockEntity extends EnergyStorageBlock implem
         }
     }
 
-    // Canonical layout: origin is the controller's own position (dx=0, dz=0 corner of the 5×5).
+    // Canonical layout: origin is always the centre of the 5×5 footprint (the controller
+    // can be placed at any of the 25 base positions, so the preview centres on it).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
         Block base = ModBlocks.COOLING_TOWER_BASE.get();
         Block wall = ModBlocks.COOLING_TOWER_WALL.get();
         Block vent = ModBlocks.COOLING_TOWER_VENT.get();
-        for (int x = 0; x < 5; x++) {
-            for (int z = 0; z < 5; z++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 6; y++) {
-            for (int x = 0; x < 5; x++) {
-                for (int z = 0; z < 5; z++) {
-                    boolean border = x == 0 || x == 4 || z == 0 || z == 4;
+            for (int x = -2; x <= 2; x++) {
+                for (int z = -2; z <= 2; z++) {
+                    boolean border = x == -2 || x == 2 || z == -2 || z == 2;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
-        for (int x = 0; x < 5; x++) {
-            for (int z = 0; z < 5; z++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
                 map.put(origin.offset(x, 7, z), vent);
             }
         }

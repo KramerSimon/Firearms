@@ -237,19 +237,23 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         if (!(level instanceof ServerLevel server) || structureBack == null) return;
 
         long t = level.getGameTime();
-        // The central heat column is 2 blocks into the machine, on the controller axis.
-        BlockPos axis = worldPosition.relative(structureBack, 2);
+        // The central heat column sits at the structure's depth-centre (d=2, r=0), which
+        // may be offset from the controller's own cell now that it can sit anywhere in the shell.
+        Direction right = structureBack.getClockWise();
+        BlockPos axis = worldPosition.relative(structureBack, 2 - controllerD)
+                .relative(right, -controllerR)
+                .relative(Direction.UP, -controllerU);
         double cx = axis.getX() + 0.5;
         double cz = axis.getZ() + 0.5;
 
         if (t % 5 == 0) {
             for (int u = -1; u <= 1; u++) {
                 server.sendParticles(ParticleTypes.FLAME,
-                        cx, worldPosition.getY() + u + 0.2, cz, smelting ? 3 : 1,
+                        cx, axis.getY() + u + 0.2, cz, smelting ? 3 : 1,
                         0.22, 0.25, 0.22, 0.01);
             }
             server.sendParticles(ParticleTypes.LARGE_SMOKE,
-                    cx, worldPosition.getY() + 1.6, cz, 1, 0.18, 0.1, 0.18, 0.0);
+                    cx, axis.getY() + 1.6, cz, 1, 0.18, 0.1, 0.18, 0.0);
         }
 
         // Muffler exhaust at the centre of the roof (two blocks above the axis).
@@ -262,23 +266,35 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     }
 
     // ── Multiblock validation ───────────────────────────────────────────────────
-    // The controller is the front-centre block of a 5x5x5 shell; the machine body
-    // extends behind it. Validation tries all four horizontal orientations so the
-    // structure forms whichever way the player built it. Local coordinates relative
-    // to the controller: d = depth into the machine (0..4), r = right (-2..2),
-    // u = height (-2..2); the controller itself is at (0, 0, 0).
+    // The machine body is a 5x5x5 shell; the controller can be placed at any non-hollow
+    // cell within it (front face, walls, floor, roof — anywhere but the open central
+    // chamber). Validation tries all four horizontal orientations, and for each, every
+    // candidate cell the controller could be occupying, so the structure forms wherever
+    // and however the player built it. Local coordinates: d = depth into the machine
+    // (0..4), r = right (-2..2), u = height (-2..2).
     private Direction structureBack = null;
+    private int controllerD = 2, controllerR = 0, controllerU = 0;
 
     public boolean checkStructure() {
         if (level == null) return false;
         for (Direction back : Direction.Plane.HORIZONTAL) {
-            CoilBlock coil = validateOriented(back);
-            if (coil != null) {
-                structureValid = true;
-                structureBack = back;
-                installedCoilTemp = coil.getTemperature();
-                setFormed(true);
-                return true;
+            for (int d = 0; d <= 4; d++) {
+                for (int r = -2; r <= 2; r++) {
+                    for (int u = -2; u <= 2; u++) {
+                        if (cellType(d, r, u) == Cell.HOLLOW) continue;
+                        CoilBlock coil = validateOriented(back, d, r, u);
+                        if (coil != null) {
+                            structureValid = true;
+                            structureBack = back;
+                            controllerD = d;
+                            controllerR = r;
+                            controllerU = u;
+                            installedCoilTemp = coil.getTemperature();
+                            setFormed(true);
+                            return true;
+                        }
+                    }
+                }
             }
         }
         structureValid = false;
@@ -288,7 +304,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         return false;
     }
 
-    private CoilBlock validateOriented(Direction back) {
+    private CoilBlock validateOriented(Direction back, int cd, int cr, int cu) {
         Direction right = back.getClockWise();
         Block muffler = ModBlocks.MUFFLER_HATCH.get();
         CoilBlock coil = null;
@@ -296,7 +312,8 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         for (int u = -2; u <= 2; u++) {
             for (int d = 0; d <= 4; d++) {
                 for (int r = -2; r <= 2; r++) {
-                    BlockPos p = worldPosition.relative(back, d).relative(right, r).relative(Direction.UP, u);
+                    if (d == cd && r == cr && u == cu) continue; // the controller's own cell
+                    BlockPos p = worldPosition.relative(back, d - cd).relative(right, r - cr).relative(Direction.UP, u - cu);
                     switch (cellType(d, r, u)) {
                         case CONTROLLER, HOLLOW -> { /* nothing to verify */ }
                         case CASING  -> { if (!isCasing(p)) return null; }
@@ -317,8 +334,10 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
     private enum Cell { CASING, COIL, CONTROLLER, MUFFLER, HOLLOW }
 
     // The shape of the furnace at a given local cell (kept in sync with the JEI guide).
+    // CONTROLLER is no longer tied to a fixed cell — cellType() only classifies the block
+    // requirements of the shell itself; validateOriented() separately skips whichever cell
+    // the controller currently occupies.
     private static Cell cellType(int d, int r, int u) {
-        if (d == 0 && r == 0 && u == 0) return Cell.CONTROLLER;          // front-centre interface
         int dist = Math.max(Math.abs(d - 2), Math.abs(r));              // ring distance from the central axis
         if (u == 2)  return (d == 2 && r == 0) ? Cell.MUFFLER : Cell.CASING; // roof (+ muffler)
         if (u == -2) return Cell.CASING;                                // floor
@@ -364,6 +383,9 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         }
     }
 
+    // Canonical layout: origin is always the structure's depth-centre (d=2, r=0, u=0) —
+    // the controller can be placed at any non-hollow cell in the shell, so the preview
+    // centres on the machine regardless of where it ends up.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
@@ -375,7 +397,7 @@ public class EBFControllerBlockEntity extends EnergyStorageBlock implements Menu
         for (int u = -2; u <= 2; u++) {
             for (int d = 0; d <= 4; d++) {
                 for (int r = -2; r <= 2; r++) {
-                    BlockPos p = origin.relative(back, d).relative(right, r).relative(Direction.UP, u);
+                    BlockPos p = origin.relative(back, d - 2).relative(right, r).relative(Direction.UP, u);
                     if (p.equals(origin)) continue;
                     Block expected = switch (cellType(d, r, u)) {
                         case CASING -> casing;

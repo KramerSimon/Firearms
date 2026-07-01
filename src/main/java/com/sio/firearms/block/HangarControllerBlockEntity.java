@@ -239,34 +239,14 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
     public boolean checkStructure() {
         if (level == null) return false;
 
-        // Try controller at any position on the outer border of the 11x11 floor.
-        for (int dz = 0; dz <= 10; dz++) {
-            BlockPos o;
-            String fail;
-
-            // Controller on west face (dx=0)
-            o = worldPosition.offset(0, 0, -dz);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-
-            // Controller on east face (dx=10)
-            o = worldPosition.offset(-10, 0, -dz);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-        }
-        for (int dx = 1; dx <= 9; dx++) {
-            BlockPos o;
-            String fail;
-
-            // Controller on north face (dz=0)
-            o = worldPosition.offset(-dx, 0, 0);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
-
-            // Controller on south face (dz=10)
-            o = worldPosition.offset(-dx, 0, -10);
-            fail = validateAt(o);
-            if (fail == null) return onValidOrigin(o);
+        // Try all 121 positions of the 11x11 floor as the controller's possible location
+        // within the grid (anywhere in the footprint, not just the border).
+        for (int dx = 0; dx <= 10; dx++) {
+            for (int dz = 0; dz <= 10; dz++) {
+                BlockPos o = worldPosition.offset(-dx, 0, -dz);
+                String fail = validateAt(o);
+                if (fail == null) return onValidOrigin(o);
+            }
         }
 
         structureOrigin = null;
@@ -410,29 +390,30 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
         }
     }
 
-    // Canonical layout: origin is the controller's own position (west face, dz=0).
+    // Canonical layout: origin is always the centre of the 11×11 footprint (the controller
+    // can be placed at any of the 121 floor positions, so the preview centres on it).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
         Block floor = ModBlocks.HANGAR_FLOOR.get();
         Block wall  = ModBlocks.HANGAR_WALL.get();
         Block roof  = ModBlocks.HANGAR_ROOF.get();
-        for (int x = 0; x < 11; x++) {
-            for (int z = 0; z < 11; z++) {
+        for (int x = -5; x <= 5; x++) {
+            for (int z = -5; z <= 5; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, floor);
             }
         }
         for (int y = 1; y <= 4; y++) {
-            for (int x = 0; x < 11; x++) {
-                for (int z = 0; z < 11; z++) {
-                    boolean border = x == 0 || x == 10 || z == 0 || z == 10;
+            for (int x = -5; x <= 5; x++) {
+                for (int z = -5; z <= 5; z++) {
+                    boolean border = x == -5 || x == 5 || z == -5 || z == 5;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
-        for (int x = 0; x < 11; x++) {
-            for (int z = 0; z < 11; z++) {
+        for (int x = -5; x <= 5; x++) {
+            for (int z = -5; z <= 5; z++) {
                 map.put(origin.offset(x, 5, z), roof);
             }
         }

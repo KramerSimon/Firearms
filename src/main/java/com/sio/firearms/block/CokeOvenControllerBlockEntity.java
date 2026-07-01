@@ -195,14 +195,15 @@ public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuPr
         }
     }
 
-    // Canonical layout: origin is the controller's own position (min corner of the 3×3×3 cube).
+    // Canonical layout: origin is always the centre of the 3×3×3 cube (the controller can
+    // be placed at any of the 27 cells, so the preview centres on wherever it is).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
         Block brick = ModBlocks.COKE_OVEN_BRICK.get();
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
-                for (int z = 0; z < 3; z++) {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
                     BlockPos p = origin.offset(x, y, z);
                     if (!p.equals(origin)) map.put(p, brick);
                 }

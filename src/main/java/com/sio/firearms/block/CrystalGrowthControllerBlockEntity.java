@@ -116,7 +116,6 @@ public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock imple
         if (level == null) return false;
         for (int ox = 0; ox <= 2; ox++) {
             for (int oz = 0; oz <= 2; oz++) {
-                if (ox == 1 && oz == 1) continue;
                 BlockPos origin = worldPosition.offset(-ox, 0, -oz);
                 if (isValidAt(origin)) {
                     structureValid = true;
@@ -163,28 +162,29 @@ public class CrystalGrowthControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    // Canonical layout: origin is the controller's own position (ox=0, oz=0 corner of the 3×3).
+    // Canonical layout: origin is always the centre of the 3×3 footprint (the controller
+    // can be placed at any of the 9 base positions, so the preview centres on it).
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
         Map<BlockPos, Block> map = new HashMap<>();
         Block base = ModBlocks.CRYSTAL_GROWTH_BASE.get();
         Block wall = ModBlocks.CRYSTAL_GROWTH_WALL.get();
         Block top  = ModBlocks.CRYSTAL_GROWTH_TOP.get();
-        for (int x = 0; x < 3; x++) {
-            for (int z = 0; z < 3; z++) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
                 BlockPos p = origin.offset(x, 0, z);
                 if (!p.equals(origin)) map.put(p, base);
             }
         }
         for (int y = 1; y <= 2; y++) {
-            for (int x = 0; x < 3; x++) {
-                for (int z = 0; z < 3; z++) {
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
                     map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
-        for (int x = 0; x < 3; x++) {
-            for (int z = 0; z < 3; z++) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
                 map.put(origin.offset(x, 3, z), top);
             }
         }
