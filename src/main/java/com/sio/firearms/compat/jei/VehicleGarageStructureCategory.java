@@ -25,28 +25,31 @@ public class VehicleGarageStructureCategory implements IRecipeCategory<VehicleGa
             RecipeType.create(Firearms.MOD_ID, "vehicle_garage_structure", VehicleGarageStructureJeiRecipe.class);
 
     private static final int W = 178;
-    private static final int H = 118;
+    private static final int H = 132;
 
-    // 3 representative layers for the 9×9×6 structure.
+    // 3 representative layers for the 11×11×5 structure.
     // F=garage_floor, W=garage_wall, D=garage_door, R=garage_roof, C=controller, .=hollow
     private static final String[][] LAYERS = {
-        { "FFFFFFFFF", "FFFFFFFFF", "FFFFFFFFF", "FFFFFFFFF", "FFFFFFFFF",
-          "FFFFFFFFF", "FFFFFFFFF", "FFFFFFFFF", "FFFCFFFFF" }, // 1 — ×2 floor (controller front centre)
-        { "WWWWWWWWW", "W.......W", "W.......W", "W.......W", "W.......W",
-          "W.......W", "W.......W", "W.......W", "WDDDDDDDW" }, // 2 — ×3 wall ring (D=doors on front)
-        { "RRRRRRRRR", "RRRRRRRRR", "RRRRRRRRR", "RRRRRRRRR", "RRRRRRRRR",
-          "RRRRRRRRR", "RRRRRRRRR", "RRRRRRRRR", "RRRRRRRRR" }, // 3 — roof cap
+        { "FFFFFFFFFFF", "FFFFFFFFFFF", "FFFFFFFFFFF", "FFFFFFFFFFF", "FFFFFFFFFFF",
+          "FFFFFFFFFFF", "FFFFFFFFFFF", "FFFFFFFFFFF", "FFFFFFFFFFF", "FFFFFFFFFFF",
+          "FFFFFCFFFFF" }, // 1 — ×1 floor (controller front centre)
+        { "WWWWWWWWWWW", "W.........W", "W.........W", "W.........W", "W.........W",
+          "W.........W", "W.........W", "W.........W", "W.........W", "W.........W",
+          "WDDDDDDDDDW" }, // 2 — ×3 wall ring (D=doors on front)
+        { "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR",
+          "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR", "RRRRRRRRRRR",
+          "RRRRRRRRRRR" }, // 3 — roof cap
     };
     private static final String[] STEP_NUMS  = { "1", "2", "3" };
-    private static final String[] LAYER_NAME = { "×2 Floor", "×3 Walls", "Roof" };
+    private static final String[] LAYER_NAME = { "×1 Floor", "×3 Walls", "Roof" };
 
     private static final int CELL     = 4;
-    private static final int GRID_W   = CELL * 9; // 36
+    private static final int GRID_W   = CELL * 11; // 44
     private static final int GRID_TOP = 22;
     private static final int PANEL_X0 = 4;
     private static final int PANEL_GAP = 58;
 
-    private static final int BOM_Y   = 63;
+    private static final int BOM_Y   = 70;
     private static final int[] BOM_X = { 6, 50, 94, 138 };
 
     private static final int C_FLOOR   = 0xFF646464;
@@ -104,8 +107,8 @@ public class VehicleGarageStructureCategory implements IRecipeCategory<VehicleGa
             g.fill(px - 1, GRID_TOP - 1, px,               GRID_TOP + GRID_W + 1, C_PANEL_HI);
 
             String[] layer = LAYERS[li];
-            for (int row = 0; row < 9; row++) {
-                for (int col = 0; col < 9; col++) {
+            for (int row = 0; row < 11; row++) {
+                for (int col = 0; col < 11; col++) {
                     int x = px + col * CELL;
                     int y = GRID_TOP + row * CELL;
                     int color = colorOf(layer[row].charAt(col));
@@ -126,8 +129,8 @@ public class VehicleGarageStructureCategory implements IRecipeCategory<VehicleGa
         bom(g, font, 3, C_ROOF,  "x" + VehicleGarageStructureJeiRecipe.ROOF_COUNT);
 
         int ny = BOM_Y + 32;
-        g.drawString(font, "Build bottom→top. 9×9×6. Controller on any border of the two floor layers.", 2, ny,      0xFF9AA0A8, false);
-        g.drawString(font, "Layers 2–4 are hollow wall rings. Garage Door blocks may replace any border wall.", 2, ny + 10, 0xFF9AA0A8, false);
+        g.drawString(font, "Build bottom→top. 11×11×5 — 1× Floor / 3× Walls / 1× Roof.", 2, ny,      0xFF9AA0A8, false);
+        g.drawString(font, "Layers 1–3 are hollow wall rings. Garage Door blocks may replace any border wall.", 2, ny + 10, 0xFF9AA0A8, false);
         g.drawString(font, "A vehicle spawns at interior centre on activation. Energy/Fluid Ports OK.", 2, ny + 20, 0xFF9AA0A8, false);
     }
 

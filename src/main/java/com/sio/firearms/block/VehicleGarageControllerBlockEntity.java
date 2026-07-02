@@ -219,10 +219,10 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         if (level == null || structureOrigin == null) return;
         if (!hasRequiredItems()) return;
 
-        // Interior centre: 2-layer floor → spawn at y+2; 9-wide → centre at +4.5
-        double cx = structureOrigin.getX() + 4.5;
-        double cy = structureOrigin.getY() + 2.0;
-        double cz = structureOrigin.getZ() + 4.5;
+        // Interior centre: 1-layer floor → spawn at y+1; 11-wide → centre at +5.5
+        double cx = structureOrigin.getX() + 5.5;
+        double cy = structureOrigin.getY() + 1.0;
+        double cz = structureOrigin.getZ() + 5.5;
 
         TankEntity tank = new TankEntity(ModEntities.TANK.get(), level);
         tank.setPos(cx, cy, cz);
@@ -242,9 +242,9 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
 
     private Direction findDoorFacing() {
         if (structureOrigin == null) return Direction.NORTH;
-        for (int y = 2; y <= 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 0; x < 11; x++) {
+                for (int z = 0; z < 11; z++) {
                     BlockState bs = level.getBlockState(structureOrigin.offset(x, y, z));
                     if (bs.getBlock() instanceof GarageDoorBlock) {
                         return bs.getValue(GarageDoorBlock.FACING);
@@ -255,16 +255,16 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         return Direction.NORTH;
     }
 
-    // ── Structure validation: 9×9×6 ─────────────────────────────────────────
+    // ── Structure validation: 11×11×5 ─────────────────────────────────────────
 
     public boolean checkStructure() {
         if (level == null) return false;
         String firstFail = null;
 
-        // Try all 81 positions of the 9×9 floor as the controller's possible location
+        // Try all 121 positions of the 11×11 floor as the controller's possible location
         // within the grid (anywhere in the footprint, not just the border).
-        for (int dx = 0; dx <= 8; dx++) {
-            for (int dz = 0; dz <= 8; dz++) {
+        for (int dx = 0; dx <= 10; dx++) {
+            for (int dz = 0; dz <= 10; dz++) {
                 BlockPos o = worldPosition.offset(-dx, 0, -dz);
                 LOGGER.info("[VehicleGarage@{}] Trying origin {} (ctrl at local dx={}, dz={})",
                         worldPosition.toShortString(), o.toShortString(), dx, dz);
@@ -296,22 +296,21 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         return true;
     }
 
-    /** Every floor/wall/roof position of the 9×9×6 shell for a given origin. */
+    /** Every floor/wall/roof position of the 11×11×5 shell for a given origin. */
     private Set<BlockPos> collectStructurePositions(BlockPos origin) {
         Set<BlockPos> positions = new HashSet<>();
-        for (int y = 0; y <= 1; y++)
-            for (int x = 0; x < 9; x++)
-                for (int z = 0; z < 9; z++)
-                    positions.add(origin.offset(x, y, z));
-        for (int y = 2; y <= 4; y++)
-            for (int x = 0; x < 9; x++)
-                for (int z = 0; z < 9; z++) {
-                    boolean border = x == 0 || x == 8 || z == 0 || z == 8;
+        for (int x = 0; x < 11; x++)
+            for (int z = 0; z < 11; z++)
+                positions.add(origin.offset(x, 0, z));
+        for (int y = 1; y <= 3; y++)
+            for (int x = 0; x < 11; x++)
+                for (int z = 0; z < 11; z++) {
+                    boolean border = x == 0 || x == 10 || z == 0 || z == 10;
                     if (border) positions.add(origin.offset(x, y, z));
                 }
-        for (int x = 0; x < 9; x++)
-            for (int z = 0; z < 9; z++)
-                positions.add(origin.offset(x, 5, z));
+        for (int x = 0; x < 11; x++)
+            for (int z = 0; z < 11; z++)
+                positions.add(origin.offset(x, 4, z));
         return positions;
     }
 
@@ -321,9 +320,9 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         // Sample the first door's OPEN state to determine toggle direction
         boolean currentlyOpen = false;
         search:
-        for (int y = 2; y <= 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 0; x < 11; x++) {
+                for (int z = 0; z < 11; z++) {
                     BlockState bs = level.getBlockState(structureOrigin.offset(x, y, z));
                     if (bs.getBlock() instanceof GarageDoorBlock) {
                         currentlyOpen = bs.getValue(GarageDoorBlock.OPEN);
@@ -334,9 +333,9 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
 
         boolean newOpen = !currentlyOpen;
-        for (int y = 2; y <= 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 0; x < 11; x++) {
+                for (int z = 0; z < 11; z++) {
                     BlockPos bp = structureOrigin.offset(x, y, z);
                     BlockState bs = level.getBlockState(bp);
                     if (bs.getBlock() instanceof GarageDoorBlock) {
@@ -350,28 +349,26 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
     private String validateAt(BlockPos origin) {
         String tag = "[VehicleGarage@" + worldPosition.toShortString() + " origin=" + origin.toShortString() + "]";
 
-        // Layers 0–1: 9×9 garage_floor (controller counts as floor on border)
-        for (int y = 0; y <= 1; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
-                    BlockPos fp = origin.offset(x, y, z);
-                    Block b = level.getBlockState(fp).getBlock();
-                    if (!isFloor(b)) {
-                        String fail = String.format("layer %d (%d,%d) abs(%d,%d,%d): expected floor, got %s",
-                                y, x, z, fp.getX(), fp.getY(), fp.getZ(), blockName(b));
-                        LOGGER.info("{} FAIL {}", tag, fail);
-                        return fail;
-                    }
+        // Layer 0: 11×11 garage_floor (controller counts as floor on border)
+        for (int x = 0; x < 11; x++) {
+            for (int z = 0; z < 11; z++) {
+                BlockPos fp = origin.offset(x, 0, z);
+                Block b = level.getBlockState(fp).getBlock();
+                if (!isFloor(b)) {
+                    String fail = String.format("layer 0 (%d,%d) abs(%d,%d,%d): expected floor, got %s",
+                            x, z, fp.getX(), fp.getY(), fp.getZ(), blockName(b));
+                    LOGGER.info("{} FAIL {}", tag, fail);
+                    return fail;
                 }
             }
-            LOGGER.info("{} layer {} floor OK", tag, y);
         }
+        LOGGER.info("{} layer 0 floor OK", tag);
 
-        // Layers 2–4: 9×9 wall border, 7×7 interior air/port
-        for (int y = 2; y <= 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                for (int z = 0; z < 9; z++) {
-                    boolean border = x == 0 || x == 8 || z == 0 || z == 8;
+        // Layers 1–3: 11×11 wall border, 9×9 interior air/port
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 0; x < 11; x++) {
+                for (int z = 0; z < 11; z++) {
+                    boolean border = x == 0 || x == 10 || z == 0 || z == 10;
                     BlockPos bp = origin.offset(x, y, z);
                     Block b = level.getBlockState(bp).getBlock();
                     if (border) {
@@ -394,20 +391,20 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
             LOGGER.info("{} layer {} wall/interior OK", tag, y);
         }
 
-        // Layer 5: 9×9 garage_roof
-        for (int x = 0; x < 9; x++) {
-            for (int z = 0; z < 9; z++) {
-                BlockPos rp = origin.offset(x, 5, z);
+        // Layer 4: 11×11 garage_roof
+        for (int x = 0; x < 11; x++) {
+            for (int z = 0; z < 11; z++) {
+                BlockPos rp = origin.offset(x, 4, z);
                 Block b = level.getBlockState(rp).getBlock();
                 if (!isRoof(b)) {
-                    String fail = String.format("layer 5 (%d,%d) abs(%d,%d,%d): expected roof, got %s",
+                    String fail = String.format("layer 4 (%d,%d) abs(%d,%d,%d): expected roof, got %s",
                             x, z, rp.getX(), rp.getY(), rp.getZ(), blockName(b));
                     LOGGER.info("{} FAIL {}", tag, fail);
                     return fail;
                 }
             }
         }
-        LOGGER.info("{} layer 5 roof OK — Structure VALID", tag);
+        LOGGER.info("{} layer 4 roof OK — Structure VALID", tag);
         return null;
     }
 
@@ -453,7 +450,7 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         }
     }
 
-    // Canonical layout: origin is the front-center cell at ground level (the 9×9
+    // Canonical layout: origin is the front-center cell at ground level (the 11×11
     // footprint), with the structure extending back (+z) and to the sides.
     @Override
     public Map<BlockPos, Block> getPreviewPositions(BlockPos origin) {
@@ -461,25 +458,23 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
         Block floor = ModBlocks.GARAGE_FLOOR.get();
         Block wall  = ModBlocks.GARAGE_WALL.get();
         Block roof  = ModBlocks.GARAGE_ROOF.get();
-        for (int y = 0; y <= 1; y++) {
-            for (int x = -4; x <= 4; x++) {
-                for (int z = 0; z <= 8; z++) {
-                    BlockPos p = origin.offset(x, y, z);
-                    if (!p.equals(origin)) map.put(p, floor);
-                }
+        for (int x = -5; x <= 5; x++) {
+            for (int z = 0; z <= 10; z++) {
+                BlockPos p = origin.offset(x, 0, z);
+                if (!p.equals(origin)) map.put(p, floor);
             }
         }
-        for (int y = 2; y <= 4; y++) {
-            for (int x = -4; x <= 4; x++) {
-                for (int z = 0; z <= 8; z++) {
-                    boolean border = x == -4 || x == 4 || z == 0 || z == 8;
+        for (int y = 1; y <= 3; y++) {
+            for (int x = -5; x <= 5; x++) {
+                for (int z = 0; z <= 10; z++) {
+                    boolean border = x == -5 || x == 5 || z == 0 || z == 10;
                     if (border) map.put(origin.offset(x, y, z), wall);
                 }
             }
         }
-        for (int x = -4; x <= 4; x++) {
-            for (int z = 0; z <= 8; z++) {
-                map.put(origin.offset(x, 5, z), roof);
+        for (int x = -5; x <= 5; x++) {
+            for (int z = 0; z <= 10; z++) {
+                map.put(origin.offset(x, 4, z), roof);
             }
         }
         return map;
