@@ -247,6 +247,7 @@ public class ModCreativeTabs {
                         output.accept(ModItems.HAZMAT_LEGGINGS.get());
                         output.accept(ModItems.HAZMAT_BOOTS.get());
                         output.accept(ModItems.GEIGER_COUNTER.get());
+                        output.accept(ModItems.METAL_DETECTOR.get());
                         // ── Vehicle Garage ────────────────────────────────────
                         output.accept(ModItems.GARAGE_FLOOR.get());
                         output.accept(ModItems.GARAGE_WALL.get());
@@ -329,6 +330,8 @@ public class ModCreativeTabs {
                         output.accept(ModItems.JET_ENGINE.get());
                         output.accept(ModItems.COCKPIT_AVIONICS.get());
                         output.accept(ModItems.AIRCRAFT_SCHEMATIC.get());
+                        // ── Refuel Station ────────────────────────────────────
+                        output.accept(ModItems.REFUEL_STATION.get());
                     })
                     .build());
 }
