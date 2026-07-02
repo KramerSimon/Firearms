@@ -110,7 +110,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<NukeBombEntity>> NUKE_BOMB =
             ENTITY_TYPES.register("nuke_bomb", () -> EntityType.Builder.<NukeBombEntity>of(NukeBombEntity::new, MobCategory.MISC)
                     .sized(1.0F, 2.0F)
-                    .clientTrackingRange(128)
+                    .clientTrackingRange(256)
                     .build(Firearms.MOD_ID + ":nuke_bomb"));
 
     // ── Aircraft ──────────────────────────────────────────────────────────────

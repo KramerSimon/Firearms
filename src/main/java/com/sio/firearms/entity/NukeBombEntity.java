@@ -73,7 +73,7 @@ public class NukeBombEntity extends Entity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);
-        if (!(held.getItem() instanceof WrenchItem)) {
+        if (!held.isEmpty() && !(held.getItem() instanceof WrenchItem)) {
             return InteractionResult.PASS;
         }
 
