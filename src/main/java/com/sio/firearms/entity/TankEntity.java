@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 public class TankEntity extends Entity {
 
     public static final int MAX_AMMO = 20;
+    public static final int MAX_FUEL = 10_000;
 
     private static final EntityDataAccessor<Float>   DATA_TURRET_YAW   = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float>   DATA_TURRET_PITCH = SynchedEntityData.defineId(TankEntity.class, EntityDataSerializers.FLOAT);
@@ -173,8 +174,8 @@ public class TankEntity extends Entity {
             // Diesel bucket → refuel 1000 mB, return empty bucket
             if (held.getItem() == ModItems.DIESEL_BUCKET.get()) {
                 int current = getFuel();
-                if (current < 10000) {
-                    setFuel(Math.min(10000, current + 1000));
+                if (current < MAX_FUEL) {
+                    setFuel(Math.min(MAX_FUEL, current + 1000));
                     if (!player.isCreative()) {
                         held.shrink(1);
                         player.addItem(new net.minecraft.world.item.ItemStack(Items.BUCKET));

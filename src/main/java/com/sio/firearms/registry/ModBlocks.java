@@ -4,6 +4,7 @@ import com.sio.firearms.Firearms;
 import com.sio.firearms.block.AcidBathBlock;
 import com.sio.firearms.block.CoolingTowerControllerBlock;
 import com.sio.firearms.block.FluidTankBlock;
+import com.sio.firearms.block.RefuelStationBlock;
 import com.sio.firearms.block.ReactorControllerBlock;
 import com.sio.firearms.block.SteamTurbineBlock;
 import com.sio.firearms.block.GasCentrifugeBlock;
@@ -631,6 +632,13 @@ public class ModBlocks {
             BLOCKS.register("fluid_tank",
                     () -> new FluidTankBlock(BlockBehaviour.Properties.of()
                             .strength(3.5f)
+                            .requiresCorrectToolForDrops()));
+
+    // ── Vehicle/Aircraft refuel station ─────────────────────────────────────
+    public static final DeferredBlock<Block> REFUEL_STATION =
+            BLOCKS.register("refuel_station",
+                    () -> new RefuelStationBlock(BlockBehaviour.Properties.of()
+                            .strength(3.0f)
                             .requiresCorrectToolForDrops()));
 
     // ── Nuclear Reactor Stage 2 ──────────────────────────────────────────────

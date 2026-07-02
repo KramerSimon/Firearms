@@ -398,6 +398,7 @@ public class ModItems {
 
     // ── Fluid storage ────────────────────────────────────────────────────────
     public static final DeferredItem<BlockItem> FLUID_TANK = ITEMS.registerSimpleBlockItem(ModBlocks.FLUID_TANK);
+    public static final DeferredItem<BlockItem> REFUEL_STATION = ITEMS.registerSimpleBlockItem(ModBlocks.REFUEL_STATION);
 
     // ── Nuclear Reactor Stage 2 blocks ────────────────────────────────────────
     public static final DeferredItem<BlockItem> REACTOR_BASE                = ITEMS.registerSimpleBlockItem(ModBlocks.REACTOR_BASE);

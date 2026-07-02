@@ -77,6 +77,7 @@ public class ModScreens {
         event.register(ModMenuTypes.EUV_LITHOGRAPHY_MENU.get(), EuvLithographyScreen::new);
         event.register(ModMenuTypes.GAS_CENTRIFUGE_MENU.get(), GasCentrifugeScreen::new);
         event.register(ModMenuTypes.FLUID_TANK_MENU.get(), FluidTankScreen::new);
+        event.register(ModMenuTypes.REFUEL_STATION_MENU.get(), com.sio.firearms.screen.RefuelStationScreen::new);
         event.register(ModMenuTypes.REACTOR_MENU.get(), ReactorScreen::new);
         event.register(ModMenuTypes.STEAM_TURBINE_MENU.get(), SteamTurbineScreen::new);
         event.register(ModMenuTypes.COOLING_TOWER_MENU.get(), CoolingTowerScreen::new);

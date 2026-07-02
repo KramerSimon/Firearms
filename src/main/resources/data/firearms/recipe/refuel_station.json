@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SPS",
+    "ICI",
+    "SPS"
+  ],
+  "key": {
+    "S": {"item": "firearms:steel_ingot"},
+    "P": {"item": "firearms:fluid_pipe"},
+    "I": {"item": "minecraft:iron_bars"},
+    "C": {"item": "firearms:circuit_board"}
+  },
+  "result": {
+    "id": "firearms:refuel_station",
+    "count": 1
+  }
+}

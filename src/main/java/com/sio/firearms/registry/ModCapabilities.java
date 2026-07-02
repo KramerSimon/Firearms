@@ -380,6 +380,10 @@ public class ModCapabilities {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_TANK.get(),
                 (be, dir) -> be.fullAccessHandler);
 
+        // ── Refuel Station ────────────────────────────────────────────────────
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.REFUEL_STATION.get(),
+                (be, dir) -> be.fullAccessHandler);
+
         // ── Nuclear Reactor Stage 2 ───────────────────────────────────────────
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.REACTOR_CONTROLLER.get(),
                 (be, dir) -> be.getEnergyStorage());

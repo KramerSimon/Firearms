@@ -319,7 +319,7 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
                             return "layer " + y + " border (" + x + "," + z + "): expected wall, got " + blockName(b);
                         }
                     } else {
-                        if (!level.getBlockState(bp).isAir() && !isPort(b)) {
+                        if (!level.getBlockState(bp).isAir() && !isValidInterior(b)) {
                             return "layer " + y + " interior (" + x + "," + z + "): expected air/port, got " + blockName(b);
                         }
                     }
@@ -361,6 +361,11 @@ public class HangarControllerBlockEntity extends EnergyStorageBlock implements M
 
     private boolean isPort(Block b) {
         return b == ModBlocks.ENERGY_PORT.get() || b == ModBlocks.FLUID_PORT.get();
+    }
+
+    /** Interior air space also accepts a refuel station placed inside the hangar. */
+    private boolean isValidInterior(Block b) {
+        return isPort(b) || b == ModBlocks.REFUEL_STATION.get();
     }
 
     private String blockName(Block b) {

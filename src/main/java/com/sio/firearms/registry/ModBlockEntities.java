@@ -235,6 +235,11 @@ public class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(FluidTankBlockEntity::new,
                             ModBlocks.FLUID_TANK.get()).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.sio.firearms.block.RefuelStationBlockEntity>> REFUEL_STATION =
+            BLOCK_ENTITIES.register("refuel_station",
+                    () -> BlockEntityType.Builder.of(com.sio.firearms.block.RefuelStationBlockEntity::new,
+                            ModBlocks.REFUEL_STATION.get()).build(null));
+
     // ── Nuclear Reactor Stage 2 ───────────────────────────────────────────────
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorControllerBlockEntity>> REACTOR_CONTROLLER =
             BLOCK_ENTITIES.register("reactor_controller",

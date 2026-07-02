@@ -1984,6 +1984,79 @@ def make_nuke_bomb():
     save(img, os.path.join(ITEM, "nuke_bomb.png"))
 
 
+# ── Refuel station block (16×16) — steel floor panel, hazard border, nozzle ──
+def make_refuel_station():
+    STEEL   = (90,  96, 104, 255)
+    STEEL_L = (122, 128, 136, 255)
+    STEEL_D = (58,  62,  70, 255)
+    HAZ_Y   = (230, 190,  20, 255)
+    HAZ_B   = (28,  28,  28, 255)
+    NOZZLE  = (40,  42,  48, 255)
+    NOZZLE_L= (84,  88,  96, 255)
+    PIPE    = (150, 100,  40, 255)
+
+    img = px(16, 16)
+    draw = ImageDraw.Draw(img)
+
+    # Steel floor panel base with a subtle bevel
+    draw.rectangle([1, 1, 14, 14], fill=STEEL)
+    for x in range(1, 15):
+        img.putpixel((x, 1), STEEL_L)
+        img.putpixel((x, 14), STEEL_D)
+    for y in range(1, 15):
+        img.putpixel((1, y), STEEL_L)
+        img.putpixel((14, y), STEEL_D)
+
+    # Yellow/black hazard stripe border
+    for i in range(16):
+        c = HAZ_Y if (i // 2) % 2 == 0 else HAZ_B
+        img.putpixel((i, 0), c)
+        img.putpixel((i, 15), c)
+        img.putpixel((0, i), c)
+        img.putpixel((15, i), c)
+
+    # Fuel nozzle icon, centered
+    draw.rectangle([7, 3, 8, 5], fill=PIPE)          # spout
+    draw.rectangle([6, 5, 9, 10], fill=NOZZLE)        # body
+    img.putpixel((7, 6), NOZZLE_L)
+    draw.ellipse([5, 10, 10, 13], fill=NOZZLE, outline=NOZZLE_L)  # base ring
+
+    save(img, os.path.join(BLOCK, "refuel_station.png"))
+
+
+# ── Refuel station GUI background (176×166) ──────────────────────────────────
+def make_refuel_station_gui():
+    PANEL   = (198, 198, 198, 255)
+    BORDER  = (85,   85,  85, 255)
+    BAR_BG  = (40,   38,  32, 255)
+    SLOT_BG = (139, 139, 139, 255)
+    SLOT_D  = (55,   55,  55, 255)
+    SLOT_L  = (255, 255, 255, 255)
+
+    img = px(176, 166, bg=PANEL)
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([0, 0, 175, 165], outline=BORDER, width=1)
+
+    # Fluid bar recess (matches RefuelStationScreen.BAR_X/Y/W/H)
+    bx, by, bw, bh = 80, 14, 16, 52
+    draw.rectangle([bx - 1, by - 1, bx + bw, by + bh], fill=SLOT_D)
+    draw.rectangle([bx, by, bx + bw - 1, by + bh - 1], fill=BAR_BG)
+
+    def slot(x, y):
+        draw.rectangle([x - 1, y - 1, x + 18, y + 18], fill=SLOT_D)
+        draw.rectangle([x, y, x + 17, y + 17], fill=SLOT_L)
+        draw.rectangle([x + 1, y + 1, x + 16, y + 16], fill=SLOT_BG)
+
+    # Player inventory (3 rows) + hotbar, matching RefuelStationMenu slot layout
+    for row in range(3):
+        for col in range(9):
+            slot(8 + col * 18, 84 + row * 18)
+    for col in range(9):
+        slot(8 + col * 18, 142)
+
+    save(img, os.path.join(GUI, "refuel_station.png"))
+
+
 # ── main ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("Generating Firearms mod textures...")
@@ -2080,5 +2153,9 @@ if __name__ == "__main__":
 
     # ── Detection tools ──────────────────────────────────────────────────────
     make_metal_detector()
+
+    # ── Refuel Station ────────────────────────────────────────────────────────
+    make_refuel_station()
+    make_refuel_station_gui()
 
     print("Done.")

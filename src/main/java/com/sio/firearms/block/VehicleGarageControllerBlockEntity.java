@@ -379,7 +379,7 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
                             return fail;
                         }
                     } else {
-                        if (!level.getBlockState(bp).isAir() && !isPort(b)) {
+                        if (!level.getBlockState(bp).isAir() && !isValidInterior(b)) {
                             String fail = String.format("layer %d interior (%d,%d) abs(%d,%d,%d): expected air/port, got %s",
                                     y, x, z, bp.getX(), bp.getY(), bp.getZ(), blockName(b));
                             LOGGER.info("{} FAIL {}", tag, fail);
@@ -429,6 +429,11 @@ public class VehicleGarageControllerBlockEntity extends EnergyStorageBlock imple
 
     private boolean isPort(Block b) {
         return b == ModBlocks.ENERGY_PORT.get() || b == ModBlocks.FLUID_PORT.get();
+    }
+
+    /** Interior air space also accepts a refuel station placed inside the garage. */
+    private boolean isValidInterior(Block b) {
+        return isPort(b) || b == ModBlocks.REFUEL_STATION.get();
     }
 
     private String blockName(Block b) {

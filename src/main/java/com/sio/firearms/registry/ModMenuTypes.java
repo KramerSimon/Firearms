@@ -162,6 +162,10 @@ public class ModMenuTypes {
             MENU_TYPES.register("fluid_tank",
                     () -> IMenuTypeExtension.create((windowId, inv, data) -> new FluidTankMenu(windowId, inv)));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<com.sio.firearms.menu.RefuelStationMenu>> REFUEL_STATION_MENU =
+            MENU_TYPES.register("refuel_station",
+                    () -> IMenuTypeExtension.create((windowId, inv, data) -> new com.sio.firearms.menu.RefuelStationMenu(windowId, inv)));
+
     // ── Nuclear Reactor Stage 2 ───────────────────────────────────────────────
     public static final DeferredHolder<MenuType<?>, MenuType<ReactorMenu>> REACTOR_MENU =
             MENU_TYPES.register("reactor_controller",

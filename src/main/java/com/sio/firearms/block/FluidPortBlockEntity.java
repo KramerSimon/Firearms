@@ -245,6 +245,8 @@ public class FluidPortBlockEntity extends BlockEntity {
                     target = turbine.getSteamInputHandler();
                 } else if (be instanceof CoolingTowerControllerBlockEntity ct) {
                     target = ct.steamInputHandler;
+                } else if (be instanceof RefuelStationBlockEntity rs) {
+                    target = rs.fullAccessHandler;
                 }
                 if (target != null) {
                     FluidStack toOffer = tank.drain(MAX_TRANSFER, IFluidHandler.FluidAction.SIMULATE);
@@ -625,7 +627,8 @@ public class FluidPortBlockEntity extends BlockEntity {
                         || be instanceof PlasmaEtcherBlockEntity
                         || be instanceof FluidTankBlockEntity
                         || be instanceof ReactorControllerBlockEntity
-                        || be instanceof CoolingTowerControllerBlockEntity) {
+                        || be instanceof CoolingTowerControllerBlockEntity
+                        || be instanceof RefuelStationBlockEntity) {
                     LOGGER.info("[FluidPort BFS]@{} FOUND controller: {} at {} (after {} visits)",
                             worldPosition.toShortString(),
                             be.getClass().getSimpleName(),

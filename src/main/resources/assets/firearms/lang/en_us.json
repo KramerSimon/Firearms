@@ -266,6 +266,7 @@
   "fluid_type.firearms.heavy_water": "Heavy Water",
   "fluid_type.firearms.steam": "Steam",
   "block.firearms.fluid_tank": "Fluid Tank",
+  "block.firearms.refuel_station": "Refuel Station",
   "block.firearms.reactor_base": "Reactor Base",
   "block.firearms.reactor_wall": "Reactor Wall",
   "block.firearms.reactor_top": "Reactor Top",
