@@ -127,7 +127,9 @@ public class AssemblyBenchJeiRecipe {
                 createGoldWireCircuitBoardRecipe(),
                 createKevlarWeaveRecipe(),
                 createKevlarVestRecipe(),
-                createStainlessPistolRecipe()
+                createStainlessPistolRecipe(),
+                // ── Detection tools ────────────────────────────────────────────
+                createMetalDetectorRecipe()
         );
     }
 
@@ -794,6 +796,15 @@ public class AssemblyBenchJeiRecipe {
                     Component.literal("Quality: ").withStyle(ChatFormatting.GRAY)
                             .append(Component.literal("Stainless").withStyle(ChatFormatting.AQUA)),
                     Component.literal("+10% Damage  +20% Durability").withStyle(ChatFormatting.GRAY)));
+    }
+
+    private static AssemblyBenchJeiRecipe createMetalDetectorRecipe() {
+        return of(new ItemStack[]{
+                new ItemStack(ModItems.CIRCUIT_BOARD.get()),
+                new ItemStack(ModItems.COPPER_WIRE.get(), 3),
+                new ItemStack(Items.IRON_INGOT, 2),
+                new ItemStack(ModItems.BATTERY.get())
+        }, new ItemStack(ModItems.METAL_DETECTOR.get()));
     }
 
     private static NonNullList<ItemStack> buildInputs(ItemStack[] items) {

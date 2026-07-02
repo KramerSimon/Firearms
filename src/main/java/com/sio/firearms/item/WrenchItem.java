@@ -8,6 +8,8 @@ import com.sio.firearms.block.FluidPortBlockEntity;
 import com.sio.firearms.block.IMultiblockPreview;
 import com.sio.firearms.block.ItemPipeBlock;
 import com.sio.firearms.block.ItemPipeBlockEntity;
+import com.sio.firearms.block.LandMineBlock;
+import com.sio.firearms.block.LandMineBlockEntity;
 import com.sio.firearms.block.WireBlock;
 import com.sio.firearms.menu.FluidPipeUnifiedMenu;
 import com.sio.firearms.menu.ItemPipeUnifiedMenu;
@@ -16,14 +18,18 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.slf4j.Logger;
 
 public class WrenchItem extends Item {
@@ -133,6 +139,24 @@ public class WrenchItem extends Item {
                 port.cycleTargetFluid();
                 ctx.getPlayer().displayClientMessage(
                         Component.literal("Fluid Port: Targeting " + port.getTargetFluidDisplayName()), true);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        // ── Land Mine — reveal a camouflaged mine, returning the dirt/grass used to hide it ──
+        if (block instanceof LandMineBlock) {
+            if (state.getValue(LandMineBlock.HIDDEN)) {
+                level.setBlock(pos, state.setValue(LandMineBlock.HIDDEN, false), 3);
+                if (level.getBlockEntity(pos) instanceof LandMineBlockEntity mine) {
+                    Item camoItem = mine.takeCamoItem();
+                    if (camoItem != null && ctx.getPlayer() != null) {
+                        ItemHandlerHelper.giveItemToPlayer(ctx.getPlayer(), new ItemStack(camoItem));
+                    }
+                }
+                level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.5f, 1.5f);
+                if (ctx.getPlayer() != null) {
+                    ctx.getPlayer().displayClientMessage(Component.literal("Land mine revealed"), true);
+                }
             }
             return InteractionResult.SUCCESS;
         }

@@ -4,6 +4,8 @@ import com.sio.firearms.registry.ModEffects;
 import com.sio.firearms.registry.ModEntities;
 import com.sio.firearms.registry.ModItems;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +20,12 @@ import net.minecraft.world.phys.AABB;
 import java.util.UUID;
 
 public class SeaMineEntity extends Entity implements ItemSupplier {
+
+    // A sea mine is only ever visually "hidden" while submerged — this mirrors LandMineBlock's
+    // HIDDEN property so the metal detector can treat both the same way, and fully suppresses
+    // rendering (via isInvisible()) instead of relying on murky water to obscure it.
+    private static final EntityDataAccessor<Boolean> DATA_HIDDEN =
+            SynchedEntityData.defineId(SeaMineEntity.class, EntityDataSerializers.BOOLEAN);
 
     private UUID placerUUID = null;
     private int placerImmuneTicks = 60; // 3-second placer immunity
@@ -45,6 +53,11 @@ public class SeaMineEntity extends Entity implements ItemSupplier {
         if (!level().isClientSide()) {
             setDeltaMovement(0, 0, 0); // stay stationary on water surface
 
+            boolean underwater = isUnderWater();
+            if (entityData.get(DATA_HIDDEN) != underwater) {
+                entityData.set(DATA_HIDDEN, underwater);
+            }
+
             if (placerImmuneTicks > 0) placerImmuneTicks--;
 
             AABB detection = getBoundingBox().inflate(2.0);
@@ -54,6 +67,15 @@ public class SeaMineEntity extends Entity implements ItemSupplier {
                 return;
             }
         }
+    }
+
+    public boolean isHidden() {
+        return entityData.get(DATA_HIDDEN);
+    }
+
+    @Override
+    public boolean isInvisible() {
+        return isHidden();
     }
 
     private boolean isPlacerImmune(Entity entity) {
@@ -75,7 +97,7 @@ public class SeaMineEntity extends Entity implements ItemSupplier {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        // No client-synced data needed
+        builder.define(DATA_HIDDEN, true);
     }
 
     @Override

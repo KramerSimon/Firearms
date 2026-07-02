@@ -1,6 +1,8 @@
 {
   "variants": {
-    "armed=false": { "model": "firearms:block/land_mine" },
-    "armed=true":  { "model": "firearms:block/land_mine" }
+    "armed=false,hidden=false": { "model": "firearms:block/land_mine" },
+    "armed=false,hidden=true":  { "model": "firearms:block/land_mine" },
+    "armed=true,hidden=false":  { "model": "firearms:block/land_mine" },
+    "armed=true,hidden=true":   { "model": "firearms:block/land_mine" }
   }
 }

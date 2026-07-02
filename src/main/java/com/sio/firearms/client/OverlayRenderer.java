@@ -3,9 +3,11 @@ package com.sio.firearms.client;
 import com.sio.firearms.Firearms;
 import com.sio.firearms.attachment.AttachmentType;
 import com.sio.firearms.item.GunItem;
+import com.sio.firearms.item.MetalDetectorItem;
 import com.sio.firearms.registry.ModDataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -144,6 +146,45 @@ public class OverlayRenderer {
         gui.fill(centerX - radius, centerY - 1, centerX + radius, centerY + 1, white);
         // Vertical crosshair
         gui.fill(centerX - 1, centerY - radius, centerX + 1, centerY + radius, white);
+    }
+
+    @SubscribeEvent
+    public static void onRenderGuiLayerPost(RenderGuiLayerEvent.Post event) {
+        if (!event.getName().equals(VanillaGuiLayers.HOTBAR)) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null) return;
+
+        boolean holdingDetector = player.getMainHandItem().getItem() instanceof MetalDetectorItem
+                || player.getOffhandItem().getItem() instanceof MetalDetectorItem;
+        if (!holdingDetector) return;
+
+        BlockPos minePos = MetalDetectorItem.getNearestMinePos();
+        if (minePos == null) return;
+
+        double distance = MetalDetectorItem.getNearestDistance();
+
+        GuiGraphics gui = event.getGuiGraphics();
+        int screenWidth = gui.guiWidth();
+        int screenHeight = gui.guiHeight();
+
+        double dx = (minePos.getX() + 0.5) - player.getX();
+        double dz = (minePos.getZ() + 0.5) - player.getZ();
+        double angleToMine = Math.toDegrees(Math.atan2(dz, dx));
+        double relativeAngle = Math.toRadians(angleToMine - (player.getYRot() + 90.0));
+
+        int cx = screenWidth - 30;
+        int cy = screenHeight - 40;
+        int radius = 12;
+        int arrowX = cx + (int) Math.round(Math.cos(relativeAngle) * radius);
+        int arrowY = cy + (int) Math.round(Math.sin(relativeAngle) * radius);
+
+        gui.fill(cx - 1, cy - 1, cx + 1, cy + 1, 0xFFFFFFFF);
+        gui.fill(arrowX - 2, arrowY - 2, arrowX + 2, arrowY + 2, 0xFFFF3030);
+
+        String label = "Mine: " + Math.round(distance) + "m";
+        gui.drawString(mc.font, label, cx - mc.font.width(label) / 2, cy + radius + 4, 0xFFFF5555);
     }
 
     private static AttachmentType getActiveScopeType() {

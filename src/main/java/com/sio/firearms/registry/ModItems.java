@@ -18,6 +18,7 @@ import com.sio.firearms.item.SeaMineItem;
 import com.sio.firearms.item.SmokeGrenadeItem;
 import com.sio.firearms.item.GunItem;
 import com.sio.firearms.item.MedikitItem;
+import com.sio.firearms.item.MetalDetectorItem;
 import com.sio.firearms.item.ShotgunItem;
 import com.sio.firearms.item.SMGItem;
 import com.sio.firearms.item.SniperRifleItem;
@@ -434,6 +435,10 @@ public class ModItems {
     // ── Radiation tools ───────────────────────────────────────────────────────
     public static final DeferredItem<Item> GEIGER_COUNTER =
             ITEMS.register("geiger_counter", GeigerCounterItem::new);
+
+    // ── Detection tools ───────────────────────────────────────────────────────
+    public static final DeferredItem<Item> METAL_DETECTOR =
+            ITEMS.register("metal_detector", MetalDetectorItem::new);
 
     public static final DeferredItem<BlockItem> CRATE = ITEMS.registerSimpleBlockItem(ModBlocks.CRATE);
     public static final DeferredItem<BlockItem> TRASH_CAN = ITEMS.registerSimpleBlockItem(ModBlocks.TRASH_CAN);

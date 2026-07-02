@@ -608,6 +608,36 @@ def make_raw_opium():
     save(img, os.path.join(ITEM, "raw_opium.png"))
 
 
+# ── Metal detector (16×16) — handheld wand with a sensor disc ────────────────
+def make_metal_detector():
+    SHAFT_D = (90,  90,  98,  255)   # shaft dark
+    SHAFT_L = (140, 142, 150, 255)   # shaft light
+    GRIP    = (60,  42,  30,  255)   # grip dark brown
+    GRIP_L  = (90,  64,  46,  255)   # grip highlight
+    DISC_D  = (70,  74,  82,  255)   # disc rim dark
+    DISC_L  = (120, 124, 134, 255)   # disc rim light
+    DISC_C  = (150, 190, 210, 255)   # disc face pale cyan
+    IND     = (60,  220, 120, 255)   # status light green
+    img = px(16, 16)
+    draw = ImageDraw.Draw(img)
+    # grip (bottom-left)
+    draw.rectangle([1, 11, 4, 14], fill=GRIP)
+    img.putpixel((1, 11), GRIP_L)
+    img.putpixel((2, 12), GRIP_L)
+    # shaft (diagonal, grip to disc)
+    shaft_pixels = [(4, 10), (5, 9), (6, 8), (7, 7), (8, 6), (9, 5)]
+    for (x, y) in shaft_pixels:
+        img.putpixel((x, y), SHAFT_D)
+    for (x, y) in [(5, 10), (6, 9), (7, 8), (8, 7), (9, 6)]:
+        img.putpixel((x, y), SHAFT_L)
+    # sensor disc (top-right), drawn as a filled ellipse on an angled head
+    draw.ellipse([8, 1, 15, 6], fill=DISC_C, outline=DISC_D)
+    img.putpixel((9, 2), DISC_L)
+    img.putpixel((13, 2), DISC_L)
+    img.putpixel((11, 3), IND)
+    save(img, os.path.join(ITEM, "metal_detector.png"))
+
+
 # ── Refined opium (16×16) — cream-colored powder in small pile ───────────────
 def make_refined_opium():
     RL = (240, 235, 210, 255)
@@ -2047,5 +2077,8 @@ if __name__ == "__main__":
     # ── Nuclear Bomb ──────────────────────────────────────────────────────────
     make_enriched_uranium()
     make_nuke_bomb()
+
+    # ── Detection tools ──────────────────────────────────────────────────────
+    make_metal_detector()
 
     print("Done.")

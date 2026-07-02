@@ -907,6 +907,18 @@ public class AssemblyBenchBlockEntity extends EnergyStorageBlock implements Menu
                             "firearms:cordite", 2));
         }
 
+        // ── Detection tools ───────────────────────────────────────────────────
+        // Metal Detector: circuit_board×1 + copper_wire×3 + iron_ingot×2 + battery×1
+        // battery is unique to this recipe in the Assembly Bench; no ordering conflicts.
+        if (hasAtLeast(in, "firearms:circuit_board", 1)
+                && hasAtLeast(in, "firearms:copper_wire", 3)
+                && hasAtLeast(in, "minecraft:iron_ingot", 2)
+                && hasAtLeast(in, "firearms:battery", 1)) {
+            return new RecipeMatch(new ItemStack(ModItems.METAL_DETECTOR.get()),
+                    Map.of("firearms:circuit_board", 1, "firearms:copper_wire", 3,
+                            "minecraft:iron_ingot", 2, "firearms:battery", 1));
+        }
+
         return null;
     }
 
